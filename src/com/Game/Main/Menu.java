@@ -1,6 +1,7 @@
 package com.Game.Main;
 
 import com.Game.listener.Input;
+import com.Util.Math.Vector2;
 import com.Util.Other.Settings;
 
 import javax.swing.*;
@@ -10,6 +11,7 @@ import java.awt.event.KeyEvent;
 public class Menu {
 
     public boolean tempFullscreen = false;
+    private int pseudoResIndex = Settings.resolutionIndex;
 
     public enum MenuState {
         PauseMenu,
@@ -32,6 +34,15 @@ public class Menu {
     }
 
     public void render(Graphics g) {
+        Vector2 center = Settings.curResolution().scaleClone(0.5f);
+
+        g.setColor(Color.GRAY);
+        g.fillRect((int) (center.x  * 0.33f), (int) (center.y * 0.33f), (int) (center.x * 1.33f), (int) (center.y * 1.33f));
+
+        g.setColor(Color.LIGHT_GRAY);
+        g.fillRect((int) (center.x  * 0.33f) + 12, (int) (center.y * 0.33f) + 12, (int) (center.x * 1.33f) - 24, (int) (center.y * 1.33f) - 24);
+
+
         g.setColor(Color.BLACK);
         g.setFont(new Font("Arial", Font.BOLD, Settings.fontSize));
 
@@ -70,7 +81,7 @@ public class Menu {
             case VideoSettings:
 
                 String[] options2 =  {
-                        ((curSelected == 0) ? "> " : "") + "Screen Resolution: " + Settings.curResolution().toString(),
+                        ((curSelected == 0) ? "> " : "") + "Screen Resolution: " + Settings.resolutions[pseudoResIndex].toString(),
                         ((curSelected == 1) ? "> " : "") + "Show FPS: " + Settings.showFPS,
                         ((curSelected == 2) ? "> " : "") + "Fullscreen: " + tempFullscreen,
                         ((curSelected == 3) ? "> " : "") + "Apply Changes"
@@ -90,10 +101,10 @@ public class Menu {
                 boolean enter = Input.GetKeyDown(KeyEvent.VK_ENTER);
 
                 if (left && curSelected == 0 && !Settings.fullScreen) {
-                    Settings.resolutionIndex--;
+                    pseudoResIndex--;
                 }
                 if (right && curSelected == 0 && !Settings.fullScreen) {
-                    Settings.resolutionIndex++;
+                    pseudoResIndex++;
                 }
 
                 if (Settings.resolutionIndex == -1 && !Settings.fullScreen)
@@ -109,6 +120,7 @@ public class Menu {
 
                 if (enter && curSelected == 3) {
                     Settings.fullScreen = tempFullscreen;
+                    Settings.resolutionIndex = pseudoResIndex;
                     Main.main.updateFrame();
                     state = MenuState.PauseMenu;
                 }
@@ -131,7 +143,7 @@ public class Menu {
 
             g.drawString(options[i], window.getWidth() / 2
                             - Settings.sWidth(options[i], g) / 2,
-                    window.getHeight() / 2 - Settings.fontSize * options.length + i * Settings.fontSize * 2);
+                    (int) (window.getHeight() / 2 - Settings.fontSize / 1.5 * options.length + i * Settings.fontSize * 2));
         }
     }
 

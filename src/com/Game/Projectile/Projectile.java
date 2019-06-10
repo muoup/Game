@@ -15,6 +15,7 @@ public class Projectile {
     protected Vector2 direction;
 
     private float damage;
+    private int index;
     public BufferedImage image;
 
     public Projectile(Vector2 position, Vector2 aim, Vector2 scale, float damage, float speed) {
@@ -25,6 +26,7 @@ public class Projectile {
 
         direction = Vector2.magnitudeDirection(position, aim).scale(speed);
 
+        index = Main.projectiles.size();
         Main.projectiles.add(this);
     }
 

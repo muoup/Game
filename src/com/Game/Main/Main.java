@@ -1,15 +1,20 @@
 package com.Game.Main;
 
-import com.Game.Player.Player;
+import com.Game.Entity.NPC.NPC;
+import com.Game.Entity.Player.Player;
 import com.Game.Projectile.Projectile;
+import com.Game.World.World;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Settings;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Main extends Canvas {
@@ -21,9 +26,13 @@ public class Main extends Canvas {
     public static JFrame frame;
     public static Dimension screenSize;
 
+    public BufferedImage playerImage;
     public Player player;
     public Menu settings;
     public static ArrayList<Projectile> projectiles;
+    public static ArrayList<NPC> npcs;
+
+    public BufferedImage worldImage;
 
     public static void main(String[] args) {
         Main mainObj = new Main();
@@ -54,8 +63,18 @@ public class Main extends Canvas {
 
     public void init(){
         Main.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+        try {
+            worldImage = ImageIO.read(getClass().getResource("/res/images/worldTest.png"));
+            playerImage = ImageIO.read(getClass().getResource("/res/images/player.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         projectiles = new ArrayList<Projectile>();
-        player = new Player(new Vector2(100, 100), 150f, Color.GREEN, 2f, 40);
+        npcs = new ArrayList<NPC>();
+
+        player = new Player(Settings.curResolution().scale(0.5f), 250f, Color.GREEN, 2f, playerImage);
         settings = new Menu();
     }
 
@@ -66,6 +85,8 @@ public class Main extends Canvas {
         } else {
             frame.setExtendedState(0);
         }
+
+        frame.setSize((int) Settings.curResolution().x, (int) Settings.curResolution().y);
 
     }
 
@@ -138,12 +159,17 @@ public class Main extends Canvas {
     // Calls every tick - use for drawing graphics and other things similar
     public void render(Graphics g) {
         // Wipe screen every tick
-        g.setColor(new Color(245, 245, 245));
-        g.fillRect(0, 0, frame.getWidth(), frame.getHeight());
+        BufferedImage subImage = worldImage.getSubimage((int)World.curWorld.offset.x, (int)World.curWorld.offset.y,
+                (int)Settings.curResolution().x, (int)Settings.curResolution().y);
+
+        g.drawImage(subImage, 0, 0, (int)Settings.curResolution().x, (int)Settings.curResolution().y, null);
 
         if (!Settings.pause) {
             for (int i = 0; i < projectiles.size(); i++)
                 projectiles.get(i).projectileUpdate(g, i);
+
+            for (int i = 0; i < npcs.size(); i++)
+                npcs.get(i).update(g);
 
             player.render(g);
 
@@ -162,7 +188,5 @@ public class Main extends Canvas {
             g.setColor(Color.BLACK);
             g.drawString("FPS: " + (int) Main.fps, 15, 25);
         }
-
-
     }
 }

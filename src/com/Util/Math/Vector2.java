@@ -40,11 +40,48 @@ public class Vector2 {
         return new Vector2(x, y);
     }
 
+    public Vector2 addClone(Vector2 other) {
+        float xx = x + other.x;
+        float yy = y + other.y;
+
+        return new Vector2(xx, yy);
+    }
+
+    public Vector2 subtractClone(Vector2 other) {
+        float xx = x - other.x;
+        float yy = y - other.y;
+
+        return new Vector2(xx, yy);
+    }
+
+    public int compareTo(Vector2 other) {
+        boolean c1 = x > other.x;
+        boolean c2 = y > other.y;
+        boolean c3 = x == other.x;
+        boolean c4 = y == other.y;
+
+        return (c1 ? 1 : -1) + (c2 ? 1 : -1) + (c3 ? 1 : 0) + (c4 ? 1 : 0);
+
+        /*
+          Values:
+          Equality => 0 points
+          Greater Than => 1 points
+          Less Than => -1 points
+        */
+    }
+
     public Vector2 scale(float scaleFactor) {
         this.x *= scaleFactor;
         this.y *= scaleFactor;
 
         return new Vector2(x, y);
+    }
+
+    public Vector2 scaleClone(float scaleFactor) {
+        float xx = x * scaleFactor;
+        float yy = y * scaleFactor;
+
+        return new Vector2(xx, yy);
     }
 
     public static Vector2 magnitudeDirection(Vector2 v1, Vector2 v2) {

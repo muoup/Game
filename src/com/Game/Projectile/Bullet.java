@@ -16,5 +16,6 @@ public class Bullet extends Projectile {
     }
 
     public void update() {
+
     }
 }

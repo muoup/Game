@@ -15,9 +15,10 @@ public class Settings {
             new Vector2(1200, 900),
             new Vector2(1960, 1280)
     };
+
     public static int fontSize = 25;
     public static boolean fullScreen = false;
-    public static float cameraSensitivity = 0.255f;
+    public static float cameraSensitivity = 0.25f;
 
     public static Vector2 curResolution() {
         return Settings.resolutions[Settings.resolutionIndex].clone();
