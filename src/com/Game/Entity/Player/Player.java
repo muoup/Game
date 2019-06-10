@@ -78,7 +78,7 @@ public class Player {
             }
 
             if (Input.GetKeyDown(KeyEvent.VK_SPACE)) {
-                new Bullet(pos, Input.mousePosition, new Vector2(8, 8), 2, 4);
+                new Bullet(pos.subtractClone(World.curWorld.offset), Input.mousePosition, new Vector2(8, 8), 2, 4);
             }
 
             dMod = speedMod;
