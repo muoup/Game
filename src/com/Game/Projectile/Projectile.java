@@ -26,8 +26,7 @@ public class Projectile {
 
         direction = Vector2.magnitudeDirection(position, aim).scale(speed);
 
-        index = Main.projectiles.size();
-        Main.projectiles.add(this);
+        Main.methods.projectiles.add(this);
     }
 
     public void setImage(String root) {
@@ -56,6 +55,6 @@ public class Projectile {
     public void update() {}
 
     public void destroy(int index) {
-        Main.projectiles.remove(index);
+        Main.methods.projectiles.remove(index);
     }
 }

@@ -1,8 +1,6 @@
 package com.Game.Main;
 
-import com.Game.Entity.NPC.NPC;
 import com.Game.Entity.Player.Player;
-import com.Game.Projectile.Projectile;
 import com.Game.World.World;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
@@ -11,11 +9,9 @@ import com.Util.Other.Settings;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class Main extends Canvas {
 
@@ -29,8 +25,8 @@ public class Main extends Canvas {
     public BufferedImage playerImage;
     public Player player;
     public Menu settings;
-    public static ArrayList<Projectile> projectiles;
-    public static ArrayList<NPC> npcs;
+
+    public static MethodHandler methods;
 
     public BufferedImage worldImage;
 
@@ -70,14 +66,18 @@ public class Main extends Canvas {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        projectiles = new ArrayList<Projectile>();
-        npcs = new ArrayList<NPC>();
-
         player = new Player(Settings.curResolution().scale(0.5f), 250f, Color.GREEN, 2f, playerImage);
         settings = new Menu();
+
+        methods = new MethodHandler();
+
+        initMethods();
     }
 
+    public void initMethods() {
+        methods.player = player;
+        methods.settings = settings;
+    }
     public void updateFrame() {
 
         if (Settings.fullScreen) {
@@ -143,50 +143,16 @@ public class Main extends Canvas {
 
     // Calls every tick - use for game logic and other similar non-graphical devices
     public void update() {
-        if (Input.GetKeyDown(KeyEvent.VK_ESCAPE))
-            Settings.pause = !Settings.pause;
-
-        if (Input.GetKeyDown(KeyEvent.VK_F1))
-            Settings.showFPS = !Settings.showFPS;
-
-        if (Settings.pause)
-            return;
-
-        player.update();
-
+        methods.update();
     }
 
     // Calls every tick - use for drawing graphics and other things similar
     public void render(Graphics g) {
-        // Wipe screen every tick
-        BufferedImage subImage = worldImage.getSubimage((int)World.curWorld.offset.x, (int)World.curWorld.offset.y,
+        BufferedImage subImage = worldImage.getSubimage((int) World.curWorld.offset.x, (int)World.curWorld.offset.y,
                 (int)Settings.curResolution().x, (int)Settings.curResolution().y);
 
-        g.drawImage(subImage, 0, 0, (int)Settings.curResolution().x, (int)Settings.curResolution().y, null);
+        g.drawImage(subImage, 0, 0, (int) Settings.curResolution().x, (int)Settings.curResolution().y, null);
 
-        if (!Settings.pause) {
-            for (int i = 0; i < projectiles.size(); i++)
-                projectiles.get(i).projectileUpdate(g, i);
-
-            for (int i = 0; i < npcs.size(); i++)
-                npcs.get(i).update(g);
-
-            player.render(g);
-
-            settings.curSelected = 0;
-            settings.state = Menu.MenuState.PauseMenu;
-
-
-        } else {
-            // Enter Pause Menu
-            settings.render(g);
-            settings.update();
-        }
-
-        if (Settings.showFPS) {
-            g.setFont(new Font("Arial", Font.BOLD, 16));
-            g.setColor(Color.BLACK);
-            g.drawString("FPS: " + (int) Main.fps, 15, 25);
-        }
+        methods.render(g);
     }
 }

@@ -1,5 +1,7 @@
 package com.Util.Other;
 
+import com.Game.Entity.Player.Player;
+import com.Game.Main.Main;
 import com.Util.Math.Vector2;
 
 import java.awt.*;
@@ -10,6 +12,7 @@ public class Settings {
     public static boolean pause = false;
     public static boolean showFPS = false;
     public static int resolutionIndex = 0;
+    public static final float maxDistance = 50;
     public static final Vector2[] resolutions = {
             new Vector2(800, 600),
             new Vector2(1200, 900),
@@ -26,6 +29,10 @@ public class Settings {
 
     public static int sWidth(String string, Graphics g) {
         return g.getFontMetrics().stringWidth(string);
+    }
+
+    public static Player getPlayer() {
+        return Main.main.player;
     }
 
 }
