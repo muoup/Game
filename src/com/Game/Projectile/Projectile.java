@@ -1,10 +1,11 @@
 package com.Game.Projectile;
 
 import com.Game.Main.Main;
+import com.Game.Main.MethodHandler;
 import com.Util.Math.Vector2;
+import com.Util.Other.Render;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -26,31 +27,32 @@ public class Projectile {
 
         direction = Vector2.magnitudeDirection(position, aim).scale(speed);
 
-        Main.methods.projectiles.add(this);
+        MethodHandler.projectiles.add(this);
     }
 
     public void setImage(String root) {
         try {
-            this.image = ImageIO.read(getClass().getResource(root));
+            this.image = ImageIO.read(getClass().getResource("/res/images/" + root));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void projectileUpdate(Graphics g, int index) {
+    public void projectileUpdate(int index) {
         position.add(direction);
-        g.drawImage(image, (int) position.x, (int) position.y, (int) scale.x, (int) scale.y, null);
+        Render.drawImage(image, position);
+
         if (position.x + scale.x > Main.frame.getWidth()
                 || position.x - scale.x < 0
                 || position.y + scale.y > Main.frame.getHeight()
                 || position.y - scale.y < 0)
             destroy(index);
 
-        render(g);
+        render();
         update();
     }
 
-    public void render(Graphics g) {}
+    public void render() {}
 
     public void update() {}
 

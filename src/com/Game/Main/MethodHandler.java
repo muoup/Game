@@ -3,7 +3,9 @@ package com.Game.Main;
 import com.Game.Entity.NPC.NPC;
 import com.Game.Entity.Player.Player;
 import com.Game.Projectile.Projectile;
+import com.Game.World.World;
 import com.Game.listener.Input;
+import com.Util.Other.Render;
 import com.Util.Other.Settings;
 
 import java.awt.*;
@@ -17,8 +19,8 @@ public class MethodHandler {
     public Menu settings;
     public Player player;
 
-    public ArrayList<Projectile> projectiles;
-    public ArrayList<NPC> npcs;
+    public static ArrayList<Projectile> projectiles;
+    public static ArrayList<NPC> npcs;
 
     public MethodHandler() {
         main = Main.main;
@@ -39,31 +41,29 @@ public class MethodHandler {
         player.update();
     }
 
-    public void render(Graphics g) {
-        // Wipe screen every tick
-
-
+    public void render() {
         if (!Settings.pause) {
+            World.curWorld.renderWorld();
+            player.render();
+
             for (int i = 0; i < projectiles.size(); i++)
-                projectiles.get(i).projectileUpdate(g, i);
+                projectiles.get(i).projectileUpdate(i);
 
             for (int i = 0; i < npcs.size(); i++)
-                npcs.get(i).update(g);
-
-            player.render(g);
+                npcs.get(i).update();
 
             settings.curSelected = 0;
             settings.state = Menu.MenuState.PauseMenu;
         } else {
             // Enter Pause Menu
-            settings.render(g);
+            settings.render();
             settings.update();
         }
 
         if (Settings.showFPS) {
-            g.setFont(new Font("Arial", Font.BOLD, 16));
-            g.setColor(Color.BLACK);
-            g.drawString("FPS: " + (int) Main.fps, 15, 25);
+            Render.setFont(new Font("Arial", Font.BOLD, 16));
+            Render.setColor(Color.BLACK);
+            Render.drawText("FPS: " + (int) Main.fps, 15, 25);
         }
     }
 }

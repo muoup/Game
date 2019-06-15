@@ -60,7 +60,7 @@ public class Vector2 {
         boolean c3 = x == other.x;
         boolean c4 = y == other.y;
 
-        return (c1 ? 1 : -1) + (c2 ? 1 : -1) + (c3 ? 1 : 0) + (c4 ? 1 : 0);
+        return ((c1 ? 1 : -1) + (c2 ? 1 : -1) + (c3 ? 1 : 0) + (c4 ? 1 : 0)) / 2;
 
         /*
           Values:
@@ -80,6 +80,13 @@ public class Vector2 {
     public Vector2 scaleClone(float scaleFactor) {
         float xx = x * scaleFactor;
         float yy = y * scaleFactor;
+
+        return new Vector2(xx, yy);
+    }
+
+    public Vector2 offsetClone(float offset) {
+        float xx = x + offset;
+        float yy = y + offset;
 
         return new Vector2(xx, yy);
     }
@@ -130,7 +137,7 @@ public class Vector2 {
         return result;
     }
 
-    public static double distance(Vector2 v1, Vector2 v2) {
+    public static double distanceTesting(Vector2 v1, Vector2 v2) {
         double x = (v1.x - v2.x);
         double y = (v1.y - v2.y);
 
@@ -140,6 +147,20 @@ public class Vector2 {
         double dist = x + y;
 
         dist = Math.signum(dist) * Math.sqrt(Math.abs(dist));
+
+        return dist;
+    }
+
+    public static double distance(Vector2 v1, Vector2 v2) {
+        double x = (v1.x - v2.x);
+        double y = (v1.y - v2.y);
+
+        x = Math.pow(x, 2);
+        y = Math.pow(y, 2);
+
+        double dist = x + y;
+
+        dist = Math.sqrt(dist);
 
         return dist;
     }

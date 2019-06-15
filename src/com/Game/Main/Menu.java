@@ -2,6 +2,7 @@ package com.Game.Main;
 
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
+import com.Util.Other.Render;
 import com.Util.Other.Settings;
 
 import javax.swing.*;
@@ -33,18 +34,17 @@ public class Menu {
         state = MenuState.PauseMenu;
     }
 
-    public void render(Graphics g) {
+    public void render() {
         Vector2 center = Settings.curResolution().scaleClone(0.5f);
 
-        g.setColor(Color.GRAY);
-        g.fillRect((int) (center.x  * 0.33f), (int) (center.y * 0.33f), (int) (center.x * 1.33f), (int) (center.y * 1.33f));
+        Render.setColor(Color.GRAY);
+        Render.drawRectangle(center.scaleClone(0.33f), center.scaleClone(1.33f));
 
-        g.setColor(Color.LIGHT_GRAY);
-        g.fillRect((int) (center.x  * 0.33f) + 12, (int) (center.y * 0.33f) + 12, (int) (center.x * 1.33f) - 24, (int) (center.y * 1.33f) - 24);
+        Render.setColor(Color.LIGHT_GRAY);
+        Render.drawRectangle(center.scaleClone(0.33f).offsetClone(12f), center.scale(1.33f).offsetClone(-24));
 
-
-        g.setColor(Color.BLACK);
-        g.setFont(new Font("Arial", Font.BOLD, Settings.fontSize));
+        Render.setColor(Color.BLACK);
+        Render.setFont(new Font("Arial", Font.BOLD, Settings.fontSize));
 
         switch (state) {
             case PauseMenu:
@@ -57,7 +57,7 @@ public class Menu {
                         ((curSelected == 3) ? "> " : "") + "Exit Game"
                 };
 
-                drawOptions(options1, g, Main.frame, new int[0]);
+                drawOptions(options1, Main.frame, new int[0]);
 
                 if (Input.GetKeyDown(KeyEvent.VK_ENTER)) {
                     switch (curSelected) {
@@ -94,7 +94,7 @@ public class Menu {
                         (Settings.fullScreen) ? 0 : -1
                 };
 
-                drawOptions(options2, g, Main.frame, grayed);
+                drawOptions(options2, Main.frame, grayed);
 
                 boolean left = Input.GetKeyDown(KeyEvent.VK_LEFT);
                 boolean right = Input.GetKeyDown(KeyEvent.VK_RIGHT);
@@ -133,16 +133,16 @@ public class Menu {
         }
     }
 
-    public void drawOptions(String[] options, Graphics g, JFrame window, int[] grayedOut) {
+    public void drawOptions(String[] options, JFrame window, int[] grayedOut)  {
         for (int i = 0; i < options.length; i++) {
-            g.setColor(Color.BLACK);
+            Render.setColor(Color.BLACK);
 
             for (int x : grayedOut)
                 if (i == x)
-                    g.setColor(Color.GRAY);
+                    Render.setColor(Color.GRAY);
 
-            g.drawString(options[i], window.getWidth() / 2
-                            - Settings.sWidth(options[i], g) / 2,
+            Render.drawText(options[i], window.getWidth() / 2
+                            - Settings.sWidth(options[i]) / 2,
                     (int) (window.getHeight() / 2 - Settings.fontSize / 1.5 * options.length + i * Settings.fontSize * 2));
         }
     }

@@ -1,10 +1,7 @@
 package com.Util.Other;
 
-import com.Game.Entity.Player.Player;
 import com.Game.Main.Main;
 import com.Util.Math.Vector2;
-
-import java.awt.*;
 
 public class Settings {
     public static float cameraZoom = 320;
@@ -27,12 +24,8 @@ public class Settings {
         return Settings.resolutions[Settings.resolutionIndex].clone();
     }
 
-    public static int sWidth(String string, Graphics g) {
-        return g.getFontMetrics().stringWidth(string);
-    }
-
-    public static Player getPlayer() {
-        return Main.main.player;
+    public static int sWidth(String string) {
+        return Main.graphics.getFontMetrics().stringWidth(string);
     }
 
 }

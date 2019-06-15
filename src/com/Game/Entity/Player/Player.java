@@ -5,6 +5,7 @@ import com.Game.Projectile.Bullet;
 import com.Game.World.World;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
+import com.Util.Other.Render;
 import com.Util.Other.Settings;
 
 import java.awt.*;
@@ -31,12 +32,12 @@ public class Player {
         playerColor = Color.BLACK;
     }
 
-    public Player(Vector2 pos, float speed, Color playerColor, float dash, BufferedImage image) {
+    public Player(Vector2 pos, float speed, Color playerColor, float dash) {
         this.pos = pos;
         this.speed = speed;
         this.playerColor = playerColor;
         this.dashMultiplier = dash;
-        this.image = image;
+        this.image = Main.main.getImageFromRoot("player.png");
         this.scale = image.getWidth();
     }
 
@@ -123,12 +124,13 @@ public class Player {
 
         if (offset.y < 0) {
             offset.y = 0;
-        } else if (offset.y > size.y - Settings.curResolution().x) {
+        } else if (offset.y > size.y - Settings.curResolution().y) {
             offset.y = size.y - Settings.curResolution().y;
         }
 }
 
-    public void render(Graphics g) {
-        g.drawImage(image, (int) pos.x - scale / 2 - (int) World.curWorld.offset.x, (int) pos.y - scale / 2 - (int) World.curWorld.offset.y, null);
+    public void render() {
+        Render.drawImage(image, pos.x - scale / 2 - World.curWorld.offset.x,
+                pos.y - scale / 2 - World.curWorld.offset.y);
     }
 }

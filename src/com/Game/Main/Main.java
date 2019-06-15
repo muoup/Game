@@ -21,14 +21,12 @@ public class Main extends Canvas {
     public static Main main;
     public static JFrame frame;
     public static Dimension screenSize;
+    public static Graphics graphics;
 
-    public BufferedImage playerImage;
-    public Player player;
-    public Menu settings;
+    public static Player player;
+    public static Menu settings;
 
     public static MethodHandler methods;
-
-    public BufferedImage worldImage;
 
     public static void main(String[] args) {
         Main mainObj = new Main();
@@ -60,16 +58,12 @@ public class Main extends Canvas {
     public void init(){
         Main.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-        try {
-            worldImage = ImageIO.read(getClass().getResource("/res/images/worldTest.png"));
-            playerImage = ImageIO.read(getClass().getResource("/res/images/player.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        player = new Player(Settings.curResolution().scale(0.5f), 250f, Color.GREEN, 2f, playerImage);
+        player = new Player(Settings.curResolution().scale(0.5f), 250f, Color.GREEN, 2f);
         settings = new Menu();
 
         methods = new MethodHandler();
+
+        World.changeWorld(0);
 
         initMethods();
     }
@@ -78,6 +72,8 @@ public class Main extends Canvas {
         methods.player = player;
         methods.settings = settings;
     }
+
+    // Used for the shift of the settings
     public void updateFrame() {
 
         if (Settings.fullScreen) {
@@ -90,6 +86,7 @@ public class Main extends Canvas {
 
     }
 
+    // Calculate fps and run other functions
     public void run() {
         double lastFpsTime = 0;
         double lfps = 0;
@@ -122,8 +119,10 @@ public class Main extends Canvas {
 
             Graphics g = bs.getDrawGraphics();
 
+            Main.graphics = g;
+
             update();
-            render(g);
+            render();
 
             bs.show();
             g.dispose();
@@ -147,12 +146,17 @@ public class Main extends Canvas {
     }
 
     // Calls every tick - use for drawing graphics and other things similar
-    public void render(Graphics g) {
-        BufferedImage subImage = worldImage.getSubimage((int) World.curWorld.offset.x, (int)World.curWorld.offset.y,
-                (int)Settings.curResolution().x, (int)Settings.curResolution().y);
+    public void render() {
+        methods.render();
+    }
 
-        g.drawImage(subImage, 0, 0, (int) Settings.curResolution().x, (int)Settings.curResolution().y, null);
+    public BufferedImage getImageFromRoot(String root) {
+        try {
+            return ImageIO.read(getClass().getResource("/res/images/" + root));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        methods.render(g);
+        return null;
     }
 }
