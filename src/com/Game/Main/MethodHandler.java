@@ -2,6 +2,7 @@ package com.Game.Main;
 
 import com.Game.Entity.NPC.NPC;
 import com.Game.Entity.Player.Player;
+import com.Game.GUI.TextBox;
 import com.Game.Projectile.Projectile;
 import com.Game.World.World;
 import com.Game.listener.Input;
@@ -29,8 +30,14 @@ public class MethodHandler {
     }
 
     public void update() {
-        if (Input.GetKeyDown(KeyEvent.VK_ESCAPE))
+        TextBox.handleTextbox();
+
+        if (Input.GetKeyDown(KeyEvent.VK_ESCAPE)) {
+            if (Settings.pause && TextBox.noText())
+                Main.settings.state = Menu.MenuState.PauseMenu;
+
             Settings.pause = !Settings.pause;
+        }
 
         if (Input.GetKeyDown(KeyEvent.VK_F1))
             Settings.showFPS = !Settings.showFPS;
@@ -43,17 +50,18 @@ public class MethodHandler {
 
     public void render() {
         if (!Settings.pause) {
-            World.curWorld.renderWorld();
-            player.render();
 
+            World.curWorld.renderWorld();
             for (int i = 0; i < projectiles.size(); i++)
                 projectiles.get(i).projectileUpdate(i);
 
             for (int i = 0; i < npcs.size(); i++)
                 npcs.get(i).update();
 
+
+            player.render();
+
             settings.curSelected = 0;
-            settings.state = Menu.MenuState.PauseMenu;
         } else {
             // Enter Pause Menu
             settings.render();

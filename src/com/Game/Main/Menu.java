@@ -15,15 +15,17 @@ public class Menu {
     private int pseudoResIndex = Settings.resolutionIndex;
 
     public enum MenuState {
+        SimplePause,
         PauseMenu,
         VideoSettings,
         AudioSettings
     }
 
     int[] stateLengths = {
-        4,
-        4,
-        4
+            0,
+            4,
+            4,
+            4
     };
 
     public int curSelected;
@@ -35,6 +37,9 @@ public class Menu {
     }
 
     public void render() {
+        if (state == MenuState.SimplePause)
+            return;
+
         Vector2 center = Settings.curResolution().scaleClone(0.5f);
 
         Render.setColor(Color.GRAY);
@@ -148,6 +153,9 @@ public class Menu {
     }
 
     public void update() {
+        if (state == MenuState.SimplePause)
+            return;
+
         if (Input.GetKeyDown(KeyEvent.VK_DOWN)) {
             curSelected++;
         }

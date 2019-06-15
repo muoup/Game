@@ -14,8 +14,12 @@ public class Render {
         Main.graphics.drawImage(image, (int) x, (int) y, null);
     }
 
-    public static void drawRectangle(Vector2 position, Vector2 position2) {
-        Main.graphics.fillRect((int) position.x, (int) position.y, (int) position2.x, (int) position2.y);
+    public static void drawRectangle(Vector2 position, Vector2 scale) {
+        Main.graphics.fillRect((int) position.x, (int) position.y, (int) scale.x, (int) scale.y);
+    }
+
+    public static void drawRectangle(float x, float y, float width, float height) {
+        Main.graphics.fillRect((int) x, (int) y, (int) width, (int) height);
     }
 
     public static void setColor(Color color) {

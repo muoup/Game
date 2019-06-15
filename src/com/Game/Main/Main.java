@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class Main extends Canvas {
 
@@ -60,6 +61,8 @@ public class Main extends Canvas {
 
         player = new Player(Settings.curResolution().scale(0.5f), 250f, Color.GREEN, 2f);
         settings = new Menu();
+
+        Settings.npcFont = getFont("npc-text.ttf", 20, Font.BOLD);
 
         methods = new MethodHandler();
 
@@ -153,6 +156,22 @@ public class Main extends Canvas {
     public BufferedImage getImageFromRoot(String root) {
         try {
             return ImageIO.read(getClass().getResource("/res/images/" + root));
+        } catch (IOException e) {
+            System.err.println("ERROR, IMAGE NOT FOUND: " + root);
+        }
+
+        return null;
+    }
+
+    public Font getFont(String root, float size, int style) {
+        InputStream is = Main.class.getResourceAsStream("/res/fonts/" + root);
+
+        try {
+            Font font = Font.createFont(Font.TRUETYPE_FONT, is);
+
+            return font.deriveFont(style, size);
+        } catch (FontFormatException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

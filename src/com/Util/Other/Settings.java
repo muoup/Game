@@ -3,6 +3,8 @@ package com.Util.Other;
 import com.Game.Main.Main;
 import com.Util.Math.Vector2;
 
+import java.awt.*;
+
 public class Settings {
     public static float cameraZoom = 320;
     public static int fpsCap = 60;
@@ -15,6 +17,8 @@ public class Settings {
             new Vector2(1200, 900),
             new Vector2(1960, 1280)
     };
+
+    public static Font npcFont = null;
 
     public static int fontSize = 25;
     public static boolean fullScreen = false;

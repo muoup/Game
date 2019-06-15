@@ -1,5 +1,6 @@
 package com.Game.Entity.NPC;
 
+import com.Game.GUI.TextBox;
 import com.Game.Main.Main;
 
 public class TestNPC extends NPC {
@@ -11,7 +12,10 @@ public class TestNPC extends NPC {
     }
 
     public void onInteract() {
-        System.out.println("Hello traveller! How may I treat you.");
+        TextBox.setText(new String[]{
+                "Hello traveller! How may I treat you?",
+                "Here is a second text box to prove it works."
+        });
     }
 
     public void move() {
