@@ -22,6 +22,14 @@ public class Render {
         Main.graphics.fillRect((int) x, (int) y, (int) width, (int) height);
     }
 
+    public static void drawRectOutline(Vector2 position, Vector2 scale) {
+        Main.graphics.drawRect((int) position.x, (int) position.y, (int) scale.x, (int) scale.y);
+    }
+
+    public static void drawRectOutline(float x, float y, float width, float height) {
+        Main.graphics.drawRect((int) x, (int) y, (int) width, (int) height);
+    }
+
     public static void setColor(Color color) {
         Main.graphics.setColor(color);
     }

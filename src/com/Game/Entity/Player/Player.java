@@ -1,5 +1,6 @@
 package com.Game.Entity.Player;
 
+import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.Main.Main;
 import com.Game.Projectile.Bullet;
 import com.Game.World.World;
@@ -26,10 +27,14 @@ public class Player {
     private float dy = 0;
     private float dMod = 0;
 
+
+
     public Player() {
         pos = Vector2.zero();
         speed = 0;
         playerColor = Color.BLACK;
+
+        init();
     }
 
     public Player(Vector2 pos, float speed, Color playerColor, float dash) {
@@ -39,11 +44,21 @@ public class Player {
         this.dashMultiplier = dash;
         this.image = Main.main.getImageFromRoot("player.png");
         this.scale = image.getWidth();
+
+        init();
+    }
+
+    public void init() {
+        InventoryManager.init();
+
+        //InventoryManager.addItem(Item.wood, 1);
     }
 
     public void update() {
         movement();
         handleOffset();
+
+        InventoryManager.update();
     }
 
     public void movement() {
@@ -132,5 +147,7 @@ public class Player {
     public void render() {
         Render.drawImage(image, pos.x - scale / 2 - World.curWorld.offset.x,
                 pos.y - scale / 2 - World.curWorld.offset.y);
+
+        InventoryManager.render();
     }
 }

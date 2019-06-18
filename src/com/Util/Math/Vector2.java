@@ -1,5 +1,7 @@
 package com.Util.Math;
 
+import java.util.Random;
+
 public class Vector2 {
 
     public float x = 0;
@@ -47,9 +49,23 @@ public class Vector2 {
         return new Vector2(xx, yy);
     }
 
+    public Vector2 addClone(float dx, float dy) {
+        float xx = x + dx;
+        float yy = y + dy;
+
+        return new Vector2(xx, yy);
+    }
+
     public Vector2 subtractClone(Vector2 other) {
         float xx = x - other.x;
         float yy = y - other.y;
+
+        return new Vector2(xx, yy);
+    }
+
+    public Vector2 subtractClone(float dx, float dy) {
+        float xx = x - dx;
+        float yy = y - dy;
 
         return new Vector2(xx, yy);
     }
@@ -77,6 +93,13 @@ public class Vector2 {
         return new Vector2(x, y);
     }
 
+    public Vector2 scaleClone(Vector2 scaleFactor) {
+        float xx = x * scaleFactor.x;
+        float yy = y * scaleFactor.y;
+
+        return new Vector2(xx, yy);
+    }
+
     public Vector2 scaleClone(float scaleFactor) {
         float xx = x * scaleFactor;
         float yy = y * scaleFactor;
@@ -89,6 +112,14 @@ public class Vector2 {
         float yy = y + offset;
 
         return new Vector2(xx, yy);
+    }
+
+    public static Vector2 randomVector(float xRange, float yRange) {
+        Random random = new Random();
+
+        Vector2 offset = new Vector2(random.nextFloat() * xRange, random.nextFloat() * yRange);
+
+        return offset;
     }
 
     public static Vector2 magnitudeDirection(Vector2 v1, Vector2 v2) {

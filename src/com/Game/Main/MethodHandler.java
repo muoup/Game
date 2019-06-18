@@ -30,14 +30,14 @@ public class MethodHandler {
     }
 
     public void update() {
-        TextBox.handleTextbox();
-
         if (Input.GetKeyDown(KeyEvent.VK_ESCAPE)) {
             if (Settings.pause && TextBox.noText())
                 Main.settings.state = Menu.MenuState.PauseMenu;
 
             Settings.pause = !Settings.pause;
         }
+
+        TextBox.handleTextbox();
 
         if (Input.GetKeyDown(KeyEvent.VK_F1))
             Settings.showFPS = !Settings.showFPS;
@@ -50,14 +50,13 @@ public class MethodHandler {
 
     public void render() {
         if (!Settings.pause) {
-
             World.curWorld.renderWorld();
+
             for (int i = 0; i < projectiles.size(); i++)
                 projectiles.get(i).projectileUpdate(i);
 
             for (int i = 0; i < npcs.size(); i++)
                 npcs.get(i).update();
-
 
             player.render();
 

@@ -42,6 +42,9 @@ public class Menu {
 
         Vector2 center = Settings.curResolution().scaleClone(0.5f);
 
+        Render.setColor(new Color(64, 64, 64));
+        Render.drawRectangle(Vector2.zero(), Settings.curResolution());
+
         Render.setColor(Color.GRAY);
         Render.drawRectangle(center.scaleClone(0.33f), center.scaleClone(1.33f));
 
@@ -162,6 +165,10 @@ public class Menu {
 
         if (Input.GetKeyDown(KeyEvent.VK_UP)) {
             curSelected--;
+        }
+
+        if (curSelected <= 0) {
+            curSelected = stateLengths[state.ordinal()];
         }
 
         curSelected %= stateLengths[state.ordinal()];

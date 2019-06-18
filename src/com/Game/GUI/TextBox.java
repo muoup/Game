@@ -38,9 +38,9 @@ public class TextBox {
 
         String text = textBoxes.get(0);
 
-        Render.setColor(new Color(137, 79, 26));
-        Render.drawRectangle(0,Settings.curResolution().y * 0.75f,
-                Settings.curResolution().x, Settings.curResolution().y * 0.25f);
+        Render.setColor(new Color(129, 79, 47));
+        Render.drawRectangle(0,Settings.curResolution().y * 0.65f,
+                Settings.curResolution().x, Settings.curResolution().y * 0.35f);
 
         if (counter >= text.length() * 2) {
             counter = text.length() * 2;
@@ -62,6 +62,6 @@ public class TextBox {
         Render.setFont(Settings.npcFont);
 
         Render.drawText(text.substring(0, counter / 2), Settings.curResolution().x / 2 - Settings.sWidth(text) / 2,
-                Settings.curResolution().y  * 0.85f);
+                Settings.curResolution().y  * 0.8f);
     }
 }

@@ -91,6 +91,7 @@ public class Main extends Canvas {
 
     // Calculate fps and run other functions
     public void run() {
+        // NOTE: just don't touch any of this, I got this off of StackOverFlow
         double lastFpsTime = 0;
         double lfps = 0;
         long lastLoopTime = System.nanoTime();
@@ -113,6 +114,7 @@ public class Main extends Canvas {
                 lfps = 0;
             }
 
+            // Creates buffer graphics to pass to methods.
             BufferStrategy bs = getBufferStrategy();
 
             if (bs == null) {
