@@ -7,7 +7,7 @@ import java.awt.*;
 public class Item {
 
     public static Item empty = new Item(-1, "/", "/", -1);
-    public static Item wood = new Item(0, "wood.png", "A nice piece of wood.", 100);
+    public static Item wood = new Item(0, "wood.png", "A nice piece of wood.", 10);
 
     public int id;
     public Image image;

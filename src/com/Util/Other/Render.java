@@ -1,6 +1,7 @@
 package com.Util.Other;
 
 import com.Game.Main.Main;
+import com.Game.World.World;
 import com.Util.Math.Vector2;
 
 import java.awt.*;
@@ -48,5 +49,12 @@ public class Render {
 
     public static Vector2 getDimensions(Image image) {
         return new Vector2(image.getWidth(null), image.getHeight(null));
+    }
+
+    public static boolean onScreen(Vector2 position, Image image) {
+        Vector2 offset = World.curWorld.offset;
+
+        return position.compareTo(offset.subtractClone(Render.getDimensions(image))) == 1
+                && offset.addClone(Settings.curResolution()).compareTo(position) == 1;
     }
 }

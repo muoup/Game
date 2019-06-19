@@ -182,7 +182,7 @@ public class Vector2 {
         return dist;
     }
 
-    public static double distance(Vector2 v1, Vector2 v2) {
+    public static float distance(Vector2 v1, Vector2 v2) {
         double x = (v1.x - v2.x);
         double y = (v1.y - v2.y);
 
@@ -193,7 +193,7 @@ public class Vector2 {
 
         dist = Math.sqrt(dist);
 
-        return dist;
+        return (float) dist;
     }
 
     public static double absDistance(Vector2 v1, Vector2 v2) {

@@ -86,11 +86,12 @@ public class Main extends Canvas {
         }
 
         frame.setSize((int) Settings.curResolution().x, (int) Settings.curResolution().y);
-
+        frame.setLocationRelativeTo(null);
     }
 
     // Calculate fps and run other functions
     public void run() {
+
         // NOTE: just don't touch any of this, I got this off of StackOverFlow
         double lastFpsTime = 0;
         double lfps = 0;

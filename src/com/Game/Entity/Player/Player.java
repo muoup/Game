@@ -1,6 +1,7 @@
 package com.Game.Entity.Player;
 
 import com.Game.GUI.Inventory.InventoryManager;
+import com.Game.GUI.Inventory.Item;
 import com.Game.Main.Main;
 import com.Game.Projectile.Bullet;
 import com.Game.World.World;
@@ -8,6 +9,7 @@ import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 import com.Util.Other.Settings;
+import javafx.scene.input.KeyCode;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -59,6 +61,10 @@ public class Player {
         handleOffset();
 
         InventoryManager.update();
+
+        if (Input.GetKeyDown(KeyEvent.VK_I)) {
+            InventoryManager.addItem(Item.wood, 1);
+        }
     }
 
     public void movement() {

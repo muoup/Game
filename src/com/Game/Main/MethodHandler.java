@@ -3,6 +3,7 @@ package com.Game.Main;
 import com.Game.Entity.NPC.NPC;
 import com.Game.Entity.Player.Player;
 import com.Game.GUI.TextBox;
+import com.Game.Object.GameObject;
 import com.Game.Projectile.Projectile;
 import com.Game.World.World;
 import com.Game.listener.Input;
@@ -22,11 +23,13 @@ public class MethodHandler {
 
     public static ArrayList<Projectile> projectiles;
     public static ArrayList<NPC> npcs;
+    public static ArrayList<GameObject> objects;
 
     public MethodHandler() {
         main = Main.main;
         projectiles = new ArrayList();
         npcs = new ArrayList();
+        objects = new ArrayList();
     }
 
     public void update() {
@@ -57,6 +60,9 @@ public class MethodHandler {
 
             for (int i = 0; i < npcs.size(); i++)
                 npcs.get(i).update();
+
+            for (int i = 0; i < objects.size(); i++)
+                objects.get(i).updateObject();
 
             player.render();
 

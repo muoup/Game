@@ -45,7 +45,7 @@ public class TextBox {
         if (counter >= text.length() * 2) {
             counter = text.length() * 2;
 
-            if (Input.GetKeyDown(KeyEvent.VK_ENTER)) {
+            if (Input.GetKeyDown(KeyEvent.VK_E)) {
                 textBoxes.remove(0);
                 counter = 0;
 
@@ -54,7 +54,7 @@ public class TextBox {
                     Settings.pause = false;
                 }
             }
-        } else if (Input.GetKeyDown(KeyEvent.VK_ENTER)) {
+        } else if (Input.GetKeyDown(KeyEvent.VK_E)) {
             counter = text.length() * 2;
         }
 

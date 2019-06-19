@@ -34,8 +34,7 @@ public class NPC {
             onInteract();
         }
 
-        if (position.compareTo(offset.subtractClone(Render.getDimensions(image))) == 1
-                && offset.addClone(Settings.curResolution()).compareTo(position) == 1) {
+        if (Render.onScreen(position, image)) {
             Render.drawImage(image, position.subtractClone(World.curWorld.offset));
         }
 

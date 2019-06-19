@@ -14,8 +14,6 @@ public class InventoryManager {
         for (int i = 0; i < inventory.length; i++) {
             inventory[i] = new ItemStack(Item.empty, 0);
         }
-
-        InventoryManager.addItem(Item.wood, 100000000);
     }
 
     public static void update() {
@@ -39,10 +37,12 @@ public class InventoryManager {
             for (int y = 0; y < 5; y++) {
                 Vector2 rectPos = startingPosition.addClone(x * 48f, y * 48f);
 
-                if (inventory[x + y * 4].getID() != -1) {
-                    Render.drawImage(inventory[x + y * x].item.image, startingPosition.addClone(x * 48f, y * 48f));
+                ItemStack stack = inventory[x + y * 4];
 
-                    int itext = inventory[x + y * x].amount;
+                if (stack.getID() != -1) {
+                    Render.drawImage(stack.item.image, startingPosition.addClone(x * 48f, y * 48f));
+
+                    int itext = stack.amount;
                     String text;
 
                     // There is no point in going beyond billion because the
@@ -69,17 +69,38 @@ public class InventoryManager {
     }
 
     public static boolean addItem(Item item, int amount) {
+        int add = amount;
+
         for (int i = 0; i < inventory.length; i++) {
-            if (inventory[i].item.id == -1) {
-                inventory[i] = new ItemStack(item, amount);
+            System.out.println(amount);
+            add = amount;
+
+            if (add == 0)
                 return true;
-            }
 
             if (inventory[i].item.id == item.id && inventory[i].amount < item.maxStack) {
-                inventory[i].amount += amount;
-                return true;
+                if (add > item.maxStack - inventory[i].amount) {
+                    add = item.maxStack - inventory[i].amount;
+                }
+
+                inventory[i].amount += add;
+
+                amount -= add;
+            }
+
+            if (inventory[i].item.id == -1) {
+                if (add > item.maxStack) {
+                    add = item.maxStack;
+                }
+
+                inventory[i] = new ItemStack(item, add);
+
+                amount -= add;
             }
         }
+
+        if (amount == 0)
+            return true;
 
         return false;
     }
