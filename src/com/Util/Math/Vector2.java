@@ -35,6 +35,14 @@ public class Vector2 {
         return new Vector2(x, y);
     }
 
+    public Vector2 add(float dx, float dy) {
+        this.x = x + dx;
+        this.y = y + dy;
+
+        return new Vector2(x, y);
+    }
+
+
     public Vector2 subtract(Vector2 other) {
         this.x -= other.x;
         this.y -= other.y;
@@ -128,11 +136,9 @@ public class Vector2 {
 
         Vector2 result = new Vector2(dx, dy);
 
-        float slope = 0;
-
         boolean xy = (Math.abs(dx) > Math.abs(dy));
 
-        slope = xy ? 1 / dx : 1 / dy;
+        float slope = xy ? 1 / dx : 1 / dy;
 
         result.scale(slope);
 
@@ -168,20 +174,6 @@ public class Vector2 {
         return result;
     }
 
-    public static double distanceTesting(Vector2 v1, Vector2 v2) {
-        double x = (v1.x - v2.x);
-        double y = (v1.y - v2.y);
-
-        x = Math.signum(x) * Math.pow(x, 2);
-        y = Math.signum(y) * Math.pow(y, 2);
-
-        double dist = x + y;
-
-        dist = Math.signum(dist) * Math.sqrt(Math.abs(dist));
-
-        return dist;
-    }
-
     public static float distance(Vector2 v1, Vector2 v2) {
         double x = (v1.x - v2.x);
         double y = (v1.y - v2.y);
@@ -196,7 +188,7 @@ public class Vector2 {
         return (float) dist;
     }
 
-    public static double absDistance(Vector2 v1, Vector2 v2) {
-        return Math.sqrt(Math.pow(v1.x - v2.x, 2) + Math.pow(v1.y - v2.y, 2));
+    public static Vector2 identity(float scale) {
+        return new Vector2(scale, scale);
     }
 }

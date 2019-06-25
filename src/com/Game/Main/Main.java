@@ -1,6 +1,8 @@
 package com.Game.Main;
 
 import com.Game.Entity.Player.Player;
+import com.Game.GUI.GUI;
+import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.World.World;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
@@ -74,6 +76,8 @@ public class Main extends Canvas {
     public void initMethods() {
         methods.player = player;
         methods.settings = settings;
+
+        GUI.init();
     }
 
     // Used for the shift of the settings
@@ -87,6 +91,8 @@ public class Main extends Canvas {
 
         frame.setSize((int) Settings.curResolution().x, (int) Settings.curResolution().y);
         frame.setLocationRelativeTo(null);
+
+        GUI.init();
     }
 
     // Calculate fps and run other functions
@@ -156,14 +162,20 @@ public class Main extends Canvas {
         methods.render();
     }
 
+    public static BufferedImage getImage(String root) {
+        return Main.main.getImageFromRoot(root);
+    }
+
     public BufferedImage getImageFromRoot(String root) {
+        BufferedImage image = null;
+
         try {
-            return ImageIO.read(getClass().getResource("/res/images/" + root));
+            image = ImageIO.read(getClass().getResource("/res/images/" + root));
         } catch (IOException e) {
             System.err.println("ERROR, IMAGE NOT FOUND: " + root);
         }
 
-        return null;
+        return image;
     }
 
     public Font getFont(String root, float size, int style) {

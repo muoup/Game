@@ -1,5 +1,6 @@
 package com.Game.Object;
 
+import com.Game.Entity.Player.Player;
 import com.Game.Main.Main;
 import com.Game.World.World;
 import com.Game.listener.Input;
@@ -11,12 +12,12 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
 public class GameObject {
-    public static Image[] objectImages = {
+    public static BufferedImage[] objectImages = {
             getImage("tree.png")
     };
 
     public Vector2 position;
-    public Image image;
+    public BufferedImage image;
     public float maxTimer = 1.5f;
     protected float timer = 0;
     public int id = 0;
@@ -28,10 +29,9 @@ public class GameObject {
     }
 
     public void updateObject() {
-        timer += 1 / Main.fps;
         image = objectImages[id];
 
-        float distance = Vector2.distance(Main.player.pos, position.addClone(Render.getDimensions(image).scale(2f)).subtractClone(World.curWorld.offset));
+        float distance = Vector2.distance(Main.player.position, position.addClone(Render.getDimensions(image).scale(0.5f)));
 
         if (Render.onScreen(position, image)) {
             Render.drawImage(image,
@@ -40,11 +40,13 @@ public class GameObject {
         }
 
         if (Input.GetKey(KeyEvent.VK_E)
-            && distance < Render.getDimensions(image).y && timer > maxTimer) {
+            && distance < Render.getDimensions(image).y) {
 
-            timer = 0;
             onInteract();
         }
+
+        if (!Input.GetKey(KeyEvent.VK_E) || distance > Render.getDimensions(image).y)
+            timer = 0;
     }
 
     public void update() {
@@ -52,9 +54,21 @@ public class GameObject {
     }
 
     public void onInteract() {
+
     }
 
-    public static Image getImage(String name) {
+    public static BufferedImage getImage(String name) {
         return Main.main.getImageFromRoot("Object/" + name);
+    }
+
+    public void drawProgressBar() {
+        Vector2 sPos = position.subtractClone(image.getWidth() * -0.25f, 24).subtract(World.curWorld.offset);
+        Vector2 rect = new Vector2(image.getWidth() * (timer / maxTimer) * 0.5f, 8);
+
+        Render.setColor(Color.BLUE);
+        Render.drawRectangle(sPos, rect);
+
+        Render.setColor(Color.BLACK);
+        Render.drawRectOutline(sPos, rect);
     }
 }

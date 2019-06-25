@@ -1,5 +1,6 @@
 package com.Game.World;
 
+import com.Game.Entity.Enemy.TestEnemy;
 import com.Game.Entity.NPC.TestNPC;
 import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
@@ -20,5 +21,6 @@ public class MainWorld extends World {
 
         new TestNPC(0, 250, 250);
         new Tree(500, 500);
+        new TestEnemy(400, 150);
     }
 }

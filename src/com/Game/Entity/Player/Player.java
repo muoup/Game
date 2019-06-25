@@ -1,7 +1,9 @@
 package com.Game.Entity.Player;
 
+import com.Game.GUI.GUI;
+import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.Inventory.InventoryManager;
-import com.Game.GUI.Inventory.Item;
+import com.Game.GUI.TextBox;
 import com.Game.Main.Main;
 import com.Game.Projectile.Bullet;
 import com.Game.World.World;
@@ -9,14 +11,13 @@ import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 import com.Util.Other.Settings;
-import javafx.scene.input.KeyCode;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
 public class Player {
-    public Vector2 pos;
+    public Vector2 position;
     public float speed;
     public Color playerColor;
     public boolean canMove = true;
@@ -29,18 +30,19 @@ public class Player {
     private float dy = 0;
     private float dMod = 0;
 
-
+    public float maxHealth = 100f;
+    public float health = 100f;
 
     public Player() {
-        pos = Vector2.zero();
+        position = Vector2.zero();
         speed = 0;
         playerColor = Color.BLACK;
 
         init();
     }
 
-    public Player(Vector2 pos, float speed, Color playerColor, float dash) {
-        this.pos = pos;
+    public Player(Vector2 position, float speed, Color playerColor, float dash) {
+        this.position = position;
         this.speed = speed;
         this.playerColor = playerColor;
         this.dashMultiplier = dash;
@@ -51,20 +53,21 @@ public class Player {
     }
 
     public void init() {
-        InventoryManager.init();
 
-        //InventoryManager.addItem(Item.wood, 1);
     }
 
     public void update() {
         movement();
         handleOffset();
 
-        InventoryManager.update();
+    }
 
-        if (Input.GetKeyDown(KeyEvent.VK_I)) {
-            InventoryManager.addItem(Item.wood, 1);
-        }
+    public void damage(float amount) {
+        health -= amount;
+    }
+
+    public Vector2 getCenter() {
+        return position.addClone(Render.getDimensions(image).scaleClone(0.5f));
     }
 
     public void movement() {
@@ -100,7 +103,8 @@ public class Player {
             }
 
             if (Input.GetKeyDown(KeyEvent.VK_SPACE)) {
-                new Bullet(pos.subtractClone(World.curWorld.offset), Input.mousePosition, new Vector2(8, 8), 2, 4);
+                AccessoriesManager.getSlot(AccessoriesManager.WEAPON_SLOT).
+                        item.createProjectile(position, Input.mousePosition.addClone(World.curWorld.offset));
             }
 
             dMod = speedMod;
@@ -111,10 +115,17 @@ public class Player {
             curSpeed = new Vector2((float) ((dx + Math.signum(dx) * dMod) / Main.fps), (float) ((dy + Math.signum(dy) * dMod) / Main.fps));
         }
 
-        pos.add(curSpeed);
+        if (CollisionHandler.isFree(getCenter().addClone(curSpeed.x, 0))) {
+            position.add(curSpeed.x, 0);
+        }
+
+        if (CollisionHandler.isFree(getCenter().addClone(0, curSpeed.y))) {
+            position.add(0, curSpeed.y);
+        }
     }
 
     public void handleOffset() {
+        // These variables are probably not all necessary but it looks cleaner.
         Vector2 offset = World.curWorld.offset;
         Vector2 size = World.curWorld.size;
         Vector2 res = Settings.curResolution();
@@ -122,19 +133,19 @@ public class Player {
         Vector2 sens = middle.scaleClone(Settings.cameraSensitivity);
         Vector2 arcsens = middle.scaleClone(1 - Settings.cameraSensitivity);
 
-        float rX = (pos.x - World.curWorld.offset.x);
-        float rY = (pos.y - World.curWorld.offset.y);
+        float rX = (position.x - World.curWorld.offset.x);
+        float rY = (position.y - World.curWorld.offset.y);
 
         if (rX < middle.x - sens.x) {
-            offset.x = pos.x - arcsens.x;
+            offset.x = position.x - arcsens.x;
         } else if (rX > middle.x + sens.x) {
-            offset.x = pos.x - sens.x - middle.x;
+            offset.x = position.x - sens.x - middle.x;
         }
 
         if (rY < middle.y - sens.y) {
-            offset.y = pos.y - arcsens.y;
+            offset.y = position.y - arcsens.y;
         } else if (rY > middle.y + sens.y) {
-            offset.y = pos.y - sens.y - middle.y;
+            offset.y = position.y - sens.y - middle.y;
         }
 
         if (offset.x < 0) {
@@ -148,12 +159,33 @@ public class Player {
         } else if (offset.y > size.y - Settings.curResolution().y) {
             offset.y = size.y - Settings.curResolution().y;
         }
-}
+    }
+
+    public void renderStats() {
+        // Draw Health Bar
+        Render.setColor(Color.LIGHT_GRAY);
+        Render.drawRectangle(GUI.mainPos.subtractClone(new Vector2(0, 18)),
+                new Vector2(GUI.inputSize * 4 * (health / maxHealth), 16));
+
+        Render.setColor(Color.RED);
+        Render.drawRectangle(GUI.mainPos.subtractClone(new Vector2(0, 18)),
+                new Vector2(GUI.inputSize * 4 * (health / maxHealth), 16));
+
+        Render.setColor(Color.BLACK);
+        Render.drawRectOutline(GUI.mainPos.subtractClone(new Vector2(0, 18)),
+                new Vector2(GUI.inputSize * 4, 16));
+
+        if (health <= 0) {
+            TextBox.setText("Oh no! You are dead!");
+
+            health = maxHealth;
+        }
+    }
 
     public void render() {
-        Render.drawImage(image, pos.x - scale / 2 - World.curWorld.offset.x,
-                pos.y - scale / 2 - World.curWorld.offset.y);
+        Render.drawImage(image, position.x - scale / 2 - World.curWorld.offset.x,
+                position.y - scale / 2 - World.curWorld.offset.y);
 
-        InventoryManager.render();
+        renderStats();
     }
 }

@@ -1,5 +1,7 @@
 package com.Game.GUI.Inventory;
 
+import com.Game.GUI.GUI;
+import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 import com.Util.Other.Settings;
@@ -8,7 +10,7 @@ import java.awt.*;
 
 public class InventoryManager {
 
-    public static ItemStack[] inventory = new ItemStack[23];
+    public static ItemStack[] inventory = new ItemStack[20];
 
     public static void init() {
         for (int i = 0; i < inventory.length; i++) {
@@ -17,53 +19,67 @@ public class InventoryManager {
     }
 
     public static void update() {
-        for (ItemStack i : inventory) {
-            if (i.amount <= 0) {
-                i = new ItemStack(Item.empty, 0);
+        for (int i = 0; i < inventory.length; i++) {
+            if (inventory[i].amount <= 0 && inventory[i].getID() != -1) {
+                inventory[i] = Item.emptyStack();
+            }
+        }
+
+        if (Input.mousePosition.compareTo(GUI.mainPos) == 1 &&
+            GUI.mainPos.addClone(4 * GUI.select, 5 * GUI.select).compareTo(Input.mousePosition) == 1) {
+            if (Input.GetMouse(1)) {
+                Vector2 deltaMouse = Input.mousePosition.subtract(GUI.mainPos);
+
+                int x = (int) deltaMouse.x / GUI.select;
+                int y = (int) deltaMouse.y / GUI.select;
+
+                int index = x + y * x;
+
+                inventory[index].item.OnClick(index);
             }
         }
     }
 
     public static void render() {
-        Vector2 startingPosition = Settings.curResolution().subtractClone(48 * 4 + 25, 48 * 5 + 45);
-
         Render.setColor(new Color(255, 138, 4));
 
-        Render.drawRectangle(startingPosition, new Vector2(4 * 48f, 5 * 48f));
+        Render.drawRectangle(GUI.mainPos, new Vector2(4 * GUI.inputSize, 5f * GUI.inputSize));
 
         Render.setColor(Color.BLACK);
 
         for (int x = 0; x < 4; x++) {
             for (int y = 0; y < 5; y++) {
-                Vector2 rectPos = startingPosition.addClone(x * 48f, y * 48f);
+                Vector2 rectPos = GUI.mainPos.addClone(x * GUI.inputSize, y * GUI.inputSize);
 
                 ItemStack stack = inventory[x + y * 4];
 
-                if (stack.getID() != -1) {
-                    Render.drawImage(stack.item.image, startingPosition.addClone(x * 48f, y * 48f));
+                if (stack.getID() != 0 && stack.getAmount() > 0) {
+                    Render.drawImage(stack.item.image.getScaledInstance(GUI.inputSize, GUI.inputSize, 0), rectPos);
 
-                    int itext = stack.amount;
-                    String text;
+                    if (stack.getAmount() > 1) {
+                        int itext = stack.amount;
+                        String text;
 
-                    // There is no point in going beyond billion because the
-                    // integer limit is 2.147 billion
-                    if (itext >= 1000000000) {
-                        text = itext / 1000000000 + "b";
-                    } else if (itext >= 1000000) {
-                        text = itext / 1000000 + "m";
-                    } else if (itext >= 1000) {
-                        text = itext / 1000 + "k";
-                    } else {
-                        text = itext + "";
+                        // There is no point in going beyond billion because the
+                        // integer limit is 2.147 billion
+                        if (itext >= 1000000000) {
+                            text = itext / 1000000000 + "b";
+                        } else if (itext >= 1000000) {
+                            text = itext / 1000000 + "m";
+                        } else if (itext >= 1000) {
+                            text = itext / 1000 + "k";
+                        } else {
+                            text = itext + "";
+                        }
+
+                        Render.setFont(new Font("Arial", 0, (int) rectPos.x / 55));
+
+                        Render.drawText(text,
+                                rectPos.addClone(new Vector2(GUI.inputSize - Settings.sWidth(text) - 4, GUI.inputSize - 4)));
                     }
-
-                    Render.setFont(new Font("Arial", 0, 9));
-
-                    Render.drawText(text,
-                            rectPos.addClone(new Vector2(45 - Settings.sWidth(text), 45)));
                 }
 
-                Render.drawRectOutline(rectPos, new Vector2(48, 48));
+                Render.drawRectOutline(rectPos, new Vector2(GUI.inputSize, GUI.inputSize));
             }
         }
     }
@@ -72,11 +88,7 @@ public class InventoryManager {
         int add = amount;
 
         for (int i = 0; i < inventory.length; i++) {
-            System.out.println(amount);
             add = amount;
-
-            if (add == 0)
-                return true;
 
             if (inventory[i].item.id == item.id && inventory[i].amount < item.maxStack) {
                 if (add > item.maxStack - inventory[i].amount) {
@@ -88,7 +100,7 @@ public class InventoryManager {
                 amount -= add;
             }
 
-            if (inventory[i].item.id == -1) {
+            if (inventory[i].item.id == 0) {
                 if (add > item.maxStack) {
                     add = item.maxStack;
                 }
@@ -97,11 +109,10 @@ public class InventoryManager {
 
                 amount -= add;
             }
+
+            if (add == 0)
+                return true;
         }
-
-        if (amount == 0)
-            return true;
-
         return false;
     }
 }

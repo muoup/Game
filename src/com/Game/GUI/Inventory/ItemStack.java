@@ -23,4 +23,8 @@ public class ItemStack {
     public int getMaxAmount() {
         return maxAmount;
     }
+
+    public ItemStack clone() {
+        return new ItemStack(item, amount);
+    }
 }

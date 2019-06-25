@@ -1,7 +1,9 @@
 package com.Game.Projectile;
 
+import com.Game.Entity.Enemy.Enemy;
 import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
+import com.Game.World.World;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 
@@ -16,14 +18,17 @@ public class Projectile {
     protected Vector2 direction;
 
     private float damage;
+    protected float duration;
     private int index;
     public BufferedImage image;
+    private boolean friendly;
 
-    public Projectile(Vector2 position, Vector2 aim, Vector2 scale, float damage, float speed) {
+    public Projectile(Vector2 position, Vector2 aim, Vector2 scale, float damage, float speed, boolean friendly) {
         this.position = position.clone();
         this.aim = aim.clone();
         this.scale = scale;
         this.damage = damage;
+        this.friendly = friendly;
 
         direction = Vector2.magnitudeDirection(position, aim).scale(speed);
 
@@ -40,13 +45,31 @@ public class Projectile {
 
     public void projectileUpdate(int index) {
         position.add(direction);
-        Render.drawImage(image, position);
+        Render.drawImage(image, position.subtractClone(World.curWorld.offset));
 
-        if (position.x + scale.x > Main.frame.getWidth()
-                || position.x - scale.x < 0
-                || position.y + scale.y > Main.frame.getHeight()
-                || position.y - scale.y < 0)
+        duration -= 1 / Main.fps;
+
+        if (duration < 0)
             destroy(index);
+
+        if (friendly) {
+            for (Enemy e : MethodHandler.enemies) {
+                if (!e.enabled)
+                    continue;
+
+                if (Vector2.distance(e.position, position) < e.image.getWidth()) {
+                    e.damage(damage);
+
+                    destroy(index);
+                }
+            }
+        } else {
+            if (Vector2.distance(Main.player.position, position) < 2) {
+                Main.player.damage(damage);
+
+                destroy(index);
+            }
+        }
 
         render();
         update();

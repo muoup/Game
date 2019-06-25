@@ -10,7 +10,7 @@ public class Settings {
     public static int fpsCap = 60;
     public static boolean pause = false;
     public static boolean showFPS = false;
-    public static int resolutionIndex = 0;
+    public static int resolutionIndex = 1;
     public static final float maxDistance = 50;
     public static final Vector2[] resolutions = {
             new Vector2(800, 600),

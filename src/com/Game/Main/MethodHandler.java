@@ -1,7 +1,9 @@
 package com.Game.Main;
 
+import com.Game.Entity.Enemy.Enemy;
 import com.Game.Entity.NPC.NPC;
 import com.Game.Entity.Player.Player;
+import com.Game.GUI.GUI;
 import com.Game.GUI.TextBox;
 import com.Game.Object.GameObject;
 import com.Game.Projectile.Projectile;
@@ -24,15 +26,18 @@ public class MethodHandler {
     public static ArrayList<Projectile> projectiles;
     public static ArrayList<NPC> npcs;
     public static ArrayList<GameObject> objects;
+    public static ArrayList<Enemy> enemies;
 
     public MethodHandler() {
         main = Main.main;
         projectiles = new ArrayList();
         npcs = new ArrayList();
         objects = new ArrayList();
+        enemies = new ArrayList();
     }
 
     public void update() {
+
         if (Input.GetKeyDown(KeyEvent.VK_ESCAPE)) {
             if (Settings.pause && TextBox.noText())
                 Main.settings.state = Menu.MenuState.PauseMenu;
@@ -49,6 +54,8 @@ public class MethodHandler {
             return;
 
         player.update();
+
+        GUI.update();
     }
 
     public void render() {
@@ -58,13 +65,15 @@ public class MethodHandler {
             for (int i = 0; i < projectiles.size(); i++)
                 projectiles.get(i).projectileUpdate(i);
 
-            for (int i = 0; i < npcs.size(); i++)
-                npcs.get(i).update();
+            player.render();
 
             for (int i = 0; i < objects.size(); i++)
                 objects.get(i).updateObject();
 
-            player.render();
+            for (int i = 0; i < npcs.size(); i++)
+                npcs.get(i).update();
+
+            GUI.render();
 
             settings.curSelected = 0;
         } else {

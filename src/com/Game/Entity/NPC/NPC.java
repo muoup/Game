@@ -5,7 +5,6 @@ import com.Game.World.World;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
-import com.Util.Other.Settings;
 
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
@@ -30,7 +29,7 @@ public class NPC {
     public void update() {
         Vector2 offset = World.curWorld.offset;
 
-        if (Input.GetKeyDown(KeyEvent.VK_E) && Vector2.distance(Main.player.pos, position) < 150) {
+        if (Input.GetKeyDown(KeyEvent.VK_E) && Vector2.distance(Main.player.position, position) < 150) {
             onInteract();
         }
 

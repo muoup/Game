@@ -2,6 +2,8 @@ package com.Game.Object;
 
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.Inventory.Item;
+import com.Game.GUI.Inventory.Items.RawResource.Log;
+import com.Game.Main.Main;
 
 public class Tree extends GameObject {
 
@@ -12,6 +14,13 @@ public class Tree extends GameObject {
     }
 
     public void onInteract() {
-        InventoryManager.addItem(Item.wood, 1);
+        timer += 1 / Main.fps;
+
+        drawProgressBar();
+
+        if (timer > maxTimer) {
+            timer = 0;
+            InventoryManager.addItem(Item.wood, 1);
+        }
     }
 }
