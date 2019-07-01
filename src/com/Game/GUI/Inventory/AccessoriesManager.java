@@ -4,6 +4,7 @@ import com.Game.GUI.GUI;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
+import com.Util.Other.Settings;
 
 import java.awt.*;
 
@@ -30,20 +31,36 @@ public class AccessoriesManager {
         return accessories[slot];
     }
 
-    public static void setSlot(ItemStack item, int slot) {
-        accessories[slot] = item.clone();
+    public static void handleInventory() {
+        for (int i = 0; i < accessories.length; i++) {
+            if (accessories[i].amount <= 0 && accessories[i].getID() != 0) {
+                accessories[i] = Item.emptyStack();
+            }
+        }
     }
 
+    public static void setSlot(ItemStack item, int slot) {
+        if (accessories[slot].getID() == item.getID()) {
+            int maxAmount = accessories[slot].getMaxAmount() - accessories[slot].getAmount();
+            if (maxAmount > item.amount)
+                maxAmount = item.amount;
+
+            accessories[slot].amount += maxAmount;
+        } else {
+            accessories[slot] = item.clone();
+        }
+    }
     public static void render() {
         Render.setColor(Color.BLACK);
-        Render.drawRectangle(GUI.mainPos, new Vector2(4 * GUI.inputSize, 5f * GUI.inputSize));
+        Render.drawRectangle(GUI.mainPos, GUI.GUIEnd().subtractClone(GUI.mainPos));
 
         Render.setColor(new Color(154, 154, 154));
-        Render.drawRectangle(GUI.mainPos.addClone(2, 2), new Vector2(4 * GUI.inputSize - 4, 5f * GUI.inputSize - 4));
+        Render.drawRectangle(GUI.mainPos.addClone(2, 2), GUI.GUIEnd().subtractClone(GUI.mainPos));
 
         for (int i = 0; i < accessories.length; i++) {
             int x = i % 4;
             int y = i / 4;
+
 
             switch (i) {
                 // Draw highlight images of each under when they are made:
@@ -86,28 +103,33 @@ public class AccessoriesManager {
     }
 
     public static void drawBox(int x, int y) {
+        Vector2 rectPos = GUI.mainPos.addClone(new Vector2(GUI.inputSize * x, GUI.inputSize * y));
+
         Render.setColor(Color.LIGHT_GRAY);
-        Render.drawRectangle(GUI.mainPos.addClone(new Vector2(GUI.inputSize * x, GUI.inputSize * y)), Vector2.identity(GUI.inputSize));
+        Render.drawRectangle(rectPos, Vector2.identity(GUI.inputSize));
 
         Render.setColor(Color.BLACK);
-        Render.drawRectOutline(GUI.mainPos.addClone(new Vector2(GUI.inputSize * x, GUI.inputSize * y)), Vector2.identity(GUI.inputSize));
+        Render.drawRectOutline(rectPos, Vector2.identity(GUI.inputSize));
+
+        ItemStack cur = accessories[x + y * 4];
+
+        String amount = Integer.toString(cur.getAmount());
+
+        Render.setFont(Settings.itemFont);
+
+        if (cur.getMaxAmount() > 1)
+            Render.drawText(amount, rectPos.addClone(new Vector2(GUI.inputSize - Settings.sWidth(amount) - 4, GUI.inputSize - 4)));
     }
 
     public static void update() {
-        for (int i = 0; i < accessories.length; i++) {
-            if (accessories[i].amount <= 0 && accessories[i].getID() != 0) {
-                accessories[i] = Item.emptyStack();
-            }
-        }
-
         if (Input.mousePosition.compareTo(GUI.mainPos) == 1) {
             if (Input.GetMouse(1)) {
                 Vector2 deltaMouse = Input.mousePosition.subtract(GUI.mainPos);
 
-                int x = (int) deltaMouse.x / GUI.select;
-                int y = (int) deltaMouse.y / GUI.select;
+                int x = (int) deltaMouse.x / GUI.inputSize;
+                int y = (int) deltaMouse.y / GUI.inputSize;
 
-                int index = x + y * x;
+                int index = x + y * 4;
 
                 ItemStack stack = accessories[index].clone();
 

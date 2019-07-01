@@ -9,9 +9,9 @@ import com.Game.World.World;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 
-public class Bow extends Item {
+public class CrystalBow extends Item {
 
-    public Bow(int id, String imageName, String name, String examineText, int maxStack) {
+    public CrystalBow(int id, String imageName, String name, String examineText, int maxStack) {
         super(id, imageName, name, examineText, maxStack);
 
         this.options = new String[]{
@@ -32,12 +32,12 @@ public class Bow extends Item {
             return;
 
         int[] correctIDs = {
-            3
+                3
         };
 
         for (int i : correctIDs) {
             if (stack.getID() == i) {
-                stack.item.createProjectile(position, direction, 1.25f);
+                stack.item.createProjectile(position, direction, 2.5f);
                 stack.amount--;
                 break;
             }

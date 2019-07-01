@@ -1,6 +1,8 @@
 package com.Game.GUI.Inventory;
 
 import com.Game.GUI.GUI;
+import com.Game.GUI.RightClick;
+import com.Game.Main.Main;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
@@ -18,22 +20,26 @@ public class InventoryManager {
         }
     }
 
-    public static void update() {
+    public static void handleInventory() {
         for (int i = 0; i < inventory.length; i++) {
             if (inventory[i].amount <= 0 && inventory[i].getID() != -1) {
                 inventory[i] = Item.emptyStack();
             }
         }
+    }
 
-        if (Input.mousePosition.compareTo(GUI.mainPos) == 1 &&
-            GUI.mainPos.addClone(4 * GUI.select, 5 * GUI.select).compareTo(Input.mousePosition) == 1) {
+    public static void update() {
+        if (RightClick.coolDown > 0)
+            RightClick.coolDown -= 1 / Main.fps;
+
+        if (GUI.inGUI() && !RightClick.render && RightClick.coolDown <= 0) {
             if (Input.GetMouse(1)) {
                 Vector2 deltaMouse = Input.mousePosition.subtract(GUI.mainPos);
 
-                int x = (int) deltaMouse.x / GUI.select;
-                int y = (int) deltaMouse.y / GUI.select;
+                int x = (int) deltaMouse.x / GUI.inputSize;
+                int y = (int) deltaMouse.y / GUI.inputSize;
 
-                int index = x + y * x;
+                int index = x + y * 4;
 
                 inventory[index].item.OnClick(index);
             }
@@ -43,7 +49,7 @@ public class InventoryManager {
     public static void render() {
         Render.setColor(new Color(255, 138, 4));
 
-        Render.drawRectangle(GUI.mainPos, new Vector2(4 * GUI.inputSize, 5f * GUI.inputSize));
+        Render.drawRectangle(GUI.mainPos, GUI.GUIEnd().subtract(GUI.mainPos));
 
         Render.setColor(Color.BLACK);
 
@@ -56,7 +62,7 @@ public class InventoryManager {
                 if (stack.getID() != 0 && stack.getAmount() > 0) {
                     Render.drawImage(stack.item.image.getScaledInstance(GUI.inputSize, GUI.inputSize, 0), rectPos);
 
-                    if (stack.getAmount() > 1) {
+                    if (stack.getMaxAmount() > 1) {
                         int itext = stack.amount;
                         String text;
 
@@ -72,7 +78,7 @@ public class InventoryManager {
                             text = itext + "";
                         }
 
-                        Render.setFont(new Font("Arial", 0, (int) rectPos.x / 55));
+                        Render.setFont(Settings.itemFont);
 
                         Render.drawText(text,
                                 rectPos.addClone(new Vector2(GUI.inputSize - Settings.sWidth(text) - 4, GUI.inputSize - 4)));
@@ -84,7 +90,8 @@ public class InventoryManager {
         }
     }
 
-    public static boolean addItem(Item item, int amount) {
+    public static int addItem(Item item, int amount) {
+        int amt = amount;
         int add = amount;
 
         for (int i = 0; i < inventory.length; i++) {
@@ -99,6 +106,13 @@ public class InventoryManager {
 
                 amount -= add;
             }
+        }
+
+        if (add == 0)
+            return amt;
+
+        for (int i = 0; i < inventory.length; i++) {
+            add = amount;
 
             if (inventory[i].item.id == 0) {
                 if (add > item.maxStack) {
@@ -111,8 +125,9 @@ public class InventoryManager {
             }
 
             if (add == 0)
-                return true;
+                return amt;
         }
-        return false;
+
+        return amt - add;
     }
 }

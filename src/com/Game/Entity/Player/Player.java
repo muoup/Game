@@ -29,6 +29,7 @@ public class Player {
     private float dx = 0;
     private float dy = 0;
     private float dMod = 0;
+    private float shootTimer = 0;
 
     public float maxHealth = 100f;
     public float health = 100f;
@@ -56,18 +57,27 @@ public class Player {
 
     }
 
+    public Vector2[] getPoints(Vector2 offset) {
+        Vector2 pos = position.addClone(offset);
+        Vector2[] points = new Vector2[4];
+        points[0] = pos.addClone(scale / 2, scale / 2);
+        points[1] = pos.addClone(-scale / 2, -scale / 2);
+        points[2] = pos.addClone(-scale / 2, scale / 2);
+        points[3] = pos.addClone(scale / 2, -scale / 2);
+
+        return points;
+    }
+
     public void update() {
+        if (shootTimer > 0)
+            shootTimer -= 1 / Main.fps;
+
         movement();
         handleOffset();
-
     }
 
     public void damage(float amount) {
         health -= amount;
-    }
-
-    public Vector2 getCenter() {
-        return position.addClone(Render.getDimensions(image).scaleClone(0.5f));
     }
 
     public void movement() {
@@ -102,9 +112,10 @@ public class Player {
                 speedMod = speed * dashMultiplier;
             }
 
-            if (Input.GetKeyDown(KeyEvent.VK_SPACE)) {
+            if (Input.GetKey(KeyEvent.VK_SPACE) && shootTimer <= 0) {
                 AccessoriesManager.getSlot(AccessoriesManager.WEAPON_SLOT).
-                        item.createProjectile(position, Input.mousePosition.addClone(World.curWorld.offset));
+                        item.useWeapon(position, Input.mousePosition.addClone(World.curWorld.offset));
+                shootTimer = 0.25f;
             }
 
             dMod = speedMod;
@@ -115,13 +126,23 @@ public class Player {
             curSpeed = new Vector2((float) ((dx + Math.signum(dx) * dMod) / Main.fps), (float) ((dy + Math.signum(dy) * dMod) / Main.fps));
         }
 
-        if (CollisionHandler.isFree(getCenter().addClone(curSpeed.x, 0))) {
-            position.add(curSpeed.x, 0);
+        position.add(handleCollision(curSpeed));
+    }
+
+    public Vector2 handleCollision(Vector2 curSpeed) {
+        Vector2 speed = curSpeed.clone();
+        Vector2[] xPoints = getPoints(new Vector2(curSpeed.x, 0));
+        Vector2[] yPoints = getPoints(new Vector2(0, curSpeed.y));
+
+        if (!CollisionHandler.isFree(xPoints)) {
+            speed.x = 0;
         }
 
-        if (CollisionHandler.isFree(getCenter().addClone(0, curSpeed.y))) {
-            position.add(0, curSpeed.y);
+        if (!CollisionHandler.isFree(yPoints)) {
+            speed.y = 0;
         }
+
+        return speed;
     }
 
     public void handleOffset() {
@@ -150,13 +171,13 @@ public class Player {
 
         if (offset.x < 0) {
             offset.x = 0;
-        } else if (offset.x > size.x - Settings.curResolution().x) {
+        } else if (offset.x > size.x * Settings.worldScale - Settings.curResolution().x) {
             offset.x = size.x - Settings.curResolution().x;
         }
 
         if (offset.y < 0) {
             offset.y = 0;
-        } else if (offset.y > size.y - Settings.curResolution().y) {
+        } else if (offset.y > size.y * Settings.worldScale - Settings.curResolution().y) {
             offset.y = size.y - Settings.curResolution().y;
         }
     }

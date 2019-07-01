@@ -43,6 +43,10 @@ public class Render {
         Main.graphics.drawString(text, (int) position.x, (int) position.y);
     }
 
+    public static Font getFont() {
+        return Main.graphics.getFont();
+    }
+
     public static void drawText(String text, float x, float y) {
         Main.graphics.drawString(text, (int) x, (int) y);
     }

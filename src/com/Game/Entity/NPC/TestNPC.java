@@ -8,8 +8,8 @@ public class TestNPC extends NPC {
 
     Vector2 initPosition;
 
-    public TestNPC(int id, int x, int y) {
-        super(id, x, y);
+    public TestNPC(int x, int y) {
+        super(0, x, y);
 
         initPosition = new Vector2(x, y);
 

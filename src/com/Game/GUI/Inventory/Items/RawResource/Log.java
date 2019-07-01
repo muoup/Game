@@ -6,11 +6,25 @@ import com.Game.GUI.Inventory.ItemStack;
 import com.Game.Main.Main;
 
 public class Log extends Item {
-    public Log() {
-        super(1, "wood.png", "The remnants of a tree.", 1);
+    public Log(int id, String imageName, String name, String examineText, int maxStack) {
+        super(id, imageName, name, examineText, maxStack);
+
+        this.options = new String[] {
+            "Craft Bow",
+            "Craft Arrows"
+        };
     }
 
     public void OnClick(int index) {
-        InventoryManager.inventory[index] = new ItemStack(Item.bow, 1);
+        replaceInventory(index, new ItemStack(Item.bow, 1));
+    }
+
+    public void OnRightClick(int index, int option) {
+        switch (option) {
+            case 1:
+                // Craft Arrows
+                replaceInventory(index, new ItemStack(Item.arrow, 15));
+                break;
+        }
     }
 }

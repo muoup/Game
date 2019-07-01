@@ -15,6 +15,7 @@ import java.util.Vector;
 
 public class GUI {
 
+    public static float coolDown = 0f;
     public static Vector2 mainPos;
     public static int inputSize;
     public static Vector2 mainOffset;
@@ -29,6 +30,14 @@ public class GUI {
     public static Vector2 below;
     public static int curMain = 0;
 
+    public static Vector2 GUIEnd() {
+        return mainPos.addClone(4 * inputSize, 5 * inputSize);
+    }
+
+    public static boolean inGUI() {
+        return Input.mousePosition.compareTo(GUI.mainPos) == 1 && GUI.GUIEnd().compareTo(Input.mousePosition) == 1;
+    }
+
     public static void init() {
         res = Settings.curResolution();
         inventoryOptions = new Image[invImgNames.length];
@@ -38,6 +47,7 @@ public class GUI {
         mainOffset = new Vector2(inputSize * 0.5f, inputSize * 1.5f);
         mainPos = res.subtractClone(new Vector2(inputSize * 4f, inputSize * 5.5f)).subtractClone(mainOffset);
         below = mainPos.addClone(0,  inputSize * 5);
+        Settings.itemFont = new Font("Arial", Font.PLAIN, (int) Settings.curResolution().x / 75);
 
         for (int i = 0; i < invImgNames.length; i++) {
             inventoryOptions[i] = Main.getImage("/GUI/" + invImgNames[i]).getScaledInstance(select, select, 0);
@@ -45,11 +55,13 @@ public class GUI {
 
         InventoryManager.init();
         AccessoriesManager.init();
+        RightClick.init();
     }
 
     public static void render() {
         Vector2 offset = below.clone();
         Vector2 change = new Vector2(select, 0);
+
 
         for (int i = 0; i < inventoryOptions.length; i++) {
             Image render = inventoryOptions[i];
@@ -67,10 +79,19 @@ public class GUI {
             offset.add(change);
         }
 
+        if (coolDown > 0) {
+            coolDown -= 1 / Main.fps;
+        }
+
+        InventoryManager.handleInventory();
+        AccessoriesManager.handleInventory();
+
         switch (curMain) {
             case 0:
                 InventoryManager.render();
                 InventoryManager.update();
+                RightClick.update();
+                RightClick.render();
                 break;
             case 1:
                 AccessoriesManager.render();
@@ -89,6 +110,8 @@ public class GUI {
             Vector2 mouseOffset = Input.mousePosition.subtractClone(below);
 
             curMain = (int) mouseOffset.x / (int) categorySize.x;
+
+            coolDown = 0.2f;
         }
     }
 }

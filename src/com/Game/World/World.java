@@ -1,5 +1,6 @@
 package com.Game.World;
 
+import com.Game.Main.Main;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 import com.Util.Other.Settings;
@@ -18,6 +19,7 @@ public class World {
     public Vector2 offset;
 
     public BufferedImage worldImage;
+    public BufferedImage colWorld;
 
     public World() {
         offset = Vector2.zero();
@@ -49,11 +51,18 @@ public class World {
 
     }
 
+    public void initImage(String name) {
+        worldImage = Main.main.getImageFromRoot(name);
+        colWorld = Main.main.getImageFromRoot("col_" + name);
+
+        this.size = new Vector2(worldImage.getWidth(), worldImage.getHeight());
+    }
+
     // Render the buffered image of the world, this will be called in the methods.java generally
     public void renderWorld() {
-        BufferedImage subImage = worldImage.getSubimage((int) World.curWorld.offset.x, (int)World.curWorld.offset.y,
-                (int) Settings.curResolution().x, (int)Settings.curResolution().y);
+        BufferedImage subImage = worldImage.getSubimage((int) World.curWorld.offset.x / Settings.worldScale, (int)World.curWorld.offset.y / Settings.worldScale,
+                (int) Settings.curResolution().x / Settings.worldScale, (int)Settings.curResolution().y / Settings.worldScale);
 
-        Render.drawImage(subImage, Vector2.zero());
+        Render.drawImage(subImage.getScaledInstance((int) Settings.curResolution().x, (int) Settings.curResolution().y, 0), Vector2.zero());
     }
 }

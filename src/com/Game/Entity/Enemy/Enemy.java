@@ -2,6 +2,7 @@ package com.Game.Entity.Enemy;
 
 import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
+import com.Game.World.GroundItem;
 import com.Game.World.World;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
@@ -16,10 +17,14 @@ public class Enemy {
     public Vector2 spawnPosition;
 
     public boolean enabled = true;
+    public boolean target = false;
 
     public float respawnTimer = 0;
 
     public float timer = 0;
+
+    public float maxTarget = 0;
+    public float targetTimer = 0;
 
     public float maxHealth = 0;
     public float health = 0;
@@ -47,13 +52,20 @@ public class Enemy {
             return;
         }
 
+        determineActive();
         renderEnemy();
 
         if (health <= 0) {
             enabled = false;
-        } else {
+            if (target)
+                handleDrops();
+        } else if (target) {
             AI();
         }
+    }
+
+    public Vector2 getPlayer() {
+        return Main.player.position;
     }
 
     public void renderEnemy() {
@@ -69,7 +81,14 @@ public class Enemy {
         }
     }
 
+    public void determineActive() {
+        targetTimer -= 1 / Main.fps;
+
+        target = targetTimer > 0;
+    }
+
     public void damage(float amount) {
+        targetTimer = maxTarget;
         health -= amount;
     }
 
@@ -78,6 +97,10 @@ public class Enemy {
     }
 
     public void AI() {
+
+    }
+
+    public void handleDrops() {
 
     }
 }

@@ -7,6 +7,7 @@ import com.Game.GUI.GUI;
 import com.Game.GUI.TextBox;
 import com.Game.Object.GameObject;
 import com.Game.Projectile.Projectile;
+import com.Game.World.GroundItem;
 import com.Game.World.World;
 import com.Game.listener.Input;
 import com.Util.Other.Render;
@@ -27,6 +28,7 @@ public class MethodHandler {
     public static ArrayList<NPC> npcs;
     public static ArrayList<GameObject> objects;
     public static ArrayList<Enemy> enemies;
+    public static ArrayList<GroundItem> groundItems;
 
     public MethodHandler() {
         main = Main.main;
@@ -34,6 +36,7 @@ public class MethodHandler {
         npcs = new ArrayList();
         objects = new ArrayList();
         enemies = new ArrayList();
+        groundItems = new ArrayList();
     }
 
     public void update() {
@@ -62,10 +65,16 @@ public class MethodHandler {
         if (!Settings.pause) {
             World.curWorld.renderWorld();
 
+            for (int i = 0; i < groundItems.size(); i++)
+                groundItems.get(i).updateStack();
+
             for (int i = 0; i < projectiles.size(); i++)
                 projectiles.get(i).projectileUpdate(i);
 
             player.render();
+
+            for (int i = 0; i < enemies.size(); i++)
+                enemies.get(i).updateEnemy();
 
             for (int i = 0; i < objects.size(); i++)
                 objects.get(i).updateObject();

@@ -92,6 +92,8 @@ public class Main extends Canvas {
         frame.setSize((int) Settings.curResolution().x, (int) Settings.curResolution().y);
         frame.setLocationRelativeTo(null);
 
+        Settings.itemFont = new Font("Arial", Font.PLAIN, (int) Settings.curResolution().x / 75);
+
         GUI.init();
     }
 

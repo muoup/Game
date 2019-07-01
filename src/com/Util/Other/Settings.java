@@ -12,6 +12,8 @@ public class Settings {
     public static boolean showFPS = false;
     public static int resolutionIndex = 1;
     public static final float maxDistance = 50;
+    public static Font itemFont;
+    public static int worldScale = 1;
     public static final Vector2[] resolutions = {
             new Vector2(800, 600),
             new Vector2(1200, 900),
