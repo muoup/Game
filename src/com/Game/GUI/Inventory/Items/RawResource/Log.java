@@ -15,7 +15,7 @@ public class Log extends Item {
         };
     }
 
-    public void OnClick(int index) {
+    public void ClickIdentities(int index) {
         replaceInventory(index, new ItemStack(Item.bow, 1));
     }
 

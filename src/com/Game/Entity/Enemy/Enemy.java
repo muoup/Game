@@ -33,7 +33,7 @@ public class Enemy {
 
     public Enemy(int x, int y) {
         position = new Vector2(x, y);
-        spawnPosition = position.clone();
+        spawnPosition = new Vector2(x, y);
 
         MethodHandler.enemies.add(this);
     }
@@ -44,8 +44,10 @@ public class Enemy {
 
             if (timer > respawnTimer) {
                 enabled = true;
+                target = false;
+                targetTimer = 0;
                 health = maxHealth;
-                position = spawnPosition;
+                position = spawnPosition.clone();
                 timer = 0;
             }
 

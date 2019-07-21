@@ -2,10 +2,9 @@ package com.Game.Entity.Player;
 
 import com.Game.GUI.GUI;
 import com.Game.GUI.Inventory.AccessoriesManager;
-import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.TextBox;
 import com.Game.Main.Main;
-import com.Game.Projectile.Bullet;
+import com.Game.Projectile.Projectile;
 import com.Game.World.World;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
@@ -15,6 +14,7 @@ import com.Util.Other.Settings;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class Player {
     public Vector2 position;
@@ -34,13 +34,8 @@ public class Player {
     public float maxHealth = 100f;
     public float health = 100f;
 
-    public Player() {
-        position = Vector2.zero();
-        speed = 0;
-        playerColor = Color.BLACK;
-
-        init();
-    }
+    public static ArrayList<Projectile> projectiles;
+    public static ArrayList<Projectile> removeProj;
 
     public Player(Vector2 position, float speed, Color playerColor, float dash) {
         this.position = position;
@@ -54,7 +49,9 @@ public class Player {
     }
 
     public void init() {
+        projectiles = new ArrayList();
 
+        removeProj = new ArrayList();
     }
 
     public Vector2[] getPoints(Vector2 offset) {
@@ -74,6 +71,17 @@ public class Player {
 
         movement();
         handleOffset();
+    }
+
+    private void updatePlayerArrays() {
+        for (Projectile p : projectiles)
+            p.projectileUpdate();
+
+        if (!removeProj.isEmpty()) {
+            projectiles.removeAll(removeProj);
+            removeProj.clear();
+        }
+
     }
 
     public void damage(float amount) {
@@ -169,32 +177,34 @@ public class Player {
             offset.y = position.y - sens.y - middle.y;
         }
 
+        Vector2 maximum = size.scaleClone(Settings.worldScale).subtractClone(Settings.curResolution());
+
         if (offset.x < 0) {
             offset.x = 0;
-        } else if (offset.x > size.x * Settings.worldScale - Settings.curResolution().x) {
-            offset.x = size.x - Settings.curResolution().x;
+        } else if (offset.x > maximum.x) {
+            offset.x = maximum.x;
         }
 
         if (offset.y < 0) {
             offset.y = 0;
-        } else if (offset.y > size.y * Settings.worldScale - Settings.curResolution().y) {
-            offset.y = size.y - Settings.curResolution().y;
+        } else if (offset.y > maximum.y) {
+            offset.y = maximum.y;
         }
     }
 
     public void renderStats() {
         // Draw Health Bar
         Render.setColor(Color.LIGHT_GRAY);
-        Render.drawRectangle(GUI.mainPos.subtractClone(new Vector2(0, 18)),
-                new Vector2(GUI.inputSize * 4 * (health / maxHealth), 16));
+        Render.drawRectangle(GUI.GuiPos.subtractClone(new Vector2(0, 18)),
+                new Vector2(GUI.IntBoxSize * 4 * (health / maxHealth), 16));
 
         Render.setColor(Color.RED);
-        Render.drawRectangle(GUI.mainPos.subtractClone(new Vector2(0, 18)),
-                new Vector2(GUI.inputSize * 4 * (health / maxHealth), 16));
+        Render.drawRectangle(GUI.GuiPos.subtractClone(new Vector2(0, 18)),
+                new Vector2(GUI.IntBoxSize * 4 * (health / maxHealth), 16));
 
         Render.setColor(Color.BLACK);
-        Render.drawRectOutline(GUI.mainPos.subtractClone(new Vector2(0, 18)),
-                new Vector2(GUI.inputSize * 4, 16));
+        Render.drawRectOutline(GUI.GuiPos.subtractClone(new Vector2(0, 18)),
+                new Vector2(GUI.IntBoxSize * 4, 16));
 
         if (health <= 0) {
             TextBox.setText("Oh no! You are dead!");
@@ -208,5 +218,7 @@ public class Player {
                 position.y - scale / 2 - World.curWorld.offset.y);
 
         renderStats();
+
+        updatePlayerArrays();
     }
 }

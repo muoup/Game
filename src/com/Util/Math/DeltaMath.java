@@ -10,5 +10,14 @@ public class DeltaMath {
 
         return array;
     }
-    
+
+    public static float roundTo(float in, float to) {
+        float dIn = in / to;
+        dIn = Math.round(dIn);
+        return dIn * to;
+    }
+
+    public static float logb(float base, float number) {
+        return (float) (Math.log10(number) / Math.log10(base));
+    }
 }

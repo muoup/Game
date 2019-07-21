@@ -27,4 +27,8 @@ public class ItemStack {
     public ItemStack clone() {
         return new ItemStack(item, amount);
     }
+
+    public String toString() {
+        return item.name + " " + amount;
+    }
 }

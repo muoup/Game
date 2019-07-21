@@ -24,23 +24,27 @@ public class MethodHandler {
     public Menu settings;
     public Player player;
 
-    public static ArrayList<Projectile> projectiles;
     public static ArrayList<NPC> npcs;
     public static ArrayList<GameObject> objects;
     public static ArrayList<Enemy> enemies;
     public static ArrayList<GroundItem> groundItems;
+    public static ArrayList<Projectile> projectiles;
+
+    public static ArrayList<GroundItem> removeGround;
+    public static ArrayList<Projectile> removeProjectiles;
 
     public MethodHandler() {
         main = Main.main;
-        projectiles = new ArrayList();
         npcs = new ArrayList();
         objects = new ArrayList();
         enemies = new ArrayList();
         groundItems = new ArrayList();
+        removeGround = new ArrayList();
+        projectiles = new ArrayList();
+        removeProjectiles = new ArrayList();
     }
 
     public void update() {
-
         if (Input.GetKeyDown(KeyEvent.VK_ESCAPE)) {
             if (Settings.pause && TextBox.noText())
                 Main.settings.state = Menu.MenuState.PauseMenu;
@@ -65,24 +69,26 @@ public class MethodHandler {
         if (!Settings.pause) {
             World.curWorld.renderWorld();
 
-            for (int i = 0; i < groundItems.size(); i++)
-                groundItems.get(i).updateStack();
-
-            for (int i = 0; i < projectiles.size(); i++)
-                projectiles.get(i).projectileUpdate(i);
+            for (GroundItem groundItem : groundItems) groundItem.updateStack();
+            for (Projectile p : projectiles) p.projectileUpdate();
 
             player.render();
 
-            for (int i = 0; i < enemies.size(); i++)
-                enemies.get(i).updateEnemy();
-
-            for (int i = 0; i < objects.size(); i++)
-                objects.get(i).updateObject();
-
-            for (int i = 0; i < npcs.size(); i++)
-                npcs.get(i).update();
+            for (Enemy enemy : enemies) enemy.updateEnemy();
+            for (GameObject object : objects) object.updateObject();
+            for (NPC npc : npcs) npc.update();
 
             GUI.render();
+
+            if (!removeGround.isEmpty()) {
+                groundItems.removeAll(removeGround);
+                removeGround.clear();
+            }
+
+            if (!removeProjectiles.isEmpty()) {
+                projectiles.removeAll(removeProjectiles);
+                removeProjectiles.clear();
+            }
 
             settings.curSelected = 0;
         } else {

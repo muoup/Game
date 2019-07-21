@@ -1,6 +1,7 @@
 package com.Game.Entity.NPC;
 
 import com.Game.Main.Main;
+import com.Game.Main.MethodHandler;
 import com.Game.World.World;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
@@ -11,7 +12,7 @@ import java.awt.image.BufferedImage;
 
 public class NPC {
 
-    // NOTE: I am not sure if the id is going to be of any use, but is it is good to have it nonetheless.
+    // NOTE: Use id for comparing NPCs rather than comparing the objects themselves.
     public int id;
 
     protected BufferedImage image;
@@ -23,12 +24,10 @@ public class NPC {
         position = new Vector2(x, y);
         image = null;
 
-        Main.methods.npcs.add(this);
+        MethodHandler.npcs.add(this);
     }
 
     public void update() {
-        Vector2 offset = World.curWorld.offset;
-
         if (Input.GetKeyDown(KeyEvent.VK_E) && Vector2.distance(Main.player.position, position) < 150) {
             onInteract();
         }
@@ -45,7 +44,7 @@ public class NPC {
 
     }
 
-    // Update the npc's position with a movement AI
+    // Update the NPC's position with a movement AI
     public void move() {
 
     }

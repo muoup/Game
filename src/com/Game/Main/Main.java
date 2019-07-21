@@ -100,7 +100,7 @@ public class Main extends Canvas {
     // Calculate fps and run other functions
     public void run() {
 
-        // NOTE: just don't touch any of this, I got this off of StackOverFlow
+        // NOTE: just don't touch any of this, IntBoxSize got this off of StackOverFlow
         double lastFpsTime = 0;
         double lfps = 0;
         long lastLoopTime = System.nanoTime();

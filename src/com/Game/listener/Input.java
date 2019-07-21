@@ -83,7 +83,11 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        if (e == null)
+            return;
 
+        mousePosition.x = e.getX();
+        mousePosition.y = e.getY();
     }
 
     @Override

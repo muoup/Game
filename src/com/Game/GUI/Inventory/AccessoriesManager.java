@@ -52,10 +52,10 @@ public class AccessoriesManager {
     }
     public static void render() {
         Render.setColor(Color.BLACK);
-        Render.drawRectangle(GUI.mainPos, GUI.GUIEnd().subtractClone(GUI.mainPos));
+        Render.drawBounds(GUI.GuiPos, GUI.GUIEnd());
 
         Render.setColor(new Color(154, 154, 154));
-        Render.drawRectangle(GUI.mainPos.addClone(2, 2), GUI.GUIEnd().subtractClone(GUI.mainPos));
+        Render.drawBounds(GUI.GuiPos.addClone(2, 2), GUI.GUIEnd().subtractClone(2, 2));
 
         for (int i = 0; i < accessories.length; i++) {
             int x = i % 4;
@@ -94,22 +94,22 @@ public class AccessoriesManager {
                     break;
             }
 
-            Vector2 rectPos = GUI.mainPos.addClone(x * GUI.inputSize, y * GUI.inputSize);
+            Vector2 rectPos = GUI.getGridPosition(x, y);
 
             if (accessories[i].getID() != 0) {
-                Render.drawImage(accessories[i].item.image.getScaledInstance(GUI.inputSize, GUI.inputSize, 0), rectPos);
+                Render.drawImage(Render.getScaledImage(accessories[i].item.image, GUI.invSize), rectPos);
             }
         }
     }
 
     public static void drawBox(int x, int y) {
-        Vector2 rectPos = GUI.mainPos.addClone(new Vector2(GUI.inputSize * x, GUI.inputSize * y));
+        Vector2 rectPos = GUI.getGridPosition(x, y);
 
         Render.setColor(Color.LIGHT_GRAY);
-        Render.drawRectangle(rectPos, Vector2.identity(GUI.inputSize));
+        Render.drawRectangle(rectPos, Vector2.identity(GUI.IntBoxSize));
 
         Render.setColor(Color.BLACK);
-        Render.drawRectOutline(rectPos, Vector2.identity(GUI.inputSize));
+        Render.drawRectOutline(rectPos, Vector2.identity(GUI.IntBoxSize));
 
         ItemStack cur = accessories[x + y * 4];
 
@@ -118,16 +118,16 @@ public class AccessoriesManager {
         Render.setFont(Settings.itemFont);
 
         if (cur.getMaxAmount() > 1)
-            Render.drawText(amount, rectPos.addClone(new Vector2(GUI.inputSize - Settings.sWidth(amount) - 4, GUI.inputSize - 4)));
+            Render.drawText(amount, rectPos.addClone(new Vector2(GUI.IntBoxSize - Settings.sWidth(amount) - 4, GUI.IntBoxSize - 4)));
     }
 
     public static void update() {
-        if (Input.mousePosition.compareTo(GUI.mainPos) == 1) {
+        if (GUI.inGUI()) {
             if (Input.GetMouse(1)) {
-                Vector2 deltaMouse = Input.mousePosition.subtract(GUI.mainPos);
+                Vector2 deltaMouse = Input.mousePosition.subtract(GUI.GuiPos);
 
-                int x = (int) deltaMouse.x / GUI.inputSize;
-                int y = (int) deltaMouse.y / GUI.inputSize;
+                int x = (int) deltaMouse.x / GUI.IntBoxSize;
+                int y = (int) deltaMouse.y / GUI.IntBoxSize;
 
                 int index = x + y * 4;
 

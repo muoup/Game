@@ -191,4 +191,8 @@ public class Vector2 {
     public static Vector2 identity(float scale) {
         return new Vector2(scale, scale);
     }
+
+    public boolean isZero() {
+        return x == 0 && y == 0;
+    }
 }

@@ -18,6 +18,9 @@ public class InventoryManager {
         for (int i = 0; i < inventory.length; i++) {
             inventory[i] = new ItemStack(Item.empty, 0);
         }
+
+        InventoryManager.addItem(Item.bow, 1);
+        InventoryManager.addItem(Item.arrow, 300);
     }
 
     public static void handleInventory() {
@@ -34,14 +37,14 @@ public class InventoryManager {
 
         if (GUI.inGUI() && !RightClick.render && RightClick.coolDown <= 0) {
             if (Input.GetMouse(1)) {
-                Vector2 deltaMouse = Input.mousePosition.subtract(GUI.mainPos);
+                Vector2 deltaMouse = Input.mousePosition.subtract(GUI.GuiPos);
 
-                int x = (int) deltaMouse.x / GUI.inputSize;
-                int y = (int) deltaMouse.y / GUI.inputSize;
+                int x = (int) deltaMouse.x / GUI.IntBoxSize;
+                int y = (int) deltaMouse.y / GUI.IntBoxSize;
 
                 int index = x + y * 4;
 
-                inventory[index].item.OnClick(index);
+                inventory[index].item.ClickIdentities(index);
             }
         }
     }
@@ -49,18 +52,18 @@ public class InventoryManager {
     public static void render() {
         Render.setColor(new Color(255, 138, 4));
 
-        Render.drawRectangle(GUI.mainPos, GUI.GUIEnd().subtract(GUI.mainPos));
+        Render.drawBounds(GUI.GuiPos, GUI.GUIEnd());
 
         Render.setColor(Color.BLACK);
 
         for (int x = 0; x < 4; x++) {
             for (int y = 0; y < 5; y++) {
-                Vector2 rectPos = GUI.mainPos.addClone(x * GUI.inputSize, y * GUI.inputSize);
+                Vector2 rectPos = GUI.getGridPosition(x, y);
 
                 ItemStack stack = inventory[x + y * 4];
 
                 if (stack.getID() != 0 && stack.getAmount() > 0) {
-                    Render.drawImage(stack.item.image.getScaledInstance(GUI.inputSize, GUI.inputSize, 0), rectPos);
+                    Render.drawImage(Render.getScaledImage(stack.item.image, GUI.invSize), rectPos);
 
                     if (stack.getMaxAmount() > 1) {
                         int itext = stack.amount;
@@ -81,11 +84,11 @@ public class InventoryManager {
                         Render.setFont(Settings.itemFont);
 
                         Render.drawText(text,
-                                rectPos.addClone(new Vector2(GUI.inputSize - Settings.sWidth(text) - 4, GUI.inputSize - 4)));
+                                rectPos.addClone(new Vector2(GUI.IntBoxSize - Settings.sWidth(text) - 4, GUI.IntBoxSize - 4)));
                     }
                 }
 
-                Render.drawRectOutline(rectPos, new Vector2(GUI.inputSize, GUI.inputSize));
+                Render.drawRectOutline(rectPos, GUI.invSize);
             }
         }
     }

@@ -1,6 +1,6 @@
 package com.Game.GUI.Inventory;
 
-import com.Game.GUI.Inventory.Items.Ammo.Arrow;
+import com.Game.GUI.Inventory.Items.Ammo.ArrowItem;
 import com.Game.GUI.Inventory.Items.RawResource.Log;
 import com.Game.GUI.Inventory.Items.Weapon.Bow;
 import com.Game.GUI.Inventory.Items.Weapon.CrystalBow;
@@ -9,16 +9,14 @@ import com.Game.GUI.TextBox;
 import com.Game.Main.Main;
 import com.Util.Math.Vector2;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 public class Item {
 
     public static Item empty = new Item(0, "/", "/", "/", 0);
     public static Item wood = new Log(1, "wood.png", "Log", "The remnants of a tree.", 1);
     public static Item bow = new Bow(2, "bow.png", "Bow","Get ready for the power of my bow!", 1);
-    public static Item arrow = new Arrow(3, "arrow.png", "Arrow", "Some sharp arrows!", 100000);
+    public static Item arrow = new ArrowItem(3, "arrow.png", "Arrow", "Some sharp arrows!", 100000);
     public static Item crystalBow = new CrystalBow(4, "crystalBow.png", "Crystal Bow", "This is really gonna hurt.", 1);
 
     public String[] options;
@@ -36,21 +34,29 @@ public class Item {
         this.examineText = examineText;
         this.maxStack = maxStack;
         this.name = name;
-        this.options = new String[]{
-            "Please enter some options for this item!"
-        };
+        this.options = new String[0];
     }
 
     public static ItemStack emptyStack() {
         return new ItemStack(Item.empty, 0);
     }
 
+    public void ClickIdentities(int index) {
+        if (equipStatus != -1) {
+            equipItem(index, equipStatus);
+        }
+
+        OnClick(index);
+    }
+
     public void OnClick(int index) {
+
     }
 
     public void RightClickIdentities(int index, int option) {
-        if (option == 0)
-            OnClick(index);
+        if (option == 0) {
+            ClickIdentities(index);
+        }
 
         if (option == RightClick.options.size() - 1)
             TextBox.setText(examineText);
@@ -69,7 +75,7 @@ public class Item {
 
     }
 
-    public void createProjectile(Vector2 position, Vector2 direction, float damageMultiplier) {
+    public void createProjectile(Vector2 position, Vector2 direction, float damageMultiplier, float expMultiplier) {
 
     }
 
@@ -95,5 +101,20 @@ public class Item {
     public void replaceInventory(int index, ItemStack item) {
         InventoryManager.inventory[index] = Item.emptyStack();
         InventoryManager.addItem(item.item, item.amount);
+    }
+
+    public void shoot(Item[] acceptable, Vector2 position, Vector2 direction, float damageMultiplier, float expMultiplier) {
+        ItemStack stack = AccessoriesManager.getSlot(AccessoriesManager.AMMO_SLOT);
+
+        if (stack.amount <= 0 || stack.getID() == 0)
+            return;
+
+        for (Item i : acceptable) {
+            if (stack.getID() == i.id) {
+                stack.item.createProjectile(position, direction, damageMultiplier, expMultiplier);
+                stack.amount--;
+                break;
+            }
+        }
     }
 }

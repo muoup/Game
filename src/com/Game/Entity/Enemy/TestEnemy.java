@@ -29,7 +29,7 @@ public class TestEnemy extends Enemy {
 
             if (timer > maxTimer) {
                 timer = 0;
-                new Bullet(position, Main.player.position, Vector2.identity(4f), 5f, 2f, false);
+                new Bullet(position, Main.player.position, 5f, 2f, 0, false);
             }
         }
     }

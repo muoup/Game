@@ -36,6 +36,14 @@ public class World {
         offset.add(change);
     }
 
+    public int getWidth() {
+        return worldImage.getWidth() * Settings.worldScale;
+    }
+
+    public int getHeight() {
+        return worldImage.getHeight() * Settings.worldScale;
+    }
+
     public static void changeWorld(int worldIndex) {
         curWorld = worlds[worldIndex];
         curWorld.initWorld();
@@ -63,6 +71,6 @@ public class World {
         BufferedImage subImage = worldImage.getSubimage((int) World.curWorld.offset.x / Settings.worldScale, (int)World.curWorld.offset.y / Settings.worldScale,
                 (int) Settings.curResolution().x / Settings.worldScale, (int)Settings.curResolution().y / Settings.worldScale);
 
-        Render.drawImage(subImage.getScaledInstance((int) Settings.curResolution().x, (int) Settings.curResolution().y, 0), Vector2.zero());
+        Render.drawImage(Render.getScaledImage(subImage, Settings.curResolution()), Vector2.zero());
     }
 }

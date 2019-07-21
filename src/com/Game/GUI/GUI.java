@@ -1,8 +1,10 @@
 package com.Game.GUI;
 
+import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.Inventory.InventoryManager;
-import com.Game.GUI.Inventory.Item;
+import com.Game.GUI.Skills.Skills;
+import com.Game.GUI.Skills.SkillsManager;
 import com.Game.Main.Main;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
@@ -10,67 +12,71 @@ import com.Util.Other.Render;
 import com.Util.Other.Settings;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.Vector;
 
 public class GUI {
 
-    public static float coolDown = 0f;
-    public static Vector2 mainPos;
-    public static int inputSize;
-    public static Vector2 mainOffset;
-    public static Vector2 res;
-    public static Image[] inventoryOptions;
-    public static String[] invImgNames = {
-        "backpack.png",
-        "accessories.png"
+    private static float coolDown = 0f;
+    private static Image[] inventoryOptions;
+    private static String[] invImgNames = {
+            "backpack.png",
+            "accessories.png",
+            "levels.png"
     };
-    public static int select;
-    public static Vector2 categorySize;
-    public static Vector2 below;
+    private static Vector2 below;
+
     public static int curMain = 0;
+    public static int select;
+    public static Vector2 GuiPos;
+    public static Vector2 invSize;
+    public static int IntBoxSize;
+    public static Vector2 categorySize;
 
     public static Vector2 GUIEnd() {
-        return mainPos.addClone(4 * inputSize, 5 * inputSize);
+        return GuiPos.addClone(4 * IntBoxSize, 5 * IntBoxSize);
     }
 
     public static boolean inGUI() {
-        return Input.mousePosition.compareTo(GUI.mainPos) == 1 && GUI.GUIEnd().compareTo(Input.mousePosition) == 1;
+        return Input.mousePosition.compareTo(GUI.GuiPos) == 1 && GUI.GUIEnd().compareTo(Input.mousePosition) == 1;
+    }
+
+    public static Vector2 getGridPosition(int x, int y) {
+        return new Vector2(x, y).scale(GUI.IntBoxSize).add(GuiPos);
     }
 
     public static void init() {
-        res = Settings.curResolution();
+        Vector2 res = Settings.curResolution();
         inventoryOptions = new Image[invImgNames.length];
-        inputSize = (int) (res.x * 0.05f);
-        select = (int) (inputSize * 0.75);
+        IntBoxSize = (int) (res.x * 0.05f);
+        invSize = Vector2.identity(IntBoxSize);
+        select = (int) (IntBoxSize * 0.75);
         categorySize = Vector2.identity(select);
-        mainOffset = new Vector2(inputSize * 0.5f, inputSize * 1.5f);
-        mainPos = res.subtractClone(new Vector2(inputSize * 4f, inputSize * 5.5f)).subtractClone(mainOffset);
-        below = mainPos.addClone(0,  inputSize * 5);
+        Vector2 mainOffset = new Vector2(IntBoxSize * 0.5f, IntBoxSize * 1.5f);
+        GuiPos = res.subtractClone(new Vector2(IntBoxSize * 4f, IntBoxSize * 5.5f)).subtractClone(mainOffset);
+        below = GuiPos.addClone(0,  IntBoxSize * 5);
         Settings.itemFont = new Font("Arial", Font.PLAIN, (int) Settings.curResolution().x / 75);
 
         for (int i = 0; i < invImgNames.length; i++) {
-            inventoryOptions[i] = Main.getImage("/GUI/" + invImgNames[i]).getScaledInstance(select, select, 0);
+            inventoryOptions[i] = Render.getScaledImage(Main.getImage("/GUI/" + invImgNames[i]), select, select);
         }
 
         InventoryManager.init();
         AccessoriesManager.init();
+        SkillsManager.init();
+        Skills.initExperience();
         RightClick.init();
+        ChatBox.init();
     }
 
     public static void render() {
         Vector2 offset = below.clone();
         Vector2 change = new Vector2(select, 0);
 
-
         for (int i = 0; i < inventoryOptions.length; i++) {
-            Image render = inventoryOptions[i];
-
-            Render.setColor(Color.LIGHT_GRAY);
+            Render.setColor((curMain == i) ? Color.GRAY : Color.LIGHT_GRAY);
 
             Render.drawRectangle(offset, categorySize);
 
-            Render.drawImage(render, offset);
+            Render.drawImage(inventoryOptions[i], offset);
 
             Render.setColor(Color.BLACK);
 
@@ -90,26 +96,41 @@ public class GUI {
             case 0:
                 InventoryManager.render();
                 InventoryManager.update();
-                RightClick.update();
-                RightClick.render();
                 break;
             case 1:
                 AccessoriesManager.render();
                 AccessoriesManager.update();
                 break;
+            case 2:
+                SkillsManager.render();
+                SkillsManager.update();
+                break;
             default:
                 System.err.println("There is something wrong.");
                 break;
         }
+
+        ChatBox.update();
+        ChatBox.render();
+
+        RightClick.update();
+        RightClick.render();
+
+        MouseHover.handleHover(curMain);
     }
 
     public static void update() {
-        Vector2 end = below.addClone(new Vector2(inputSize * inventoryOptions.length, inputSize));
+        Vector2 end = below.addClone(new Vector2(IntBoxSize * inventoryOptions.length, IntBoxSize));
 
         if (Input.mousePosition.compareTo(below) == 1 && end.compareTo(Input.mousePosition) == 1 && Input.GetMouse(1)) {
             Vector2 mouseOffset = Input.mousePosition.subtractClone(below);
 
-            curMain = (int) mouseOffset.x / (int) categorySize.x;
+            int selection = (int) mouseOffset.x / (int) categorySize.x;
+
+            if (selection >= inventoryOptions.length)
+                return;
+
+            curMain = selection;
 
             coolDown = 0.2f;
         }

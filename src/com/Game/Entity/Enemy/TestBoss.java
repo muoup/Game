@@ -37,7 +37,7 @@ public class TestBoss extends Enemy {
         if (timer < 0) {
             timer = 0.25f;
 
-            new Bullet(position, getPlayer(), Vector2.identity(8f), 16f, 8f, false);
+            new Bullet(position, getPlayer(),16f, 5f,0, false);
         }
     }
 

@@ -38,7 +38,7 @@ public class GroundItem {
         if (stack.size() == 0)
             return;
 
-        topImage = stack.get(0).item.image.getScaledInstance(64, 64, 0);
+        topImage = Render.getScaledImage(stack.get(0).item.image, 64, 64);
 
         if (Render.onScreen(position, topImage)) {
             Render.drawImage(topImage, position.subtractClone(World.curWorld.offset));
@@ -52,7 +52,7 @@ public class GroundItem {
         }
 
         if (stack.size() == 0)
-            MethodHandler.groundItems.remove(this);
+            MethodHandler.removeGround.add(this);
     }
 
     public static GroundItem mouseOver() {
