@@ -26,6 +26,8 @@ public class Settings {
     public static boolean fullScreen = false;
     public static float cameraSensitivity = 0.25f;
 
+    public static Vector2 playerSpawn = new Vector2(1250, 1250);
+
     public static Vector2 curResolution() {
         return Settings.resolutions[Settings.resolutionIndex].clone();
     }

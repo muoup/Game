@@ -2,7 +2,6 @@ package com.Game.Main;
 
 import com.Game.Entity.Player.Player;
 import com.Game.GUI.GUI;
-import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.World.World;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
@@ -61,7 +60,7 @@ public class Main extends Canvas {
     public void init(){
         Main.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-        player = new Player(Settings.curResolution().scale(0.5f), 250f, Color.GREEN, 2f);
+        player = new Player(Settings.playerSpawn, 250f, Color.GREEN, 2f);
         settings = new Menu();
 
         Settings.npcFont = getFont("npc-text.ttf", 20, Font.BOLD);
@@ -187,9 +186,7 @@ public class Main extends Canvas {
             Font font = Font.createFont(Font.TRUETYPE_FONT, is);
 
             return font.deriveFont(style, size);
-        } catch (FontFormatException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
 

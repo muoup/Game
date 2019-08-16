@@ -48,6 +48,7 @@ public class RightClick {
             Render.drawText(options.get(y), newPos.addClone(maxWidth * 0.05f, percentBox * 0.65f));
         }
     }
+
     public static void update() {
         if (Input.GetMouseDown(3)) {
             groundItem = 0;
@@ -82,8 +83,10 @@ public class RightClick {
                 RightClick.coolDown = 0.1f;
                 render = false;
             } else {
-                if (MethodHandler.groundItems.size() == 0)
+                if (MethodHandler.groundItems.size() == 0) {
+                    render = false;
                     return;
+                }
 
                 if (Vector2.distance(Main.player.position, MethodHandler.groundItems.get(groundItem).position) > 512) {
                     render = false;

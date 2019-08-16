@@ -44,7 +44,12 @@ public class Render {
     }
 
     public static void drawText(String text, Vector2 position) {
-        Main.graphics.drawString(text, (int) position.x, (int) position.y);
+        String[] split = text.split("/n");
+
+        for (int i = 0; i < split.length; i++) {
+            String line = split[i];
+            Main.graphics.drawString(line, (int) position.x, (int) position.y + Render.getStringHeight() * i);
+        }
     }
 
     public static Font getFont() {
@@ -70,9 +75,14 @@ public class Render {
         return position.compareTo(offset.subtractClone(Render.getDimensions(image))) == 1
                 && offset.addClone(Settings.curResolution()).compareTo(position) == 1;
     }
-
     public static int getStringHeight() {
         return Main.graphics.getFontMetrics().getHeight();
+    }
+
+    public static int getStringSpace() {
+        FontMetrics metric = Main.graphics.getFontMetrics();
+        return metric.getAscent() + metric.getHeight();
+
     }
 
     public static int getStringWidth(String string) {
@@ -94,6 +104,43 @@ public class Render {
 
     public static BufferedImage getScaledImage(BufferedImage image, Vector2 scale) {
         return getScaledImage(image, scale.x, scale.y);
+    }
+
+    public static void drawCroppedText(String text, Vector2 position, Vector2 pos) {
+        Vector2 stringSize = new Vector2(getStringWidth(text), getStringHeight());
+        String[] lines = text.split("/n");
+        BufferedImage string = new BufferedImage((int) stringSize.x, (int) stringSize.y * lines.length, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D graphics = (Graphics2D) string.getGraphics();
+        graphics.setFont(Main.graphics.getFont());
+        graphics.setColor(Main.graphics.getColor());
+        for (int i = 0; i < lines.length; i++) {
+            graphics.drawString(lines[i], 0, stringSize.y * i + Main.graphics.getFontMetrics().getAscent());
+        }
+
+        graphics.dispose();
+
+        BufferedImage croppedString = string.getSubimage((int) pos.x, (int) pos.y, string.getWidth() - (int) pos.x, string.getHeight() - (int) pos.y);;
+        drawImage(croppedString, position.addClone(pos.x, pos.y));
+    }
+
+    public static void drawCroppedText(String text, Vector2 position, Vector2 pos, Vector2 size) {
+        Vector2 stringSize = new Vector2(getStringWidth(text), getStringHeight());
+        String[] lines = text.split("/n");
+        BufferedImage string = new BufferedImage((int) stringSize.x, (int) stringSize.y * lines.length, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D graphics = (Graphics2D) string.getGraphics();
+        graphics.setFont(Main.graphics.getFont());
+        graphics.setColor(Main.graphics.getColor());
+        for (int i = 0; i < lines.length; i++) {
+            graphics.drawString(lines[i], 0, stringSize.y * i + Main.graphics.getFontMetrics().getAscent());
+        }
+
+        graphics.dispose();
+
+        BufferedImage croppedString = string.getSubimage((int) pos.x, (int) pos.y, string.getWidth() - (int) size.x, string.getHeight() - (int) size.y);
+
+        drawImage(croppedString, position.addClone(pos.x, pos.y));
     }
 
     public static BufferedImage getScaledImage(BufferedImage image, float x, float y) {

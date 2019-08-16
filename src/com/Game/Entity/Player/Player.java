@@ -1,5 +1,6 @@
 package com.Game.Entity.Player;
 
+import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.GUI;
 import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.TextBox;
@@ -97,8 +98,9 @@ public class Player {
 
         dx = 0;
         dy = 0;
+        curSpeed = Vector2.zero();
 
-        if (canMove && Main.fps > 0) {
+        if (canMove && !ChatBox.typing && Main.fps > 0) {
 
             if (Input.GetKey(KeyEvent.VK_A)) {
                 dx -= speed;

@@ -18,7 +18,7 @@ public class TestNPC extends NPC {
 
     public void onInteract() {
         TextBox.setText(new String[]{
-                "Hello traveller! How may IntBoxSize treat you?",
+                "Hello traveller! How may I treat you?",
                 "Here is a second text box to prove it works."
         });
     }
