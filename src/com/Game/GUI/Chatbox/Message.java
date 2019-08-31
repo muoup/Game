@@ -9,10 +9,12 @@ public class Message {
     // I had a ton of comments for this file but my laptop died so it was lost.
     // Considering I am going to be the only person reading this, it really is not too big of a deal.
     public String message;
+    public String rawMessage;
     public Color color;
     public int lines = 0;
 
     public Message(String message, Color color) {
+        this.rawMessage = removePlayerTag(message);
         this.message = formatMSG(message);
         this.color = color;
     }
@@ -23,7 +25,7 @@ public class Message {
 
     public String formatMSG(String message) {
         String fMsg = message;
-        float maxWidth = ChatBox.gSize.x * 0.9f;
+        float maxWidth = ChatBox.gSize.x * 0.90f;
         lines++;
         int bottom = 0;
 
@@ -34,25 +36,19 @@ public class Message {
             counter++;
 
             if (Render.getStringWidth(fMsg.substring(bottom, counter)) > maxWidth && counter < fMsg.length()) {
-                loop:
                 for (int i = counter; i >= bottom; i--) {
-                    if (fMsg.charAt(i) == ' ' || i == bottom) {
-                        System.out.println(Render.getStringWidth(fMsg.substring(i, counter)) + " " + maxWidth);
-                        if (Render.getStringWidth(fMsg.substring(i, counter)) > maxWidth) {
-                            for (int ii = 0; ii < counter; ii++) {
-                                if (Render.getStringWidth(fMsg.substring(ii, counter)) <= maxWidth) {
-                                    ii--;
-                                    fMsg = fMsg.substring(0, ii) + "-/n" + fMsg.substring(ii + 1);
-                                    bottom = ii;
-                                    break loop;
-                                }
-                            }
-                        } else {
-                            fMsg = fMsg.substring(0, i) + "/n" + fMsg.substring(i + 1);
-                            lines++;
-                            counter += 2;
-                            bottom = i + 2;
-                        }
+                    if (fMsg.charAt(i) == ' ') {
+                        fMsg = fMsg.substring(0, i) + "/n" + fMsg.substring(i + 1);
+                        bottom = i + 2;
+                        lines++;
+                        counter += 2;
+                        break;
+                    } else if (i == bottom) {
+                        int e = counter - 2;
+                        fMsg = fMsg.substring(0, e) + "-/n" + fMsg.substring(e);
+                        lines++;
+                        counter += 3;
+                        bottom = e + 3;
                         break;
                     }
                 }
@@ -60,6 +56,21 @@ public class Message {
         }
 
         return fMsg;
+    }
+
+    public String removePlayerTag(String message) {
+        String ret = "";
+
+        if (message.charAt(0) != '[')
+            return message;
+
+        for (int i = 0; i < message.length(); i++) {
+            if (message.charAt(i) == ']') {
+                ret = message.substring(i + 2);
+            }
+        }
+
+        return ret;
     }
 
     public int getHeight() {

@@ -89,6 +89,10 @@ public class Render {
         return Main.graphics.getFontMetrics().stringWidth(string);
     }
 
+    public static float getStringAscent() {
+        return Main.graphics.getFontMetrics().getAscent();
+    }
+
     public static void drawBorderedBounds(Vector2 v1, Vector2 v2) {
         Color dcol = Main.graphics.getColor();
 
@@ -107,6 +111,9 @@ public class Render {
     }
 
     public static void drawCroppedText(String text, Vector2 position, Vector2 pos) {
+        if (text.isEmpty())
+            return;
+
         Vector2 stringSize = new Vector2(getStringWidth(text), getStringHeight());
         String[] lines = text.split("/n");
         BufferedImage string = new BufferedImage((int) stringSize.x, (int) stringSize.y * lines.length, BufferedImage.TYPE_INT_ARGB);

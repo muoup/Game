@@ -15,7 +15,7 @@ public class ChatBox {
     // Static Variables - These can be changed in a future settings menu?
     // Change these if needed.
     public static int maxMessages = 50; // self-explanatory
-    private static float barSensitivity = 2f; // How much the bar needs to be scrolled (greater is less scrolling).
+    private static float barSensitivity = 1f; // How much the bar needs to be scrolled (greater is less scrolling).
     private static float heightOffset = 50f; // How far up the GUI should be pushed.
     public static Font textFont; // see initialization
     public static Color chatColor = new Color(175, 129, 34);
@@ -42,8 +42,8 @@ public class ChatBox {
     // These really should not be touched because they are used for a purpose.
     private static boolean onStartup = true; // Initialization after graphic initialization
     private static boolean moveBar = false; // Is the player moving the bar?
-    public static boolean typing = false;
-    private static String type = "";
+    public static boolean typing = false; // Is the player typing?
+    private static String type = ""; // The player's current message within the message bar.
 
     public static float getPadding() {
         return Render.getStringHeight() * 0.5f;
@@ -89,8 +89,8 @@ public class ChatBox {
         bPos = new Vector2(gSize.x - size.x * 0.125f + heightOffset, Settings.curResolution().y - gSize.y - heightOffset);
         gPos = new Vector2(heightOffset / 2, bPos.y);
         mPos = gPos.addClone(0, gSize.y - mSize.y);
-        height = (float) Math.min(gSize.y, Math.pow(bSize.y, 2) / getMaxScroll());
-        maxScroll = bSize.y - height;
+        height = (float) Math.min(gSize.y, gSize.y * (gSize.y - mSize.y) / distScroll);
+        maxScroll = bSize.y;
     }
 
     public static void renderBar() {
@@ -123,8 +123,8 @@ public class ChatBox {
         if (scroll < 0)
             scroll = 0;
 
-        if (scroll > maxScroll)
-            scroll = (int) (maxScroll);
+        if (scroll > maxScroll - height)
+            scroll = (int) (maxScroll - height);
     }
 
     public static void renderText() {
@@ -133,7 +133,7 @@ public class ChatBox {
         Render.setFont(textFont);
 
         Vector2 v1 = gPos.addClone(gPos.x * 0.5f, gPos.x * 0.25f)
-                .subtractClone(0, (maxScroll == 0) ? 0 : (distScroll - bSize.y + getPadding() * 2) * (scroll / maxScroll));
+                .subtractClone(0, (distScroll == 0) ? 0 : (scroll * distScroll) / gSize.y);
 
         for (Message msg : messages) {
             float y2 = v1.y + msg.getHeight();
@@ -163,10 +163,18 @@ public class ChatBox {
         Render.setColor(chatColor.darker());
         Render.drawBorderedRect(mPos, mSize);
 
-        float offset = (mSize.y - Render.getStringHeight()) / 2;
-        Vector2 tDraw = mPos.addClone(offset, mSize.y - offset * 2);
+        // The space above and below the message bar text translated to the sides as well.
+        float offset = Render.getStringAscent() / 2;//(mSize.y - Render.getStringHeight()) / 2;
+
+        // Location of the message bar text.
+        Vector2 tDraw = mPos.addClone(offset, offset * 0.75f);
+
         Render.setColor(Color.BLACK);
-        Render.drawText(type + ((typing) ? "|" : ""), tDraw);
+        System.out.println((Render.getStringWidth(type)) - (mSize.x - offset * 2));
+        float xDif = Math.max(0, (Render.getStringWidth(type)) - (mSize.x - offset * 2) + 1);
+
+        //Render.drawText(type + ((typing) ? "|" : ""), tDraw);
+        Render.drawCroppedText(type + ((typing) ? "|" : ""), tDraw.subtractClone(xDif, 0), new Vector2(xDif, 0));
     }
 
     public static void updateChatBar() {
@@ -201,6 +209,11 @@ public class ChatBox {
 
     public static void sendMessage(String message) {
         Message msg = new Message(message, Color.BLACK);
+
+        if (msg.rawMessage.substring(0, 2).equals("::")) {
+            Commands.onCommand(msg);
+            return;
+        }
 
         if (Main.graphics == null)
             System.err.println("The graphics component is null!");
