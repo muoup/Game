@@ -4,16 +4,21 @@ import com.Util.Math.DeltaMath;
 
 public class Skills {
     public static int RANGED = 0;
+    public static int FISHING = 1;
 
     public static int skillAmt;
 
-    private static int[] exp;
+    private static float[] exp;
     private static int[] lvl;
+    public static String[] skillNames = {
+            "Archery",
+            "Fishing"
+    };
     private static boolean[] levelUp;
 
     public static void initExperience() {
         skillAmt = SkillsManager.skillImageNames.length;
-        exp = new int[skillAmt];
+        exp = new float[skillAmt];
         lvl = new int[skillAmt];
         levelUp = new boolean[skillAmt];
 
@@ -22,7 +27,7 @@ public class Skills {
         }
     }
 
-    public static void addExperience(int skill, int amount) {
+    public static void addExperience(int skill, float amount) {
         exp[skill] += amount;
         deltaLevel(skill);
     }
@@ -36,13 +41,13 @@ public class Skills {
         }
     }
 
-    public static int expToLevel(int exp) {
+    public static int expToLevel(float exp) {
         int result = 0;
         int i = 0;
 
-        while (result < exp) {
+        while (result - 1 < exp) {
             i++;
-            result = (int)((Math.pow(1.085, i - 1) * 150) + result);
+            result += (int)(Math.pow(1.085, i - 1) * 150);
         }
 
         return Math.max(i, 1);
@@ -58,7 +63,7 @@ public class Skills {
         return result;
     }
     
-    public static int getExperience(int skill) {
+    public static float getExperience(int skill) {
         return exp[skill];
     }
 

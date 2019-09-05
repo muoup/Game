@@ -1,6 +1,9 @@
 package com.Game.GUI.Inventory;
 
+import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.Inventory.Items.Ammo.ArrowItem;
+import com.Game.GUI.Inventory.Items.Consumables.Food.BlueFishFood;
+import com.Game.GUI.Inventory.Items.Consumables.Food.ClownFishFood;
 import com.Game.GUI.Inventory.Items.RawResource.Log;
 import com.Game.GUI.Inventory.Items.Weapon.Bow;
 import com.Game.GUI.Inventory.Items.Weapon.CrystalBow;
@@ -10,6 +13,8 @@ import com.Game.Main.Main;
 import com.Util.Math.Vector2;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Item {
 
@@ -18,8 +23,10 @@ public class Item {
     public static Item bow = new Bow(2, "bow.png", "Bow","Get ready for the power of my bow!", 1);
     public static Item arrow = new ArrowItem(3, "arrow.png", "Arrow", "Some sharp arrows!", 100000);
     public static Item crystalBow = new CrystalBow(4, "crystalBow.png", "Crystal Bow", "This is really gonna hurt.", 1);
+    public static Item clownfish = new ClownFishFood(5, "clownfish.png", "Clownfish", "This looks quite tasty.", 1);
+    public static Item bluefish = new BlueFishFood(6, "bluefish.png", "Bluefish", "This looks very tasty.", 1);
 
-    public String[] options;
+    public ArrayList<String> options;
 
     public int equipStatus = -1;
     public int id;
@@ -34,7 +41,7 @@ public class Item {
         this.examineText = examineText;
         this.maxStack = maxStack;
         this.name = name;
-        this.options = new String[0];
+        this.options = new ArrayList<String>();
     }
 
     public static ItemStack emptyStack() {
@@ -59,7 +66,7 @@ public class Item {
         }
 
         if (option == RightClick.options.size() - 1)
-            TextBox.setText(examineText);
+            ChatBox.sendMessage(examineText);
 
         if (option == RightClick.options.size() - 2)
             InventoryManager.inventory[index] = emptyStack();
@@ -116,5 +123,9 @@ public class Item {
                 break;
             }
         }
+    }
+
+    public ItemStack getSingleStack() {
+        return new ItemStack(this, 1);
     }
 }

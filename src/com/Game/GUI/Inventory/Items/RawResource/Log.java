@@ -9,10 +9,8 @@ public class Log extends Item {
     public Log(int id, String imageName, String name, String examineText, int maxStack) {
         super(id, imageName, name, examineText, maxStack);
 
-        this.options = new String[] {
-            "Craft Bow",
-            "Craft Arrows"
-        };
+        options.add("Craft Bow");
+        options.add("Craft Arrows");
     }
 
     public void ClickIdentities(int index) {

@@ -44,6 +44,7 @@ public class ChatBox {
     private static boolean moveBar = false; // Is the player moving the bar?
     public static boolean typing = false; // Is the player typing?
     private static String type = ""; // The player's current message within the message bar.
+    private static boolean scrollDown = false;
 
     public static float getPadding() {
         return Render.getStringHeight() * 0.5f;
@@ -89,8 +90,13 @@ public class ChatBox {
         bPos = new Vector2(gSize.x - size.x * 0.125f + heightOffset, Settings.curResolution().y - gSize.y - heightOffset);
         gPos = new Vector2(heightOffset / 2, bPos.y);
         mPos = gPos.addClone(0, gSize.y - mSize.y);
-        height = (float) Math.min(gSize.y, gSize.y * (gSize.y - mSize.y) / distScroll);
+        height = Math.min(gSize.y, gSize.y * (gSize.y - mSize.y) / distScroll);
         maxScroll = bSize.y;
+
+        if (scrollDown) {
+            scroll = (int) (maxScroll - height);
+            scrollDown = false;
+        }
     }
 
     public static void renderBar() {
@@ -99,7 +105,7 @@ public class ChatBox {
 
         Render.setColor(inBar() && Input.GetMouse(1) ? new Color(181, 160, 108) :
                 new Color(181, 151, 57));
-        Render.drawBorderedRect(bPos.addClone(0, scroll), new Vector2(size.x * 0.125f, height));
+        Render.drawBorderedRect(bPos.addClone(0, scroll), new Vector2(bSize.x, height));
     }
 
     public static void updateBar() {
@@ -167,13 +173,11 @@ public class ChatBox {
         float offset = Render.getStringAscent() / 2;//(mSize.y - Render.getStringHeight()) / 2;
 
         // Location of the message bar text.
-        Vector2 tDraw = mPos.addClone(offset, offset * 0.75f);
+        Vector2 tDraw = mPos.addClone(offset, offset * 0.5f);
 
         Render.setColor(Color.BLACK);
-        System.out.println((Render.getStringWidth(type)) - (mSize.x - offset * 2));
         float xDif = Math.max(0, (Render.getStringWidth(type)) - (mSize.x - offset * 2) + 1);
 
-        //Render.drawText(type + ((typing) ? "|" : ""), tDraw);
         Render.drawCroppedText(type + ((typing) ? "|" : ""), tDraw.subtractClone(xDif, 0), new Vector2(xDif, 0));
     }
 
@@ -210,6 +214,10 @@ public class ChatBox {
     public static void sendMessage(String message) {
         Message msg = new Message(message, Color.BLACK);
 
+        scrollDown = (scroll == (int) (maxScroll - height)) || (height == bSize.y);
+
+        System.out.println(scroll + " -- " + maxScroll + " -- " + height);
+
         if (msg.rawMessage.substring(0, 2).equals("::")) {
             Commands.onCommand(msg);
             return;
@@ -224,7 +232,6 @@ public class ChatBox {
         }
 
         Render.setFont(textFont);
-
         messages.add(messages.size(), msg);
         distScroll += msg.getHeight() + getPadding();
     }

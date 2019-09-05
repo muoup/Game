@@ -145,11 +145,11 @@ public class RightClick {
         if (item.item.equipStatus != -1)
             options.add("Equip");
 
-        for (String s : item.item.options) {
-            if (Settings.sWidth(s) > maxWidth)
-                maxWidth = Settings.sWidth(s);
+        options.addAll(item.item.options);
 
-            options.add(s);
+        for (String s : options) {
+            if (Render.getStringWidth(s) > maxWidth)
+                maxWidth = Render.getStringWidth(s);
         }
 
         if (maxWidth * 1.1f + deltaDraw.x > Settings.curResolution().x)
@@ -158,8 +158,7 @@ public class RightClick {
         options.add("Drop");
         options.add("Examine");
 
-        if (maxWidth == 0)
-            maxWidth = Settings.sWidth("Examine");
+        maxWidth = Math.max(Settings.sWidth("Examine"), maxWidth );
     }
 
     private static void groundRightClick() {

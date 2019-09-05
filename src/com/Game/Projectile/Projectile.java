@@ -89,7 +89,7 @@ public class Projectile {
                 }
             }
         } else {
-            if (Vector2.distance(Main.player.position, position) < 8) {
+            if (Vector2.distance(Main.player.position, position) < 16) {
                 Main.player.damage(damage);
                 destroy();
             }

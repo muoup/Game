@@ -122,7 +122,7 @@ public class GUI {
     public static void update() {
         Vector2 end = below.addClone(new Vector2(IntBoxSize * inventoryOptions.length, IntBoxSize));
 
-        if (Input.mousePosition.compareTo(below) == 1 && end.compareTo(Input.mousePosition) == 1 && Input.GetMouse(1)) {
+        if (Input.mousePosition.compareTo(below) == 1 && end.compareTo(Input.mousePosition) == 1 && Input.GetMouse(1) && !RightClick.render) {
             Vector2 mouseOffset = Input.mousePosition.subtractClone(below);
 
             int selection = (int) mouseOffset.x / (int) categorySize.x;

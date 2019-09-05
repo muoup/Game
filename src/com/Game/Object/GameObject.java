@@ -12,15 +12,12 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
 public class GameObject {
-    public static BufferedImage[] objectImages = {
-            getImage("tree.png")
-    };
-
     public Vector2 position;
     public BufferedImage image;
     public float maxTimer = 1.5f;
     protected float timer = 0;
-    public int id = 0;
+    protected float maxDistance;
+    protected boolean canInteract = true;
 
     public GameObject(int x, int y) {
         this.position = new Vector2(x, y);
@@ -29,9 +26,23 @@ public class GameObject {
     }
 
     public void updateObject() {
-        image = objectImages[id];
 
-        float distance = Vector2.distance(Main.player.position, position.addClone(Render.getDimensions(image).scale(0.5f)));
+        float distance = Vector2.distance(Main.player.position, position);
+
+        if (Input.GetKey(KeyEvent.VK_E)
+            && distance < maxDistance
+            && canInteract) {
+
+            canInteract = onInteract();
+        }
+
+        if (!Input.GetKey(KeyEvent.VK_E) || distance > maxDistance) {
+            timer = 0;
+            canInteract = true;
+        }
+
+        if (image == null)
+            return;
 
         if (Render.onScreen(position, image)) {
             Render.drawImage(image,
@@ -39,22 +50,14 @@ public class GameObject {
             update();
         }
 
-        if (Input.GetKey(KeyEvent.VK_E)
-            && distance < Render.getDimensions(image).y) {
-
-            onInteract();
-        }
-
-        if (!Input.GetKey(KeyEvent.VK_E) || distance > Render.getDimensions(image).y)
-            timer = 0;
     }
 
     public void update() {
 
     }
 
-    public void onInteract() {
-
+    public boolean onInteract() {
+        return false;
     }
 
     public static BufferedImage getImage(String name) {
@@ -70,5 +73,17 @@ public class GameObject {
 
         Render.setColor(Color.BLACK);
         Render.drawRectOutline(sPos, rect);
+    }
+
+    public void drawPlayerProgressBar() {
+        Vector2 sPos = Main.player.position.subtractClone(24, 50).subtract(World.curWorld.offset);
+        Vector2 rect = new Vector2(48 * (timer / maxTimer), 8);
+        Vector2 compRect = new Vector2(48, 8);
+
+        Render.setColor(Color.BLUE);
+        Render.drawRectangle(sPos, rect);
+
+        Render.setColor(Color.BLACK);
+        Render.drawRectOutline(sPos, compRect);
     }
 }

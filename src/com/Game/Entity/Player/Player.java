@@ -142,13 +142,28 @@ public class Player {
     public Vector2 handleCollision(Vector2 curSpeed) {
         Vector2 speed = curSpeed.clone();
         Vector2[] xPoints = getPoints(new Vector2(curSpeed.x, 0));
+        Vector2[] x1Points = {
+            xPoints[1],
+            xPoints[2]
+        };
+        Vector2[] x2Points = {
+            xPoints[0],
+            xPoints[3]
+        };
         Vector2[] yPoints = getPoints(new Vector2(0, curSpeed.y));
-
-        if (!CollisionHandler.isFree(xPoints)) {
+        Vector2[] y1Points = {
+            yPoints[1],
+            yPoints[3]
+        };
+        Vector2[] y2Points = {
+                yPoints[0],
+                yPoints[2]
+        };
+        if ((speed.x < 0 && !CollisionHandler.isFree(x1Points)) || (speed.y > 0 && !CollisionHandler.isFree(x2Points))) {
             speed.x = 0;
         }
 
-        if (!CollisionHandler.isFree(yPoints)) {
+        if ((speed.y > 0 && !CollisionHandler.isFree(y2Points)) || (speed.y < 0 && !CollisionHandler.isFree(y1Points))) {
             speed.y = 0;
         }
 
@@ -209,9 +224,10 @@ public class Player {
                 new Vector2(GUI.IntBoxSize * 4, 16));
 
         if (health <= 0) {
-            TextBox.setText("Oh no! You are dead!");
+            ChatBox.sendMessage("Oh no. You are dead!");
 
             health = maxHealth;
+            position = Settings.playerSpawn.clone();
         }
     }
 

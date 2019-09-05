@@ -49,6 +49,11 @@ public class World {
         curWorld.initWorld();
     }
 
+    public static void changeWorld(World world) {
+        curWorld = world;
+        curWorld.initWorld();
+    }
+
     // Set the offset of world, possibly for teleportation.
     public void setOffset(Vector2 set) {
         offset = set;

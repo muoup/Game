@@ -23,6 +23,15 @@ public class InventoryManager {
         InventoryManager.addItem(Item.arrow, 300);
     }
 
+    public static boolean isFull() {
+        for (ItemStack i : inventory) {
+            if (i.item.id == 0)
+                return false;
+        }
+
+        return true;
+    }
+
     public static void handleInventory() {
         for (int i = 0; i < inventory.length; i++) {
             if (inventory[i].amount <= 0 && inventory[i].getID() != -1) {
@@ -47,6 +56,10 @@ public class InventoryManager {
                 inventory[index].item.ClickIdentities(index);
             }
         }
+    }
+
+    public static void removeItem(int index, int amount) {
+        inventory[index].amount -= amount;
     }
 
     public static void render() {
@@ -132,5 +145,9 @@ public class InventoryManager {
         }
 
         return amt - add;
+    }
+
+    public static int addItem(ItemStack stack) {
+        return addItem(stack.item, stack.amount);
     }
 }

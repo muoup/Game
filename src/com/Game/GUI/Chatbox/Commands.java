@@ -51,6 +51,9 @@ public class Commands {
                 ChatBox.sendMessage("Teleported.");
                 Vector2 tp = Input.mousePosition.add(World.curWorld.offset);
                 break;
+            case "resetworld":
+                World.curWorld.initWorld();
+                break;
             default:
                 ChatBox.sendMessage("That is not a valid command, please check your spelling and try again.");
         }

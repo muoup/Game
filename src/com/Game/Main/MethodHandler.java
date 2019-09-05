@@ -71,11 +71,11 @@ public class MethodHandler {
 
             for (GroundItem groundItem : groundItems) groundItem.updateStack();
             for (Projectile p : projectiles) p.projectileUpdate();
+            for (GameObject object : objects) object.updateObject();
 
             player.render();
 
             for (Enemy enemy : enemies) enemy.updateEnemy();
-            for (GameObject object : objects) object.updateObject();
             for (NPC npc : npcs) npc.update();
 
             GUI.render();

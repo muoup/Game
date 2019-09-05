@@ -1,19 +1,21 @@
-package com.Game.Object;
+package com.Game.Object.SkillingAreas;
 
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.Inventory.Item;
 import com.Game.GUI.Inventory.Items.RawResource.Log;
 import com.Game.Main.Main;
+import com.Game.Object.GameObject;
 
 public class Tree extends GameObject {
 
     public Tree(int x, int y) {
         super(x, y);
 
-        id = 0;
+        image = getImage("tree.png");
+        maxDistance = 150f;
     }
 
-    public void onInteract() {
+    public boolean onInteract() {
         timer += 1 / Main.fps;
 
         drawProgressBar();
@@ -22,5 +24,7 @@ public class Tree extends GameObject {
             timer = 0;
             InventoryManager.addItem(Item.wood, 1);
         }
+
+        return true;
     }
 }

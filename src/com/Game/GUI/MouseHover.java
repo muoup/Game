@@ -49,22 +49,28 @@ public class MouseHover {
         if (statHover == -1)
             return;
 
-        String xp = "Current XP: " + Skills.getExperience(statHover);
+        String xp = "Current XP: " + (int) Skills.getExperience(statHover);
         String lvlUp = "XP for Next Level: " + Skills.levelToExp(Skills.getLevel(statHover) + 1);
 
         Render.setFont(new Font("Arial", Font.BOLD, 14));
 
         float width = Settings.sWidth(lvlUp);
 
+        float x = (Input.mousePosition.x + width * 1.25f > Settings.curResolution().x) ?
+                Input.mousePosition.x - width * 1.1f : Input.mousePosition.x;
+
+        Vector2 dPos = new Vector2(x, Input.mousePosition.y);
+
         Render.setColor(Color.BLACK);
-        Render.drawRectangle(Input.mousePosition, new Vector2(width * 1.1f, Settings.curResolution().y * 0.05f));
+        Render.drawRectangle(dPos, new Vector2(width * 1.1f, Settings.curResolution().y * 0.07f));
 
         Render.setColor(Color.GRAY);
-        Render.drawRectangle(Input.mousePosition.addClone(2, 2),
-                new Vector2(width * 1.1f - 4, Settings.curResolution().y * 0.05f - 4));
+        Render.drawRectangle(dPos.addClone(2, 2),
+                new Vector2(width * 1.1f - 4, Settings.curResolution().y * 0.07f - 4));
 
         Render.setColor(Color.BLACK);
-        Render.drawText(xp, Input.mousePosition.addClone(width * 0.05f, Settings.curResolution().y * 0.02f));
-        Render.drawText(lvlUp, Input.mousePosition.addClone(width * 0.05f, Settings.curResolution().y * 0.04f));
+        Render.drawText(Skills.skillNames[statHover], dPos.addClone(width * 0.05f, Settings.curResolution().y * 0.02f));
+        Render.drawText(xp, dPos.addClone(width * 0.05f, Settings.curResolution().y * 0.04f));
+        Render.drawText(lvlUp, dPos.addClone(width * 0.05f, Settings.curResolution().y * 0.06f));
     }
 }
