@@ -19,6 +19,8 @@ public class InventoryManager {
             inventory[i] = new ItemStack(Item.empty, 0);
         }
 
+        InventoryDrag.init();
+
         InventoryManager.addItem(Item.bow, 1);
         InventoryManager.addItem(Item.arrow, 300);
     }
@@ -44,18 +46,7 @@ public class InventoryManager {
         if (RightClick.coolDown > 0)
             RightClick.coolDown -= 1 / Main.fps;
 
-        if (GUI.inGUI() && !RightClick.render && RightClick.coolDown <= 0) {
-            if (Input.GetMouse(1)) {
-                Vector2 deltaMouse = Input.mousePosition.subtract(GUI.GuiPos);
-
-                int x = (int) deltaMouse.x / GUI.IntBoxSize;
-                int y = (int) deltaMouse.y / GUI.IntBoxSize;
-
-                int index = x + y * 4;
-
-                inventory[index].item.ClickIdentities(index);
-            }
-        }
+        InventoryDrag.update();
     }
 
     public static void removeItem(int index, int amount) {
@@ -79,22 +70,9 @@ public class InventoryManager {
                     Render.drawImage(Render.getScaledImage(stack.item.image, GUI.invSize), rectPos);
 
                     if (stack.getMaxAmount() > 1) {
-                        int itext = stack.amount;
-                        String text;
-
-                        // There is no point in going beyond billion because the
-                        // integer limit is 2.147 billion
-                        if (itext >= 1000000000) {
-                            text = itext / 1000000000 + "b";
-                        } else if (itext >= 1000000) {
-                            text = itext / 1000000 + "m";
-                        } else if (itext >= 1000) {
-                            text = itext / 1000 + "k";
-                        } else {
-                            text = itext + "";
-                        }
-
                         Render.setFont(Settings.itemFont);
+
+                        String text = formatAmount(stack.amount);
 
                         Render.drawText(text,
                                 rectPos.addClone(new Vector2(GUI.IntBoxSize - Settings.sWidth(text) - 4, GUI.IntBoxSize - 4)));
@@ -104,6 +82,8 @@ public class InventoryManager {
                 Render.drawRectOutline(rectPos, GUI.invSize);
             }
         }
+
+        InventoryDrag.render();
     }
 
     public static int addItem(Item item, int amount) {
@@ -149,5 +129,19 @@ public class InventoryManager {
 
     public static int addItem(ItemStack stack) {
         return addItem(stack.item, stack.amount);
+    }
+
+    public static String formatAmount(int amount) {
+        String text;
+
+        if (amount >= 1000000000) {
+            return amount / 1000000000 + "b";
+        } else if (amount >= 1000000) {
+            return amount / 1000000 + "m";
+        } else if (amount >= 1000) {
+            return amount / 1000 + "k";
+        } else {
+            return amount + "";
+        }
     }
 }

@@ -152,13 +152,14 @@ public class RightClick {
                 maxWidth = Render.getStringWidth(s);
         }
 
-        if (maxWidth * 1.1f + deltaDraw.x > Settings.curResolution().x)
-            deltaDraw.x = Settings.curResolution().x - maxWidth * 1.1f;
+        if (deltaDraw.x + maxWidth * 1.1f > Settings.curResolution().x * 0.9f)
+            deltaDraw.x -= maxWidth;
+
 
         options.add("Drop");
         options.add("Examine");
 
-        maxWidth = Math.max(Settings.sWidth("Examine"), maxWidth );
+        maxWidth = Math.max(Settings.sWidth("Examine"), maxWidth);
     }
 
     private static void groundRightClick() {

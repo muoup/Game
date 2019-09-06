@@ -9,8 +9,8 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 
     public static boolean[] keys = new boolean[65535];
     public static boolean[] keysDown = new boolean[65535];
-    public static boolean[] mouse = new boolean[4];
-    public static boolean[] mouseDown = new boolean[4];
+    public static boolean[] mouse = new boolean[5];
+    public static boolean[] mouseDown = new boolean[5];
     public static Vector2 mousePosition = Vector2.zero();
 
     public static boolean GetKey(int code) {
@@ -62,12 +62,16 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
+        if (e.getButton() > 4)
+            return;
         mouse[e.getButton()] = true;
         mouseDown[e.getButton()] = true;
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        if (e.getButton() > 4)
+            return;
         mouse[e.getButton()] = false;
         mouseDown[e.getButton()] = false;
     }
