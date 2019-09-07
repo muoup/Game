@@ -16,7 +16,8 @@ public class SkillsManager {
     private static BufferedImage[] skillImages;
     public static String[] skillImageNames = {
             "ranged.png",
-            "fishing.png"
+            "fishing.png",
+            "woodcutting.png"
     };
 
     public static void init() {
@@ -50,7 +51,7 @@ public class SkillsManager {
             String text = Integer.toString(Skills.getLevel(i));
 
             Render.drawText(text,
-                    rectPos.addClone(new Vector2(GUI.IntBoxSize - Settings.sWidth(text) - 4, GUI.IntBoxSize - 4)));
+                    rectPos.addClone(new Vector2(GUI.IntBoxSize - Settings.sWidth(text) - 2, GUI.IntBoxSize - 2)));
         }
     }
 

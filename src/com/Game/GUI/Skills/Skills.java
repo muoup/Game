@@ -5,6 +5,7 @@ import com.Util.Math.DeltaMath;
 public class Skills {
     public static int RANGED = 0;
     public static int FISHING = 1;
+    public static int WOODCUTTING = 2;
 
     public static int skillAmt;
 
@@ -12,7 +13,8 @@ public class Skills {
     private static int[] lvl;
     public static String[] skillNames = {
             "Archery",
-            "Fishing"
+            "Fishing",
+            "Woodcutting"
     };
     private static boolean[] levelUp;
 

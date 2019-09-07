@@ -51,8 +51,7 @@ public class FishingArea extends GameObject {
 }
 
 class FishingPreset {
-    float minTimer, maxTimer;
-    float xp;
+    float minTimer, maxTimer, xp;
     int lvlReq;
     Item fish;
 
@@ -61,15 +60,15 @@ class FishingPreset {
             case 0: // Clown Fish
                 fish = Item.clownfish;
                 minTimer = 1.5f;
-                maxTimer = 5.0f;
-                xp = 50f;
+                maxTimer = 6.5f;
+                xp = 15f;
                 lvlReq = 1;
                 break;
             case 1: // Blue Fish
                 fish = Item.bluefish;
                 minTimer = 2.5f;
                 maxTimer = 7.5f;
-                xp = 22.5f;
+                xp = 35f;
                 lvlReq = 10;
                 break;
         }

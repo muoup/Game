@@ -5,6 +5,7 @@ import com.Game.GUI.Inventory.Items.Ammo.ArrowItem;
 import com.Game.GUI.Inventory.Items.Consumables.Food.BlueFishFood;
 import com.Game.GUI.Inventory.Items.Consumables.Food.ClownFishFood;
 import com.Game.GUI.Inventory.Items.RawResource.Log;
+import com.Game.GUI.Inventory.Items.RawResource.MapleLog;
 import com.Game.GUI.Inventory.Items.Weapon.Bow;
 import com.Game.GUI.Inventory.Items.Weapon.CrystalBow;
 import com.Game.GUI.RightClick;
@@ -25,6 +26,7 @@ public class Item {
     public static Item crystalBow = new CrystalBow(4, "crystalBow.png", "Crystal Bow", "This is really gonna hurt.", 1);
     public static Item clownfish = new ClownFishFood(5, "clownfish.png", "Clownfish", "This looks quite tasty.", 1);
     public static Item bluefish = new BlueFishFood(6, "bluefish.png", "Bluefish", "This looks very tasty.", 1);
+    public static Item mapleLog = new MapleLog(7, "maplewood.png", "Maple Log", "A sticky log, sounds useful to me.", 1);
 
     public ArrayList<String> options;
 

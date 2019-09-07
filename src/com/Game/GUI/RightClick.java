@@ -1,6 +1,7 @@
 package com.Game.GUI;
 
 import com.Game.GUI.Inventory.AccessoriesManager;
+import com.Game.GUI.Inventory.InventoryDrag;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.Inventory.ItemStack;
 import com.Game.Main.Main;
@@ -122,6 +123,9 @@ public class RightClick {
     }
 
     private static void inventoryRightClick() {
+        if (InventoryDrag.itemDrag.getID() != 0)
+            return;
+
         maxWidth = 0;
 
         Vector2 deltaMouse = Input.mousePosition.subtractClone(GUI.GuiPos);

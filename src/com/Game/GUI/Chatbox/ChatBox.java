@@ -216,8 +216,6 @@ public class ChatBox {
 
         scrollDown = (scroll == (int) (maxScroll - height)) || (height == bSize.y);
 
-        System.out.println(scroll + " -- " + maxScroll + " -- " + height);
-
         if (msg.rawMessage.substring(0, 2).equals("::")) {
             Commands.onCommand(msg);
             return;

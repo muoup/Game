@@ -2,6 +2,7 @@ package com.Game.GUI;
 
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.Inventory.AccessoriesManager;
+import com.Game.GUI.Inventory.InventoryDrag;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.Skills.Skills;
 import com.Game.GUI.Skills.SkillsManager;
@@ -122,7 +123,7 @@ public class GUI {
     public static void update() {
         Vector2 end = below.addClone(new Vector2(IntBoxSize * inventoryOptions.length, IntBoxSize));
 
-        if (Input.mousePosition.compareTo(below) == 1 && end.compareTo(Input.mousePosition) == 1 && Input.GetMouse(1) && !RightClick.render) {
+        if (Input.mousePosition.compareTo(below) == 1 && end.compareTo(Input.mousePosition) == 1 && Input.GetMouse(1) && !RightClick.render && InventoryDrag.itemDrag.getID() == 0) {
             Vector2 mouseOffset = Input.mousePosition.subtractClone(below);
 
             int selection = (int) mouseOffset.x / (int) categorySize.x;

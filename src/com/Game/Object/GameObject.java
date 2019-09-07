@@ -29,6 +29,14 @@ public class GameObject {
 
         float distance = Vector2.distance(Main.player.position, position);
 
+        if (image != null) {
+            if (Render.onScreen(position, image)) {
+                Render.drawImage(image,
+                        position.subtractClone(World.curWorld.offset));
+                update();
+            }
+        }
+
         if (Input.GetKey(KeyEvent.VK_E)
             && distance < maxDistance
             && canInteract) {
@@ -40,16 +48,6 @@ public class GameObject {
             timer = 0;
             canInteract = true;
         }
-
-        if (image == null)
-            return;
-
-        if (Render.onScreen(position, image)) {
-            Render.drawImage(image,
-                    position.subtractClone(World.curWorld.offset));
-            update();
-        }
-
     }
 
     public void update() {
@@ -80,10 +78,15 @@ public class GameObject {
         Vector2 rect = new Vector2(48 * (timer / maxTimer), 8);
         Vector2 compRect = new Vector2(48, 8);
 
-        Render.setColor(Color.BLUE);
-        Render.drawRectangle(sPos, rect);
+        Render.setColor(Color.LIGHT_GRAY);
+        Render.drawRectangle(sPos, compRect);
 
         Render.setColor(Color.BLACK);
         Render.drawRectOutline(sPos, compRect);
+
+        Render.setColor(Color.BLUE);
+        Render.drawRectangle(sPos, rect);
+
+
     }
 }

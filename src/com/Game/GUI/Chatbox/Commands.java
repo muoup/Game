@@ -1,6 +1,7 @@
 package com.Game.GUI.Chatbox;
 
 import com.Game.Main.Main;
+import com.Game.Object.SkillingAreas.Tree;
 import com.Game.World.World;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
@@ -28,10 +29,11 @@ public class Commands {
     }
 
     private static void runCommand(String command, String[] parameters) {
-        System.out.println("COMMAND: " + command);
+        boolean nullParam = false;
 
         if (parameters == null) {
             parameters = new String[0];
+            nullParam = true;
         }
 
         switch(command.toLowerCase()) {
@@ -53,6 +55,26 @@ public class Commands {
                 break;
             case "resetworld":
                 World.curWorld.initWorld();
+                break;
+            case "newtree":
+                if (!nullParam) {
+                    int x = (int) Main.player.position.x;
+                    int y = (int) Main.player.position.y;
+                    String type = parameters[0];
+
+                    switch(type) {
+                        case "wood":
+                            new Tree(x, y, Tree.wood);
+                            System.out.println("new Tree(" + x + ", " + y + ", Tree.wood);");
+                            break;
+                        case "maple":
+                            new Tree(x, y, Tree.maple);
+                            System.out.println("new Tree(" + x + ", " + y + ", Tree.maple);");
+                            break;
+                        default:
+                            ChatBox.sendMessage("That is not a valid tree type!");
+                    }
+                }
                 break;
             default:
                 ChatBox.sendMessage("That is not a valid command, please check your spelling and try again.");
