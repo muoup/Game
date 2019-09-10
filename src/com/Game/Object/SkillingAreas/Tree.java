@@ -13,6 +13,8 @@ import java.awt.image.BufferedImage;
 public class Tree extends GameObject {
 
     TreePreset preset;
+    int woodAmount;
+    float rpTimer;
 
     public static TreePreset wood = new TreePreset(0);
     public static TreePreset maple = new TreePreset(1);
@@ -20,13 +22,29 @@ public class Tree extends GameObject {
     public Tree(int x, int y, TreePreset preset) {
         super(x, y);
 
-        image = preset.treeImage;
-        maxDistance = 150f;
+        image = getImage(preset.treeImage);
+        maxDistance = 32f;
+        woodAmount = preset.getWoodAmount();
         this.preset = preset;
     }
 
+    public void update() {
+        if (woodAmount == 0) {
+            rpTimer -= 1 / Main.fps;
+
+            if (rpTimer <= 0) {
+                woodAmount = preset.getWoodAmount();
+                image = getImage(preset.treeImage);
+            }
+        }
+    }
+
     public boolean onInteract() {
-        if (Skills.getLevel(Skills.FISHING) < preset.lvlReq) {
+        if (woodAmount == 0) {
+            return false;
+        }
+
+        if (Skills.getLevel(Skills.WOODCUTTING) < preset.lvlReq) {
             ChatBox.sendMessage("You do not have the required woodcutting level of " + preset.lvlReq);
             return false;
         }
@@ -42,9 +60,15 @@ public class Tree extends GameObject {
 
         if (timer > maxTimer) {
             timer = 0;
+            woodAmount--;
             maxTimer = preset.getTimer();
             InventoryManager.addItem(preset.wood.getSingleStack());
-            Skills.addExperience(Skills.FISHING, preset.getXp());
+            Skills.addExperience(Skills.WOODCUTTING, preset.getXp());
+
+            if (woodAmount == 0) {
+                rpTimer = preset.getTimer() * 2;
+                image = getImage("toppled_" + preset.treeImage);
+            }
         }
 
         return true;
@@ -54,28 +78,32 @@ public class Tree extends GameObject {
 class TreePreset {
 
     float xp, minTimer, maxTimer;
-    int lvlReq;
+    int minWood, maxWood, lvlReq;
     Item wood;
-    BufferedImage treeImage;
+    String treeImage;
 
     public TreePreset(int index) {
         switch(index) {
             case 0:
                 // Regular Tree
                 xp = 45;
-                minTimer = 5.0f;
-                maxTimer = 12.5f;
+                minTimer = 5.0f; //5.0f
+                maxTimer = 12.5f; //12.5f
+                minWood = 2;
+                maxWood = 9;
                 lvlReq = 1;
                 wood = Item.wood;
-                treeImage = Tree.getImage("tree.png");
+                treeImage = "tree.png";
                 break;
             case 1:
                 xp = 65;
                 minTimer = 6.5f;
                 maxTimer = 14f;
+                minWood = 1;
+                maxWood = 7;
                 lvlReq = 10;
                 wood = Item.mapleLog;
-                treeImage = Tree.getImage("mapleTree.png");
+                treeImage = "mapleTree.png";
                 break;
         }
     }
@@ -86,5 +114,9 @@ class TreePreset {
 
     public float getXp() {
         return xp;
+    }
+
+    public int getWoodAmount() {
+        return Math.round(DeltaMath.range(minWood, maxWood));
     }
 }

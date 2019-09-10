@@ -1,6 +1,7 @@
 package com.Game.Object;
 
 import com.Game.Entity.Player.Player;
+import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.Main.Main;
 import com.Game.World.World;
 import com.Game.listener.Input;
@@ -27,7 +28,7 @@ public class GameObject {
 
     public void updateObject() {
 
-        float distance = Vector2.distance(Main.player.position, position);
+        float distance = Vector2.distance(Main.player.position, (image == null) ? position : position.addClone(image.getWidth() / 2, image.getHeight() / 2));
 
         if (image != null) {
             if (Render.onScreen(position, image)) {
@@ -39,7 +40,8 @@ public class GameObject {
 
         if (Input.GetKey(KeyEvent.VK_E)
             && distance < maxDistance
-            && canInteract) {
+            && canInteract
+            && !ChatBox.typing) {
 
             canInteract = onInteract();
         }

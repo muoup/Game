@@ -1,5 +1,6 @@
 package com.Game.GUI.Chatbox;
 
+import com.Game.GUI.Skills.Skills;
 import com.Game.Main.Main;
 import com.Game.Object.SkillingAreas.Tree;
 import com.Game.World.World;
@@ -74,6 +75,13 @@ public class Commands {
                         default:
                             ChatBox.sendMessage("That is not a valid tree type!");
                     }
+                }
+                break;
+            case "setskill":
+                if (parameters.length >= 2) {
+                    int skill = Integer.parseInt(parameters[0]);
+                    int level = Integer.parseInt(parameters[1]);
+                    Skills.setLevel(skill, level);
                 }
                 break;
             default:

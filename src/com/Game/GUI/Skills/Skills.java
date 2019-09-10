@@ -34,6 +34,11 @@ public class Skills {
         deltaLevel(skill);
     }
 
+    public static void setLevel(int skill, int level) {
+        exp[skill] = levelToExp(level);
+        deltaLevel(skill);
+    }
+
     private static void deltaLevel(int skill) {
         int level = expToLevel(exp[skill]);
 
