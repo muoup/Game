@@ -2,7 +2,7 @@ package com.Game.Main;
 
 import com.Game.Entity.Player.Player;
 import com.Game.GUI.GUI;
-import com.Game.Networking.Network;
+import com.Game.Networking.Client;
 import com.Game.World.World;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
@@ -13,7 +13,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -26,19 +25,29 @@ public class Main extends Canvas {
     public static JFrame frame;
     public static Dimension screenSize;
     public static Graphics graphics;
+    public static final String connectionCode = "69";
+    public static final String messageCode = "13";
 
     public static Player player;
     public static Menu settings;
+    private static Client client;
 
     public static MethodHandler methods;
 
+    public Main() {
+        client = new Client("localhost", 3112);
+        client.connect();
+
+        System.out.println(client.getErrorCode());
+    }
+
     public static void main(String[] args) {
-        Main mainObj = new Main();
-        JFrame frame = new JFrame("Game");
+        main = new Main();
+        frame = new JFrame("Game");
         Input input = new Input();
         Vector2 res = Settings.curResolution();
 
-        frame.add(mainObj);
+        frame.add(main);
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize((int) res.x, (int) res.y);
@@ -46,20 +55,17 @@ public class Main extends Canvas {
         frame.setVisible(true);
         frame.setResizable(false);
 
-        mainObj.running = true;
+        main.running = true;
 
-        Main.frame = frame;
-        Main.main = mainObj;
-
-        mainObj.init();
-        mainObj.updateFrame();
-        mainObj.addKeyListener(input);
-        mainObj.addMouseListener(input);
-        mainObj.addMouseMotionListener(input);
-        mainObj.run();
+        main.init();
+        main.updateFrame();
+        main.addKeyListener(input);
+        main.addMouseListener(input);
+        main.addMouseMotionListener(input);
+        main.run();
     }
 
-    public void init(){
+    public void init() {
         Main.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
         player = new Player(Settings.playerSpawn, 250f, Color.GREEN, 2f);
@@ -79,7 +85,6 @@ public class Main extends Canvas {
         methods.settings = settings;
 
         GUI.init();
-        Network.init();
     }
 
     // Used for the shift of the settings
@@ -195,5 +200,9 @@ public class Main extends Canvas {
         }
 
         return null;
+    }
+
+    public static void sendPacket(String message) {
+        client.send(message);
     }
 }

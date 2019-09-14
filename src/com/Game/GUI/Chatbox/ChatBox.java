@@ -2,7 +2,6 @@ package com.Game.GUI.Chatbox;
 
 import com.Game.GUI.GUI;
 import com.Game.Main.Main;
-import com.Game.Networking.Network;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
@@ -10,9 +9,6 @@ import com.Util.Other.Settings;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.ArrayList;
 
 public class ChatBox {
@@ -243,7 +239,8 @@ public class ChatBox {
             return;
         }
 
-        Network.sendPackets(msg.message);
+        // Send message to server
+        Main.sendPacket(Main.messageCode + msg.message);
     }
 
     public static int getMaxScroll() {
