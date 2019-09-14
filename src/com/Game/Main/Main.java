@@ -13,10 +13,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
-import java.net.Socket;
 
 public class Main extends Canvas {
 
@@ -71,7 +70,6 @@ public class Main extends Canvas {
         methods = new MethodHandler();
 
         World.changeWorld(0);
-        Network.init();
 
         initMethods();
     }
@@ -81,6 +79,7 @@ public class Main extends Canvas {
         methods.settings = settings;
 
         GUI.init();
+        Network.init();
     }
 
     // Used for the shift of the settings
@@ -138,6 +137,7 @@ public class Main extends Canvas {
 
             Main.graphics = g;
 
+
             update();
             render();
 
@@ -160,7 +160,6 @@ public class Main extends Canvas {
     // Calls every tick - use for game logic and other similar non-graphical devices
     public void update() {
         methods.update();
-        Network.update();
     }
 
     // Calls every tick - use for drawing graphics and other things similar

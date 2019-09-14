@@ -189,7 +189,7 @@ public class ChatBox {
         if (Input.GetMouse(1) && inType()) typing = true;
         else if (Input.GetMouse(1) && !inType()) typing = false;
 
-        if (Input.GetKey(KeyEvent.VK_ENTER) && !type.isBlank()) {
+        if (Input.GetKey(KeyEvent.VK_ENTER) && !type.isEmpty()) {
             sendPublicMessage("[Player] " + type);
             type = "";
         }
@@ -244,18 +244,6 @@ public class ChatBox {
         }
 
         Network.sendPackets(msg.message);
-
-        if (Main.graphics == null)
-            System.err.println("The graphics component is null!");
-
-        if (messages.size() > maxMessages) {
-            maxScroll -= messages.get(0).getHeight();
-            messages.remove(0);
-        }
-
-        Render.setFont(textFont);
-        messages.add(messages.size(), msg);
-        distScroll += msg.getHeight() + getPadding();
     }
 
     public static int getMaxScroll() {

@@ -5,6 +5,7 @@ import com.Game.Entity.NPC.NPC;
 import com.Game.Entity.Player.Player;
 import com.Game.GUI.GUI;
 import com.Game.GUI.TextBox;
+import com.Game.Networking.Network;
 import com.Game.Object.GameObject;
 import com.Game.Projectile.Projectile;
 import com.Game.World.GroundItem;
@@ -23,6 +24,7 @@ public class MethodHandler {
 
     public Menu settings;
     public Player player;
+    //public static boolean startUp = true;
 
     public static ArrayList<NPC> npcs;
     public static ArrayList<GameObject> objects;
