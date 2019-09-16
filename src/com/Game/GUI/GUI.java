@@ -37,7 +37,7 @@ public class GUI {
     }
 
     public static boolean inGUI() {
-        return Input.mousePosition.compareTo(GUI.GuiPos) == 1 && GUI.GUIEnd().compareTo(Input.mousePosition) == 1;
+        return Input.mouseInBounds(GuiPos, GUIEnd());
     }
 
     public static Vector2 getGridPosition(int x, int y) {

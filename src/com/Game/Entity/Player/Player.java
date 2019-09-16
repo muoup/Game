@@ -31,6 +31,8 @@ public class Player {
     private float dy = 0;
     private float dMod = 0;
     private float shootTimer = 0;
+    public int serverIndex = -1;
+    public String name = null;
 
     public float maxHealth = 100f;
     public float health = 100f;
@@ -136,7 +138,14 @@ public class Player {
             curSpeed = new Vector2((float) ((dx + Math.signum(dx) * dMod) / Main.fps), (float) ((dy + Math.signum(dy) * dMod) / Main.fps));
         }
 
-        position.add(handleCollision(curSpeed));
+        Vector2 movement = handleCollision(curSpeed);
+
+        if (!movement.equalTo(Vector2.zero())) {
+            position.add(movement);
+            System.out.println(position);
+            System.out.println("15" + Main.player.name + ":" + (int) position.x + ":" + (int) position.y + ":" + serverIndex);
+            Main.sendPacket("15" + Main.player.name + ":" + (int) position.x + ":" + (int) position.y + ":" + serverIndex);
+        }
     }
 
     public Vector2 handleCollision(Vector2 curSpeed) {

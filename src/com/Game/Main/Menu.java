@@ -79,7 +79,7 @@ public class Menu {
                             Settings.pause = false;
                             break;
                         case 3:
-                            System.exit(0);
+                            Main.client.disconnect();
                             break;
                     }
                 }

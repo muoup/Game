@@ -2,6 +2,7 @@ package com.Game.GUI.Chatbox;
 
 import com.Game.GUI.GUI;
 import com.Game.Main.Main;
+import com.Game.Main.Menu;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
@@ -45,6 +46,7 @@ public class ChatBox {
     public static boolean typing = false; // Is the player typing?
     private static String type = ""; // The player's current message within the message bar.
     private static boolean scrollDown = false;
+    public static String tag;
 
     public static float getPadding() {
         return Render.getStringHeight() * 0.5f;
@@ -176,9 +178,9 @@ public class ChatBox {
         Vector2 tDraw = mPos.addClone(offset, offset * 0.5f);
 
         Render.setColor(Color.BLACK);
-        float xDif = Math.max(0, (Render.getStringWidth(type)) - (mSize.x - offset * 2) + 1);
+        float xDif = Math.max(0, (Render.getStringWidth(tag + type)) - (mSize.x - offset * 2) + 1);
 
-        Render.drawCroppedText(type + ((typing) ? "|" : ""), tDraw.subtractClone(xDif, 0), new Vector2(xDif, 0));
+        Render.drawCroppedText(tag + type + ((typing) ? "|" : ""), tDraw.subtractClone(xDif, 0), new Vector2(xDif, 0));
     }
 
     public static void updateChatBar() {
@@ -186,7 +188,7 @@ public class ChatBox {
         else if (Input.GetMouse(1) && !inType()) typing = false;
 
         if (Input.GetKey(KeyEvent.VK_ENTER) && !type.isEmpty()) {
-            sendPublicMessage("[Player] " + type);
+            sendPublicMessage("[" + Main.player.name + "] " + type);
             type = "";
         }
     }

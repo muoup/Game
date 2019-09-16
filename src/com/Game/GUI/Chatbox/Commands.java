@@ -84,6 +84,9 @@ public class Commands {
                     Skills.setLevel(skill, level);
                 }
                 break;
+            case "disconnect":
+                Main.client.disconnect();
+                break;
             default:
                 ChatBox.sendMessage("That is not a valid command, please check your spelling and try again.");
         }

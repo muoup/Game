@@ -94,6 +94,10 @@ public class Vector2 {
         */
     }
 
+    public boolean equalTo(Vector2 compare) {
+        return x == compare.x && y == compare.y;
+    }
+
     public Vector2 scale(float scaleFactor) {
         this.x *= scaleFactor;
         this.y *= scaleFactor;

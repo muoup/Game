@@ -1,8 +1,10 @@
 package com.Game.Main;
 
 import com.Game.Entity.Player.Player;
+import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.GUI;
 import com.Game.Networking.Client;
+import com.Game.Networking.Login;
 import com.Game.World.World;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
@@ -27,19 +29,13 @@ public class Main extends Canvas {
     public static Graphics graphics;
     public static final String connectionCode = "69";
     public static final String messageCode = "13";
+    private static boolean isConnected = false;
 
     public static Player player;
     public static Menu settings;
-    private static Client client;
+    public static Client client;
 
     public static MethodHandler methods;
-
-    public Main() {
-        client = new Client("localhost", 3112);
-        client.connect();
-
-        System.out.println(client.getErrorCode());
-    }
 
     public static void main(String[] args) {
         main = new Main();
@@ -62,7 +58,17 @@ public class Main extends Canvas {
         main.addKeyListener(input);
         main.addMouseListener(input);
         main.addMouseMotionListener(input);
+        main.setFocusTraversalKeysEnabled(false);
         main.run();
+    }
+
+    public static void serverConnect(String username, String password, int loginCode) {
+        client = new Client("localhost", 3112);
+        client.connect(username, password, loginCode);
+
+        ChatBox.tag = "[" + Main.player.name + "]: ";
+
+        isConnected = true;
     }
 
     public void init() {
@@ -85,6 +91,7 @@ public class Main extends Canvas {
         methods.settings = settings;
 
         GUI.init();
+        Login.init();
     }
 
     // Used for the shift of the settings
@@ -142,9 +149,12 @@ public class Main extends Canvas {
 
             Main.graphics = g;
 
-
-            update();
-            render();
+            if (isConnected) {
+                update();
+                render();
+            } else {
+                handleMenu();
+            }
 
             bs.show();
             g.dispose();
@@ -172,6 +182,11 @@ public class Main extends Canvas {
         methods.render();
     }
 
+    public void handleMenu() {
+        Login.update();
+        Login.render();
+    }
+
     public static BufferedImage getImage(String root) {
         return Main.main.getImageFromRoot(root);
     }
@@ -188,7 +203,7 @@ public class Main extends Canvas {
         return image;
     }
 
-    public Font getFont(String root, float size, int style) {
+    public static Font getFont(String root, float size, int style) {
         InputStream is = Main.class.getResourceAsStream("/res/fonts/" + root);
 
         try {
@@ -205,4 +220,5 @@ public class Main extends Canvas {
     public static void sendPacket(String message) {
         client.send(message);
     }
+
 }

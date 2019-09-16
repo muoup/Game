@@ -1,6 +1,7 @@
 package com.Game.listener;
 
 import com.Game.GUI.Chatbox.ChatBox;
+import com.Game.Networking.Login;
 import com.Util.Math.Vector2;
 
 import java.awt.event.*;
@@ -41,6 +42,7 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
     @Override
     public void keyTyped(KeyEvent e) {
         ChatBox.type((keys[KeyEvent.VK_BACK_SPACE]) ? "bs" : Character.toString(e.getKeyChar()));
+        Login.onType((keys[KeyEvent.VK_BACK_SPACE]) ? "bs" : Character.toString(e.getKeyChar()));
     }
 
     @Override
@@ -102,5 +104,13 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 
         mousePosition.x = e.getX();
         mousePosition.y = e.getY();
+    }
+
+    public static boolean mouseInBounds(Vector2 v1, Vector2 v2) {
+        return (mousePosition.compareTo(v1) == 1 && mousePosition.compareTo(v2) == -1);
+    }
+
+    public static boolean mouseInRect(Vector2 pos, Vector2 size) {
+        return mouseInBounds(pos, pos.addClone(size));
     }
 }

@@ -5,6 +5,7 @@ import com.Game.Entity.NPC.NPC;
 import com.Game.Entity.Player.Player;
 import com.Game.GUI.GUI;
 import com.Game.GUI.TextBox;
+import com.Game.Networking.PlayerObject;
 import com.Game.Object.GameObject;
 import com.Game.Projectile.Projectile;
 import com.Game.World.GroundItem;
@@ -16,6 +17,8 @@ import com.Util.Other.Settings;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MethodHandler {
 
@@ -33,6 +36,7 @@ public class MethodHandler {
 
     public static ArrayList<GroundItem> removeGround;
     public static ArrayList<Projectile> removeProjectiles;
+    public static ArrayList<PlayerObject> playerConnections;
 
     public MethodHandler() {
         main = Main.main;
@@ -43,6 +47,7 @@ public class MethodHandler {
         removeGround = new ArrayList();
         projectiles = new ArrayList();
         removeProjectiles = new ArrayList();
+        playerConnections = new ArrayList<PlayerObject>();
     }
 
     public void update() {
@@ -73,6 +78,8 @@ public class MethodHandler {
             for (GroundItem groundItem : groundItems) groundItem.updateStack();
             for (Projectile p : projectiles) p.projectileUpdate();
             for (GameObject object : objects) object.updateObject();
+
+            for (PlayerObject playerObject : playerConnections) playerObject.tick();
 
             player.render();
 
