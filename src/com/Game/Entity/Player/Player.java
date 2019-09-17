@@ -142,8 +142,6 @@ public class Player {
 
         if (!movement.equalTo(Vector2.zero())) {
             position.add(movement);
-            System.out.println(position);
-            System.out.println("15" + Main.player.name + ":" + (int) position.x + ":" + (int) position.y + ":" + serverIndex);
             Main.sendPacket("15" + Main.player.name + ":" + (int) position.x + ":" + (int) position.y + ":" + serverIndex);
         }
     }

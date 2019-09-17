@@ -71,6 +71,11 @@ public class Main extends Canvas {
         isConnected = true;
     }
 
+    public static void logout() {
+        isConnected = false;
+        Login.resetLogin();
+    }
+
     public void init() {
         Main.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
