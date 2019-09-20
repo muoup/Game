@@ -50,10 +50,12 @@ public class Login {
             else
                 selected = 0;
 
-            if (Input.mouseInRect(loginPos, buttonSize))
-                Main.serverConnect(nameField, passwordField, 0);
-            else if (Input.mouseInRect(registerPos, buttonSize))
-                Main.serverConnect(nameField, passwordField, 1);
+            if (!nameField.isBlank() && !passwordField.isBlank()) {
+                if (Input.mouseInRect(loginPos, buttonSize))
+                    Main.serverConnect(nameField, passwordField, 0);
+                else if (Input.mouseInRect(registerPos, buttonSize))
+                    Main.serverConnect(nameField, passwordField, 1);
+            }
         }
         if (selected > 0) {
             if (Input.GetKeyDown(KeyEvent.VK_TAB)) {

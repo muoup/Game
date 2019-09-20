@@ -24,6 +24,12 @@ public class InventoryManager {
         InventoryManager.addItem(Item.arrow, 300);
     }
 
+    public static void reset() {
+        for (int i = 0; i < inventory.length; i++) {
+            inventory[i] = new ItemStack(Item.empty, 0);
+        }
+    }
+
     public static boolean isFull() {
         for (ItemStack i : inventory) {
             if (i.item.id == 0)
@@ -83,6 +89,18 @@ public class InventoryManager {
         }
 
         InventoryDrag.render();
+    }
+
+    public static void setAmount(int slot, int amount) {
+
+    }
+
+    public static void addAmount(int slot, int amount) {
+        inventory[slot].amount += amount;
+    }
+
+    public static void setItem(int slot, ItemStack item) {
+        inventory[slot] = item;
     }
 
     public static int addItem(Item item, int amount) {

@@ -1,11 +1,17 @@
 package com.Game.Networking;
 
 import com.Game.GUI.Chatbox.ChatBox;
+import com.Game.GUI.Inventory.AccessoriesManager;
+import com.Game.GUI.Inventory.InventoryManager;
+import com.Game.GUI.Inventory.ItemStack;
+import com.Game.GUI.Skills.Skills;
 import com.Game.Main.Main;
 import com.Game.Main.Menu;
 import com.Game.Main.MethodHandler;
+import com.Util.Math.Vector2;
 import com.Util.Other.Settings;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.*;
 import java.text.NumberFormat;
@@ -73,10 +79,30 @@ public class Client {
         System.out.println("PACKET RECEIVED: " + content);
         String start = content.substring(0, 2);
         String message = content.substring(2).trim();
+        String[] index;
 
         switch (start) {
             case "01":
                 Main.player.serverIndex = Integer.parseInt(message);
+                break;
+            case "02":
+                index = message.split(":");
+                boolean c = message.charAt(1) == 'c';
+                if (message.charAt(0) == 'l') {
+                    if (c) {
+                        joinServer(index[1]);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "The username and password is not recognized.");
+                    }
+                } else if (message.charAt(0) == 'r') {
+                    if (c) {
+                        joinServer(index[1]);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "That username already exists!");
+                    }
+                } else {
+                    System.err.println("An unexpected login message occured.");
+                }
                 break;
             case "13":
             case "55":
@@ -110,6 +136,9 @@ public class Client {
             case "99":
                 Main.logout();
                 break;
+            case "04":
+                takeData(message.split(":"));
+                break;
         }
 
         dataBuffer = new byte[4096];
@@ -118,7 +147,6 @@ public class Client {
     public boolean connect(String username, String password, int connectionCode) {
         try {
             serverAddress = InetAddress.getByName(ipAddress);
-
         } catch (UnknownHostException e) {
             e.printStackTrace();
             errorCode = Error.INVALID_HOST;
@@ -132,14 +160,8 @@ public class Client {
             errorCode = Error.SOCKET_EXCEPTION;
             return false;
         }
-
-        System.out.println("CLIENT NAME: " + username);
-
         Main.player.name = username;
-
-        //sendConnectionPacket(username, password);
-        System.out.println("POS: " + Main.player.position);
-        send(Main.connectionCode + username + "," + password + "," + connectionCode + "," + (int) Main.player.position.x + "," + (int) Main.player.position.y);
+        send(Main.connectionCode + username + ":" + password + ":" + connectionCode + ":" + (int) Main.player.position.x + ":" + (int) Main.player.position.y);
         // Wait for server to reply
         listening = true;
 
@@ -148,17 +170,40 @@ public class Client {
         return true;
     }
 
+    public void takeData(String[] index) {
+        // 0 - Username; 1 & 2 -> pos; 3-? -> skills;
+        Main.player.name = index[0];
+        Main.player.position = new Vector2(Integer.parseInt(index[1]), Integer.parseInt(index[2]));
+        for (int i = 3; i < index.length; i++) {
+            Skills.setExperience(i - 3, Float.parseFloat(index[i]));
+        }
+    }
+
+    public void joinServer(String username) {
+
+        System.out.println("CLIENT NAME: " + username);
+
+        Main.player.name = username;
+        ChatBox.tag = "[" + Main.player.name + "]: ";
+
+        //sendConnectionPacket(username, password);
+        System.out.println("POS: " + Main.player.position);
+
+        Main.isConnected = true;
+    }
+
     public void disconnect() {
-        send(("55" + Main.player.name).getBytes());
+        send("55" + Main.player.name);
         MethodHandler.playerConnections.clear();
         Settings.pause = false;
         Main.settings.state = Menu.MenuState.SimplePause;
+        InventoryManager.reset();
+        AccessoriesManager.init();
         Main.logout();
     }
 
     public void send(byte[] data) {
         assert(socket.isConnected());
-        System.out.println(data);
         DatagramPacket packet = new DatagramPacket(data, data.length, serverAddress, port);
         try {
             socket.send(packet);

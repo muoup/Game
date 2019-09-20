@@ -29,7 +29,7 @@ public class Main extends Canvas {
     public static Graphics graphics;
     public static final String connectionCode = "69";
     public static final String messageCode = "13";
-    private static boolean isConnected = false;
+    public static boolean isConnected = false;
 
     public static Player player;
     public static Menu settings;
@@ -65,10 +65,6 @@ public class Main extends Canvas {
     public static void serverConnect(String username, String password, int loginCode) {
         client = new Client("localhost", 3112);
         client.connect(username, password, loginCode);
-
-        ChatBox.tag = "[" + Main.player.name + "]: ";
-
-        isConnected = true;
     }
 
     public static void logout() {

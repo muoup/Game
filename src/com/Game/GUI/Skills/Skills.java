@@ -1,5 +1,6 @@
 package com.Game.GUI.Skills;
 
+import com.Game.Main.Main;
 import com.Util.Math.DeltaMath;
 
 public class Skills {
@@ -31,12 +32,17 @@ public class Skills {
 
     public static void addExperience(int skill, float amount) {
         exp[skill] += amount;
+        Main.sendPacket("07" + skill + ":" + amount + ":" + Main.player.name);
+        deltaLevel(skill);
+    }
+
+    public static void setExperience(int skill, float amount) {
+        exp[skill] = amount;
         deltaLevel(skill);
     }
 
     public static void setLevel(int skill, int level) {
-        exp[skill] = levelToExp(level);
-        deltaLevel(skill);
+        addExperience(skill, levelToExp(level) - exp[skill]);
     }
 
     private static void deltaLevel(int skill) {
