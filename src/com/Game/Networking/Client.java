@@ -3,6 +3,7 @@ package com.Game.Networking;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.Inventory.InventoryManager;
+import com.Game.GUI.Inventory.ItemList;
 import com.Game.GUI.Inventory.ItemStack;
 import com.Game.GUI.Skills.Skills;
 import com.Game.Main.Main;
@@ -14,9 +15,6 @@ import com.Util.Other.Settings;
 import javax.swing.*;
 import java.io.IOException;
 import java.net.*;
-import java.text.NumberFormat;
-import java.util.HashSet;
-import java.util.Set;
 
 public class Client {
 
@@ -76,7 +74,7 @@ public class Client {
     private void process(DatagramPacket packet) {
         byte[] data = packet.getData();
         String content = new String(data);
-        System.out.println("PACKET RECEIVED: " + content);
+//        System.out.println("PACKET RECEIVED: " + content);
         String start = content.substring(0, 2);
         String message = content.substring(2).trim();
         String[] index;
@@ -137,7 +135,13 @@ public class Client {
                 Main.logout();
                 break;
             case "04":
-                takeData(message.split(":"));
+                takeSkillData(message.split(":"));
+                break;
+            case "05":
+                takeItemData(message.split(":"));
+                break;
+            case "06":
+                takeAccData(message.split(":"));
                 break;
         }
 
@@ -170,12 +174,34 @@ public class Client {
         return true;
     }
 
-    public void takeData(String[] index) {
+    public void takeSkillData(String[] index) {
         // 0 - Username; 1 & 2 -> pos; 3-? -> skills;
         Main.player.name = index[0];
         Main.player.position = new Vector2(Integer.parseInt(index[1]), Integer.parseInt(index[2]));
         for (int i = 3; i < index.length; i++) {
             Skills.setExperience(i - 3, Float.parseFloat(index[i]));
+        }
+    }
+
+    public void takeItemData(String[] index) {
+        int id = 0;
+        for (int i = 1; i < index.length; i++) {
+            if (i % 2 == 1) {
+                id = Integer.parseInt(index[i]);
+            } else {
+                InventoryManager.clientSetItem(i / 2 - 1, id, Integer.parseInt(index[i]));
+            }
+        }
+    }
+
+    public void takeAccData(String[] index) {
+        int id = 0;
+        for (int i = 1; i < index.length; i++) {
+            if (i % 2 == 1) {
+                id = Integer.parseInt(index[i]);
+            } else {
+                AccessoriesManager.clientSetItem(i / 2 - 1, id, Integer.parseInt(index[2]));
+            }
         }
     }
 

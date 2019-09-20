@@ -4,6 +4,7 @@ import com.Game.Entity.Enemy.TestBoss;
 import com.Game.Entity.NPC.TestNPC;
 import com.Game.Entity.Player.Player;
 import com.Game.GUI.Inventory.Item;
+import com.Game.GUI.Inventory.ItemList;
 import com.Game.GUI.Inventory.ItemStack;
 import com.Game.Main.MethodHandler;
 import com.Game.Object.SkillingAreas.FishingArea;
@@ -23,7 +24,7 @@ public class MainWorld extends World {
         Player.projectiles.clear();
 
         ArrayList<ItemStack> items = new ArrayList();
-        items.add(new ItemStack(Item.arrow, 5));
+        items.add(new ItemStack(ItemList.arrow, 5));
 
         // Forest Area
         new Tree(1655, 1875, Tree.wood);

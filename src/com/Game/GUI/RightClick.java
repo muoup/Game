@@ -79,7 +79,7 @@ public class RightClick {
 
                 int option = (int) Input.mousePosition.subtract(draw).y / (int) percentBox;
 
-                item.item.RightClickIdentities(xx + yy * 4, option);
+                item.getItem().RightClickIdentities(xx + yy * 4, option);
 
                 RightClick.coolDown = 0.1f;
                 render = false;
@@ -98,26 +98,26 @@ public class RightClick {
 
                 ItemStack selected = MethodHandler.groundItems.get(groundItem).stack.get(option);
 
-                int amount = selected.amount;
+                int amount = selected.getAmount();
                 int removed = 0;
 
-                if (selected.item.equipStatus != -1) {
-                    ItemStack accessory = AccessoriesManager.getSlot(selected.item.equipStatus);
+                if (selected.getItem().equipStatus != -1) {
+                    ItemStack accessory = AccessoriesManager.getSlot(selected.getItem().equipStatus);
 
                     if (accessory.getID() == selected.getID()) {
                         int maxAdd = accessory.getMaxAmount() - accessory.getAmount();
                         int add = (amount > maxAdd) ? maxAdd : amount;
 
-                        AccessoriesManager.getSlot(selected.item.equipStatus).amount += add;
+                        AccessoriesManager.getSlot(selected.getItem().equipStatus).setAmount(add);
                         amount -= add;
 
                         removed += add;
                     }
                 }
 
-                removed += InventoryManager.addItem(selected.item, amount);
+                removed += InventoryManager.addItem(selected.getItem(), amount);
 
-                MethodHandler.groundItems.get(groundItem).stack.get(option).amount -= removed;
+                MethodHandler.groundItems.get(groundItem).stack.get(option).addAmount(-removed);
             }
         }
     }
@@ -146,10 +146,10 @@ public class RightClick {
 
         Render.setFont(Settings.itemFont);
 
-        if (item.item.equipStatus != -1)
+        if (item.getItem().equipStatus != -1)
             options.add("Equip");
 
-        options.addAll(item.item.options);
+        options.addAll(item.getItem().options);
 
         for (String s : options) {
             if (Render.getStringWidth(s) > maxWidth)
@@ -185,7 +185,7 @@ public class RightClick {
         Render.setFont(Settings.itemFont);
 
         for (ItemStack item : hover.stack) {
-            String content = item.getAmount() + " " + item.item.name;
+            String content = item.getAmount() + " " + item.getItem().name;
             if (item.getAmount() > 1)
                 content += "s";
 

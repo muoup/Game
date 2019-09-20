@@ -32,9 +32,9 @@ public class InventoryDrag {
 
             Render.drawImage(itemDragImage, rectPos);
 
-            if (itemDrag.amount > 1) {
+            if (itemDrag.getAmount() > 1) {
 
-                String text = InventoryManager.formatAmount(itemDrag.amount);
+                String text = InventoryManager.formatAmount(itemDrag.getAmount());
 
                 Render.setFont(Settings.itemFont);
 
@@ -46,9 +46,8 @@ public class InventoryDrag {
             int index = getInventoryIndex();
 
             // Swap the two spaces in case there is already an item in the inventory slot.
-            InventoryManager.inventory[inventoryIndex] =
-                    InventoryManager.inventory[index].clone();
-            InventoryManager.inventory[index] = itemDrag.clone();
+            InventoryManager.setItem(inventoryIndex, InventoryManager.getStack(index).clone());
+            InventoryManager.setItem(index, itemDrag.clone());
 
             resetVariables();
         } else if (itemDrag.getID() != 0 && !drag && !GUI.inGUI() && !click) {
@@ -59,7 +58,7 @@ public class InventoryDrag {
             resetVariables();
         } else if (itemDrag.getID() != 0 && !drag && click) {
             InventoryManager.inventory[inventoryIndex] = itemDrag.clone();
-            InventoryManager.inventory[inventoryIndex].item.ClickIdentities(inventoryIndex);
+            InventoryManager.inventory[inventoryIndex].getItem().ClickIdentities(inventoryIndex);
 
             resetVariables();
         }
@@ -84,13 +83,13 @@ public class InventoryDrag {
         if (drag && GUI.inGUI() && inventoryIndex == -1) {
             inventoryIndex = getInventoryIndex();
             itemDrag = InventoryManager.inventory[inventoryIndex];
-            itemDragImage = Render.getScaledImage(itemDrag.item.image, GUI.invSize);
+            itemDragImage = Render.getScaledImage(itemDrag.getItem().image, GUI.invSize);
             initMousePos = Input.mousePosition.clone();
         }
 
         if (itemDrag.getID() != 0 && (timer > 0.1f || Vector2.distance(initMousePos, Input.mousePosition) > 16)) {
             click = false;
-            InventoryManager.inventory[inventoryIndex] = Item.emptyStack();
+            InventoryManager.setItem(inventoryIndex, Item.emptyStack());
         }
 
         if (inventoryIndex != -1) {

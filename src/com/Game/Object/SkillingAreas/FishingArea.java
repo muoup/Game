@@ -3,6 +3,7 @@ package com.Game.Object.SkillingAreas;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.Inventory.Item;
+import com.Game.GUI.Inventory.ItemList;
 import com.Game.GUI.Inventory.ItemStack;
 import com.Game.GUI.Skills.Skills;
 import com.Game.Main.Main;
@@ -42,7 +43,7 @@ public class FishingArea extends GameObject {
         if (timer > maxTimer) {
             timer = 0;
             maxTimer = preset.getTimer();
-            InventoryManager.addItem(preset.fish.getSingleStack());
+            InventoryManager.addItem(preset.fish, 1);
             Skills.addExperience(Skills.FISHING, preset.getXp());
         }
 
@@ -53,19 +54,19 @@ public class FishingArea extends GameObject {
 class FishingPreset {
     float minTimer, maxTimer, xp;
     int lvlReq;
-    Item fish;
+    ItemList fish;
 
     public FishingPreset(int index) {
         switch(index) {
             case 0: // Clown Fish
-                fish = Item.clownfish;
+                fish = ItemList.clownfish;
                 minTimer = 1.5f;
                 maxTimer = 6.5f;
                 xp = 15f;
                 lvlReq = 1;
                 break;
             case 1: // Blue Fish
-                fish = Item.bluefish;
+                fish = ItemList.bluefish;
                 minTimer = 2.5f;
                 maxTimer = 7.5f;
                 xp = 35f;
@@ -78,7 +79,7 @@ class FishingPreset {
         return DeltaMath.range(minTimer, maxTimer) * (1.0f - 0.005f * (Skills.getLevel(Skills.FISHING) - lvlReq));
     }
 
-    public Item getFish() {
+    public ItemList getFish() {
         return fish;
     }
 

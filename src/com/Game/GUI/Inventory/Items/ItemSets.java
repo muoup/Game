@@ -1,9 +1,9 @@
 package com.Game.GUI.Inventory.Items;
 
-import com.Game.GUI.Inventory.Item;
+import com.Game.GUI.Inventory.ItemList;
 
 public class ItemSets {
-    public static Item[] arrows = {
-        Item.arrow
+    public static ItemList[] arrows = {
+        ItemList.arrow
     };
 }

@@ -33,7 +33,7 @@ public class AccessoriesManager {
 
     public static void handleInventory() {
         for (int i = 0; i < accessories.length; i++) {
-            if (accessories[i].amount <= 0 && accessories[i].getID() != 0) {
+            if (accessories[i].getAmount() <= 0 && accessories[i].getID() != 0) {
                 accessories[i] = Item.emptyStack();
             }
         }
@@ -42,14 +42,19 @@ public class AccessoriesManager {
     public static void setSlot(ItemStack item, int slot) {
         if (accessories[slot].getID() == item.getID()) {
             int maxAmount = accessories[slot].getMaxAmount() - accessories[slot].getAmount();
-            if (maxAmount > item.amount)
-                maxAmount = item.amount;
+            if (maxAmount > item.getAmount())
+                maxAmount = item.getAmount();
 
-            accessories[slot].amount += maxAmount;
+            accessories[slot].addAmount(maxAmount);
         } else {
             accessories[slot] = item.clone();
         }
     }
+
+    public static void clientSetItem(int slot, int id, int amount) {
+        accessories[slot] = new ItemStack(ItemList.values()[id], amount);
+    }
+
     public static void render() {
         Render.setColor(Color.BLACK);
         Render.drawBounds(GUI.GuiPos, GUI.GUIEnd());
@@ -97,7 +102,7 @@ public class AccessoriesManager {
             Vector2 rectPos = GUI.getGridPosition(x, y);
 
             if (accessories[i].getID() != 0) {
-                Render.drawImage(Render.getScaledImage(accessories[i].item.image, GUI.invSize), rectPos);
+                Render.drawImage(Render.getScaledImage(accessories[i].getImage(), GUI.invSize), rectPos);
             }
         }
     }
@@ -133,7 +138,7 @@ public class AccessoriesManager {
 
                 ItemStack stack = accessories[index].clone();
 
-                InventoryManager.addItem(stack.item, stack.amount);
+                InventoryManager.addItem(stack.getItem(), stack.getAmount());
 
                 setSlot(Item.emptyStack(), index);
             }

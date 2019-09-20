@@ -38,7 +38,7 @@ public class GroundItem {
         if (stack.size() == 0)
             return;
 
-        topImage = Render.getScaledImage(stack.get(0).item.image, 64, 64);
+        topImage = Render.getScaledImage(stack.get(0).getImage(), 64, 64);
 
         if (Render.onScreen(position, topImage)) {
             Render.drawImage(topImage, position.subtractClone(World.curWorld.offset));
@@ -47,7 +47,7 @@ public class GroundItem {
 
     public void update() {
         for (int i = 0; i < stack.size(); i++) {
-            if (stack.get(i).amount <= 0)
+            if (stack.get(i).getAmount() <= 0)
                 stack.remove(i);
         }
 

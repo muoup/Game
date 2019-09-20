@@ -15,24 +15,21 @@ public class InventoryManager {
 
     public static void init() {
         for (int i = 0; i < inventory.length; i++) {
-            inventory[i] = new ItemStack(Item.empty, 0);
+            inventory[i] = new ItemStack(ItemList.empty, 0);
         }
 
         InventoryDrag.init();
-
-        InventoryManager.addItem(Item.bow, 1);
-        InventoryManager.addItem(Item.arrow, 300);
     }
 
     public static void reset() {
         for (int i = 0; i < inventory.length; i++) {
-            inventory[i] = new ItemStack(Item.empty, 0);
+            inventory[i] = new ItemStack(ItemList.empty, 0);
         }
     }
 
     public static boolean isFull() {
         for (ItemStack i : inventory) {
-            if (i.item.id == 0)
+            if (i.getItem().id == 0)
                 return false;
         }
 
@@ -41,7 +38,7 @@ public class InventoryManager {
 
     public static void handleInventory() {
         for (int i = 0; i < inventory.length; i++) {
-            if (inventory[i].amount <= 0 && inventory[i].getID() != -1) {
+            if (inventory[i].getAmount() <= 0 && inventory[i].getID() != -1) {
                 inventory[i] = Item.emptyStack();
             }
         }
@@ -55,7 +52,7 @@ public class InventoryManager {
     }
 
     public static void removeItem(int index, int amount) {
-        inventory[index].amount -= amount;
+        inventory[index].addAmount(-amount);
     }
 
     public static void render() {
@@ -72,12 +69,12 @@ public class InventoryManager {
                 ItemStack stack = inventory[x + y * 4];
 
                 if (stack.getID() != 0 && stack.getAmount() > 0) {
-                    Render.drawImage(Render.getScaledImage(stack.item.image, GUI.invSize), rectPos);
+                    Render.drawImage(Render.getScaledImage(stack.getImage(), GUI.invSize), rectPos);
 
                     if (stack.getMaxAmount() > 1) {
                         Render.setFont(Settings.itemFont);
 
-                        String text = formatAmount(stack.amount);
+                        String text = formatAmount(stack.getAmount());
 
                         Render.drawText(text,
                                 rectPos.addClone(new Vector2(GUI.IntBoxSize - Settings.sWidth(text) - 4, GUI.IntBoxSize - 4)));
@@ -92,60 +89,79 @@ public class InventoryManager {
     }
 
     public static void setAmount(int slot, int amount) {
+        ItemStack stack = getStack(slot);
+        stack.setAmount(amount);
+        setItem(slot, stack);
+    }
 
+    public static void setID(int slot, int id) {
+        ItemStack stack = getStack(slot);
+        stack.setItem(ItemList.values()[id]);
     }
 
     public static void addAmount(int slot, int amount) {
-        inventory[slot].amount += amount;
+        setAmount(slot, amount + getStack(slot).getAmount());
     }
 
     public static void setItem(int slot, ItemStack item) {
-        inventory[slot] = item;
+        inventory[slot].setAmount(item.getAmount());
+        inventory[slot].setItem(ItemList.values()[item.getID()]);
+
+        Main.sendPacket("08" + slot + ":" + item.getID() + ":" + item.getAmount() + ":" + Main.player.name);
     }
 
-    public static int addItem(Item item, int amount) {
+    public static void clientSetItem(int slot, int id, int amount) {
+        System.out.println("SLOT: " + slot + " ID: " + id + " AMOUNT: " + amount);
+        inventory[slot] = new ItemStack(ItemList.values()[id], amount);
+    }
+
+    public static int addItem(ItemList item, int amount) {
         int amt = amount;
         int add = amount;
 
         for (int i = 0; i < inventory.length; i++) {
             add = amount;
 
-            if (inventory[i].item.id == item.id && inventory[i].amount < item.maxStack) {
-                if (add > item.maxStack - inventory[i].amount) {
-                    add = item.maxStack - inventory[i].amount;
+            if (inventory[i].getID() == item.item.id && inventory[i].getAmount() < item.maxStack()) {
+                if (add > item.maxStack() - inventory[i].getAmount()) {
+                    add = item.maxStack() - inventory[i].getAmount();
                 }
 
-                inventory[i].amount += add;
+                addAmount(i, add);
 
                 amount -= add;
             }
         }
 
-        if (add == 0)
+        if (amount == 0)
             return amt;
 
         for (int i = 0; i < inventory.length; i++) {
             add = amount;
 
-            if (inventory[i].item.id == 0) {
-                if (add > item.maxStack) {
-                    add = item.maxStack;
+            if (inventory[i].getID() == 0) {
+                if (add > item.maxStack()) {
+                    add = item.maxStack();
                 }
 
-                inventory[i] = new ItemStack(item, add);
+                setItem(i, new ItemStack(item, add));
 
                 amount -= add;
             }
 
-            if (add == 0)
+            if (amount == 0)
                 return amt;
         }
 
         return amt - add;
     }
 
+    public static int addItem(Item item, int amount) {
+        return addItem(ItemList.values()[item.id], amount);
+    }
+
     public static int addItem(ItemStack stack) {
-        return addItem(stack.item, stack.amount);
+        return addItem(stack.getItem(), stack.getAmount());
     }
 
     public static String formatAmount(int amount) {
@@ -160,5 +176,13 @@ public class InventoryManager {
         } else {
             return amount + "";
         }
+    }
+
+    public static ItemStack getStack(int inventoryIndex) {
+        return inventory[inventoryIndex];
+    }
+
+    public static Item getItem(int inventoryIndex) {
+        return inventory[inventoryIndex].getItem();
     }
 }

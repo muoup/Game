@@ -3,6 +3,7 @@ package com.Game.Object.SkillingAreas;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.Inventory.Item;
+import com.Game.GUI.Inventory.ItemList;
 import com.Game.GUI.Skills.Skills;
 import com.Game.Main.Main;
 import com.Game.Object.GameObject;
@@ -62,7 +63,7 @@ public class Tree extends GameObject {
             timer = 0;
             woodAmount--;
             maxTimer = preset.getTimer();
-            InventoryManager.addItem(preset.wood.getSingleStack());
+            InventoryManager.addItem(preset.wood, 1);
             Skills.addExperience(Skills.WOODCUTTING, preset.getXp());
 
             if (woodAmount == 0) {
@@ -79,7 +80,7 @@ class TreePreset {
 
     float xp, minTimer, maxTimer;
     int minWood, maxWood, lvlReq;
-    Item wood;
+    ItemList wood;
     String treeImage;
 
     public TreePreset(int index) {
@@ -92,7 +93,7 @@ class TreePreset {
                 minWood = 2;
                 maxWood = 9;
                 lvlReq = 1;
-                wood = Item.wood;
+                wood = ItemList.wood;
                 treeImage = "tree.png";
                 break;
             case 1:
@@ -102,7 +103,7 @@ class TreePreset {
                 minWood = 1;
                 maxWood = 7;
                 lvlReq = 10;
-                wood = Item.mapleLog;
+                wood = ItemList.mapleLog;
                 treeImage = "mapleTree.png";
                 break;
         }

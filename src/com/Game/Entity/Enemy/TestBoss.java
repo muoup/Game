@@ -1,6 +1,7 @@
 package com.Game.Entity.Enemy;
 
 import com.Game.GUI.Inventory.Item;
+import com.Game.GUI.Inventory.ItemList;
 import com.Game.GUI.Inventory.ItemStack;
 import com.Game.Main.Main;
 import com.Game.Projectile.Bullet;
@@ -43,8 +44,8 @@ public class TestBoss extends Enemy {
 
     public void handleDrops() {
         ArrayList<ItemStack> drops = new ArrayList();
-        drops.add(new ItemStack(Item.crystalBow, 1));
-        drops.add(new ItemStack(Item.arrow, 250));
+        drops.add(new ItemStack(ItemList.crystalBow, 1));
+        drops.add(new ItemStack(ItemList.arrow, 250));
 
         new GroundItem(position, drops);
     }

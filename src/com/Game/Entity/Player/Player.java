@@ -126,7 +126,7 @@ public class Player {
 
             if (Input.GetKey(KeyEvent.VK_SPACE) && shootTimer <= 0) {
                 AccessoriesManager.getSlot(AccessoriesManager.WEAPON_SLOT).
-                        item.useWeapon(position, Input.mousePosition.addClone(World.curWorld.offset));
+                        getItem().useWeapon(position, Input.mousePosition.addClone(World.curWorld.offset));
                 shootTimer = 0.25f;
             }
 
