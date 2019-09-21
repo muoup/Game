@@ -12,8 +12,8 @@ import com.Util.Math.Vector2;
 
 public class Bow extends Item {
 
-    public Bow(int id, String imageName, String name, String examineText, int maxStack) {
-        super(id, imageName, name, examineText, maxStack);
+    public Bow(int id, String imageName, String name, String examineText, int maxStack, int worth) {
+        super(id, imageName, name, examineText, maxStack, worth);
 
         this.equipStatus = AccessoriesManager.WEAPON_SLOT;
     }

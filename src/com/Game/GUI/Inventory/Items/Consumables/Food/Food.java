@@ -10,8 +10,8 @@ public class Food extends Item {
     int healAmount = 0;
     String eatText;// = "Mmm... delicious.";
 
-    public Food(int id, String imageName, String name, String examineText, int maxStack, int healAmount) {
-        super(id, imageName, name, examineText, maxStack);
+    public Food(int id, String imageName, String name, String examineText, int maxStack, int worth, int healAmount) {
+        super(id, imageName, name, examineText, maxStack, worth);
         this.healAmount = healAmount;
         this.eatText = "You eat the " + name + " and it heals some health.";
         options.add("Eat");

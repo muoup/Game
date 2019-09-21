@@ -3,8 +3,6 @@ package com.Game.Networking;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.Inventory.InventoryManager;
-import com.Game.GUI.Inventory.ItemList;
-import com.Game.GUI.Inventory.ItemStack;
 import com.Game.GUI.Skills.Skills;
 import com.Game.Main.Main;
 import com.Game.Main.Menu;
@@ -98,6 +96,8 @@ public class Client {
                     } else {
                         JOptionPane.showMessageDialog(null, "That username already exists!");
                     }
+                } else if (message.charAt(0) == 'p') {
+                    JOptionPane.showMessageDialog(null, "That player is already logged in. Wait a second and retry again.");
                 } else {
                     System.err.println("An unexpected login message occured.");
                 }

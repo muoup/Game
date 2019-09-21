@@ -27,7 +27,8 @@ public class InventoryDrag {
         if (RightClick.render || RightClick.coolDown > 0)
             return;
 
-        if (itemDrag.getID() != 0 && drag && !click) { // If the itemstack is not empty, render it by the mouse
+        if (itemDrag.getID() != 0 && drag && !click) {
+            // When the player attempts to drag the item, draw the image.
             Vector2 rectPos = Input.mousePosition.subtractClone(itemDragImage.getWidth() / 2, itemDragImage.getWidth() / 2);
 
             Render.drawImage(itemDragImage, rectPos);
@@ -45,21 +46,29 @@ public class InventoryDrag {
         } else if (itemDrag.getID() != 0 && !drag && GUI.inGUI() && !click) {
             int index = getInventoryIndex();
 
+            System.out.println(InventoryManager.getStack(index) + " ' " + InventoryManager.getStack(inventoryIndex));
+
             // Swap the two spaces in case there is already an item in the inventory slot.
-            InventoryManager.setItem(inventoryIndex, InventoryManager.getStack(index).clone());
-            InventoryManager.setItem(index, itemDrag.clone());
+            InventoryManager.swapSlots(inventoryIndex, index);
+            System.out.println(InventoryManager.getStack(inventoryIndex) + " " +
+                    InventoryManager.getStack(index));
 
             resetVariables();
         } else if (itemDrag.getID() != 0 && !drag && !GUI.inGUI() && !click) {
+            // When the player attempts to drag the item outside the inventory
             InventoryManager.inventory[inventoryIndex] = itemDrag.clone();
             itemDrag = Item.emptyStack();
             click = true;
 
             resetVariables();
         } else if (itemDrag.getID() != 0 && !drag && click) {
-            InventoryManager.inventory[inventoryIndex] = itemDrag.clone();
-            InventoryManager.inventory[inventoryIndex].getItem().ClickIdentities(inventoryIndex);
-
+            // When the player clicks on an item
+            if (InventoryManager.useIndex > 0) {
+                InventoryManager.getItem(InventoryManager.useIndex).use(inventoryIndex);
+                InventoryManager.useIndex = -1;
+            } else {
+                InventoryManager.getItem(inventoryIndex).ClickIdentities(inventoryIndex);
+            }
             resetVariables();
         }
     }
@@ -69,6 +78,7 @@ public class InventoryDrag {
         itemDrag = Item.emptyStack();
         inventoryIndex = -1;
         timer = 0f;
+        InventoryManager.draggedIndex = -1;
     }
 
     public static void update() {
@@ -82,14 +92,14 @@ public class InventoryDrag {
 
         if (drag && GUI.inGUI() && inventoryIndex == -1) {
             inventoryIndex = getInventoryIndex();
-            itemDrag = InventoryManager.inventory[inventoryIndex];
-            itemDragImage = Render.getScaledImage(itemDrag.getItem().image, GUI.invSize);
+            itemDrag = InventoryManager.getStack(inventoryIndex);
+            itemDragImage = Render.getScaledImage(itemDrag.getImage(), GUI.invSize);
             initMousePos = Input.mousePosition.clone();
         }
 
         if (itemDrag.getID() != 0 && (timer > 0.1f || Vector2.distance(initMousePos, Input.mousePosition) > 16)) {
             click = false;
-            InventoryManager.setItem(inventoryIndex, Item.emptyStack());
+            InventoryManager.draggedIndex = inventoryIndex;
         }
 
         if (inventoryIndex != -1) {

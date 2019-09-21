@@ -12,6 +12,7 @@ import java.awt.*;
 public class InventoryManager {
 
     public static ItemStack[] inventory = new ItemStack[20];
+    public static int draggedIndex = -1;
 
     public static void init() {
         for (int i = 0; i < inventory.length; i++) {
@@ -64,25 +65,37 @@ public class InventoryManager {
 
         for (int x = 0; x < 4; x++) {
             for (int y = 0; y < 5; y++) {
+
                 Vector2 rectPos = GUI.getGridPosition(x, y);
 
-                ItemStack stack = inventory[x + y * 4];
+                if (draggedIndex == x + y * 4) {
+                    Render.drawRectOutline(rectPos, GUI.invSize);
+                    continue;
+                }
+
+                ItemStack stack = getStack(x + y * 4);
 
                 if (stack.getID() != 0 && stack.getAmount() > 0) {
                     Render.drawImage(Render.getScaledImage(stack.getImage(), GUI.invSize), rectPos);
 
-                    if (stack.getMaxAmount() > 1) {
+                    if (stack.getAmount() > 1) {
                         Render.setFont(Settings.itemFont);
+                        Render.setColor(Color.BLACK);
 
                         String text = formatAmount(stack.getAmount());
+
 
                         Render.drawText(text,
                                 rectPos.addClone(new Vector2(GUI.IntBoxSize - Settings.sWidth(text) - 4, GUI.IntBoxSize - 4)));
                     }
                 }
-
                 Render.drawRectOutline(rectPos, GUI.invSize);
             }
+        }
+
+        if (useIndex != -1) {
+            Render.setColor(Color.GREEN);
+            Render.drawRectOutline(GUI.getGridPosition(useIndex % 4, useIndex / 4), GUI.invSize);
         }
 
         InventoryDrag.render();
@@ -103,15 +116,22 @@ public class InventoryManager {
         setAmount(slot, amount + getStack(slot).getAmount());
     }
 
+    public static int useIndex = -1;
+
     public static void setItem(int slot, ItemStack item) {
-        inventory[slot].setAmount(item.getAmount());
         inventory[slot].setItem(ItemList.values()[item.getID()]);
+        inventory[slot].setAmount(item.getAmount());
 
         Main.sendPacket("08" + slot + ":" + item.getID() + ":" + item.getAmount() + ":" + Main.player.name);
     }
 
+    public static void swapSlots(int slot1, int slot2) {
+        ItemStack temp = getStack(slot1).clone();
+        setItem(slot1, getStack(slot2).clone());
+        setItem(slot2, temp);
+    }
+
     public static void clientSetItem(int slot, int id, int amount) {
-        System.out.println("SLOT: " + slot + " ID: " + id + " AMOUNT: " + amount);
         inventory[slot] = new ItemStack(ItemList.values()[id], amount);
     }
 
@@ -165,8 +185,6 @@ public class InventoryManager {
     }
 
     public static String formatAmount(int amount) {
-        String text;
-
         if (amount >= 1000000000) {
             return amount / 1000000000 + "b";
         } else if (amount >= 1000000) {

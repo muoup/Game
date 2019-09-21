@@ -1,7 +1,6 @@
 package com.Game.Main;
 
 import com.Game.Entity.Player.Player;
-import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.GUI;
 import com.Game.Networking.Client;
 import com.Game.Networking.Login;
@@ -30,6 +29,7 @@ public class Main extends Canvas {
     public static final String connectionCode = "69";
     public static final String messageCode = "13";
     public static boolean isConnected = false;
+    public static final String ipAddress = "localhost";
 
     public static Player player;
     public static Menu settings;
@@ -63,7 +63,7 @@ public class Main extends Canvas {
     }
 
     public static void serverConnect(String username, String password, int loginCode) {
-        client = new Client("localhost", 3112);
+        client = new Client(ipAddress, 3112);
         client.connect(username, password, loginCode);
     }
 

@@ -7,8 +7,8 @@ import com.Game.GUI.Inventory.ItemStack;
 import com.Game.Main.Main;
 
 public class MapleLog extends Item {
-    public MapleLog(int id, String imageName, String name, String examineText, int maxStack) {
-        super(id, imageName, name, examineText, maxStack);
+    public MapleLog(int id, String imageName, String name, String examineText, int maxStack, int worth) {
+        super(id, imageName, name, examineText, maxStack, worth);
 
         options.add("Craft Bow");
         options.add("Craft Arrows");

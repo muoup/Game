@@ -12,8 +12,8 @@ import com.Util.Math.Vector2;
 
 public class CrystalBow extends Item {
 
-    public CrystalBow(int id, String imageName, String name, String examineText, int maxStack) {
-        super(id, imageName, name, examineText, maxStack);
+    public CrystalBow(int id, String imageName, String name, String examineText, int maxStack, int worth) {
+        super(id, imageName, name, examineText, maxStack, worth);
 
         this.equipStatus = AccessoriesManager.WEAPON_SLOT;
     }

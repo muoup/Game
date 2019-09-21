@@ -1,5 +1,7 @@
 package com.Game.GUI.Chatbox;
 
+import com.Game.GUI.Inventory.InventoryManager;
+import com.Game.GUI.Inventory.ItemList;
 import com.Game.GUI.Skills.Skills;
 import com.Game.Main.Main;
 import com.Game.Object.SkillingAreas.Tree;
@@ -86,6 +88,14 @@ public class Commands {
                 break;
             case "disconnect":
                 Main.client.disconnect();
+                break;
+            case "item":
+                if (parameters.length >= 2) {
+                    int item = Integer.parseInt(parameters[0]);
+                    int amount = Integer.parseInt(parameters[1]);
+
+                    InventoryManager.addItem(ItemList.values()[item], amount);
+                }
                 break;
             default:
                 ChatBox.sendMessage("That is not a valid command, please check your spelling and try again.");

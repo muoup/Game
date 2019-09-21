@@ -1,32 +1,14 @@
 package com.Game.GUI.Inventory;
 
 import com.Game.GUI.Chatbox.ChatBox;
-import com.Game.GUI.Inventory.Items.Ammo.ArrowItem;
-import com.Game.GUI.Inventory.Items.Consumables.Food.BlueFishFood;
-import com.Game.GUI.Inventory.Items.Consumables.Food.ClownFishFood;
-import com.Game.GUI.Inventory.Items.RawResource.Log;
-import com.Game.GUI.Inventory.Items.RawResource.MapleLog;
-import com.Game.GUI.Inventory.Items.Weapon.Bow;
-import com.Game.GUI.Inventory.Items.Weapon.CrystalBow;
 import com.Game.GUI.RightClick;
 import com.Game.Main.Main;
 import com.Util.Math.Vector2;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Item {
-
-//    public static Item empty = new Item(0, "/", "/", "/", 0);
-//    public static Item wood = new Log(1, "wood.png", "Log", "The remnants of a tree.", 1);
-//    public static Item bow = new Bow(2, "bow.png", "Bow","Get ready for the power of my bow!", 1);
-//    public static Item arrow = new ArrowItem(3, "arrow.png", "Arrow", "Some sharp arrows!", 100000);
-//    public static Item crystalBow = new CrystalBow(4, "crystalBow.png", "Crystal Bow", "This is really gonna hurt.", 1);
-//    public static Item clownfish = new ClownFishFood(5, "clownfish.png", "Clownfish", "This looks quite tasty.", 1);
-//    public static Item bluefish = new BlueFishFood(6, "bluefish.png", "Bluefish", "This looks very tasty.", 1);
-//    public static Item mapleLog = new MapleLog(7, "maplewood.png", "Maple Log", "A sticky log, sounds useful to me.", 1);
-
     public ArrayList<String> options;
 
     public int equipStatus = -1;
@@ -35,14 +17,16 @@ public class Item {
     public BufferedImage image;
     public String examineText;
     public int maxStack;
+    public int worth;
 
-    public Item(int id, String imageName, String name, String examineText, int maxStack) {
+    public Item(int id, String imageName, String name, String examineText, int maxStack, int worth) {
         this.id = id;
         this.image = (!imageName.equals("/")) ? Main.main.getImageFromRoot("items/" + imageName) : null;
         this.examineText = examineText;
         this.maxStack = maxStack;
         this.name = name;
         this.options = new ArrayList<String>();
+        this.worth = worth;
     }
 
     public static ItemStack emptyStack() {
@@ -62,15 +46,16 @@ public class Item {
     }
 
     public void RightClickIdentities(int index, int option) {
+        ItemStack stack = InventoryManager.getStack(index);
         if (option == 0) {
             ClickIdentities(index);
         }
 
         if (option == RightClick.options.size() - 1)
-            ChatBox.sendMessage(examineText);
+            ChatBox.sendMessage(examineText + ((stack.getAmount() > 1000) ? " /n" + stack.getAmount() + " " + stack.getPlural() : ""));
 
         if (option == RightClick.options.size() - 2)
-            InventoryManager.inventory[index] = emptyStack();
+            InventoryManager.setItem(index, emptyStack());
 
         OnRightClick(index, option);
     }
@@ -96,6 +81,10 @@ public class Item {
 
             if (add > slotStack.getMaxAmount() - slotStack.getAmount())
                 add = slotStack.getMaxAmount() - slotStack.getAmount();
+
+            ItemStack invStack = InventoryManager.getStack(index);
+            Main.sendPacket("08" + index + ":" + invStack.getID() + ":" + (invStack.getAmount() - add) + ":" + Main.player.name);
+            Main.sendPacket("09" + index + ":" + invStack.getID() + ":" + (AccessoriesManager.getSlot(slot).getAmount() + add) + ":" + Main.player.name);
 
             AccessoriesManager.accessories[slot].addAmount(add);
             InventoryManager.inventory[index].addAmount(-add);
@@ -124,6 +113,14 @@ public class Item {
                 break;
             }
         }
+    }
+
+    public void use(int index) {
+
+    }
+
+    public String getPlural() {
+        return name + "s";
     }
 
     public ItemStack getSingleStack() {

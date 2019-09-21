@@ -30,12 +30,20 @@ public class ItemStack {
         return maxAmount;
     }
 
+    public String getPlural() {
+        return item.getPlural();
+    }
+
     public ItemStack clone() {
         return new ItemStack(item, amount);
     }
 
     public String toString() {
         return item.name + " " + amount;
+    }
+
+    public int getWorth() {
+        return item.worth * amount;
     }
 
     public Item getItem() {

@@ -67,7 +67,7 @@ public class RightClick {
             render = false;
         }
 
-        if (render && Input.GetMouseDown(1)) {
+        if (render && Input.GetMouse(1)) {
             // Select Right Click Option
             if (inventory) {
                 Vector2 deltaDraw = draw.subtractClone(GUI.GuiPos);
