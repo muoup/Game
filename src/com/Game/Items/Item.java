@@ -1,6 +1,8 @@
-package com.Game.GUI.Inventory;
+package com.Game.Items;
 
 import com.Game.GUI.Chatbox.ChatBox;
+import com.Game.GUI.Inventory.AccessoriesManager;
+import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.RightClick;
 import com.Game.Main.Main;
 import com.Util.Math.Vector2;
@@ -16,6 +18,7 @@ public class Item {
     public String name;
     public BufferedImage image;
     public String examineText;
+    public float armor = 0;
     public int maxStack;
     public int worth;
 
@@ -35,7 +38,7 @@ public class Item {
 
     public void ClickIdentities(int index) {
         if (equipStatus != -1) {
-            equipItem(index, equipStatus);
+            equipItem(index);
         }
 
         OnClick(index);
@@ -46,13 +49,12 @@ public class Item {
     }
 
     public void RightClickIdentities(int index, int option) {
-        ItemStack stack = InventoryManager.getStack(index);
         if (option == 0) {
             ClickIdentities(index);
         }
 
         if (option == RightClick.options.size() - 1)
-            ChatBox.sendMessage(examineText + ((stack.getAmount() > 1000) ? " /n" + stack.getAmount() + " " + stack.getPlural() : ""));
+            ChatBox.sendMessage(examineText);
 
         if (option == RightClick.options.size() - 2)
             InventoryManager.setItem(index, emptyStack());
@@ -72,9 +74,9 @@ public class Item {
 
     }
 
-    public void equipItem(int index, int slot) {
-        ItemStack slotStack = AccessoriesManager.getSlot(slot);
-        ItemStack inventoryStack = InventoryManager.inventory[index];
+    public void equipItem(int index) {
+        ItemStack slotStack = AccessoriesManager.getSlot(equipStatus);
+        ItemStack inventoryStack = InventoryManager.getStack(index);
 
         if (slotStack.getID() == id) {
             int add = inventoryStack.getAmount();
@@ -82,16 +84,13 @@ public class Item {
             if (add > slotStack.getMaxAmount() - slotStack.getAmount())
                 add = slotStack.getMaxAmount() - slotStack.getAmount();
 
-            ItemStack invStack = InventoryManager.getStack(index);
-            Main.sendPacket("08" + index + ":" + invStack.getID() + ":" + (invStack.getAmount() - add) + ":" + Main.player.name);
-            Main.sendPacket("09" + index + ":" + invStack.getID() + ":" + (AccessoriesManager.getSlot(slot).getAmount() + add) + ":" + Main.player.name);
-
-            AccessoriesManager.accessories[slot].addAmount(add);
-            InventoryManager.inventory[index].addAmount(-add);
+            AccessoriesManager.addAmount(equipStatus, add);
+            InventoryManager.addAmount(index, -add);
 
         } else {
-            InventoryManager.inventory[index] = AccessoriesManager.getSlot(slot);
-            AccessoriesManager.setSlot(new ItemStack(this, inventoryStack.getAmount()), slot);
+            ItemStack invHolder = InventoryManager.getStack(index).clone();
+            InventoryManager.setItem(index, AccessoriesManager.getSlot(equipStatus));
+            AccessoriesManager.setSlot(new ItemStack(this, invHolder.getAmount()), equipStatus);
         }
     }
 
@@ -117,6 +116,10 @@ public class Item {
 
     public void use(int index) {
 
+    }
+
+    public float getArmor() {
+        return armor;
     }
 
     public String getPlural() {

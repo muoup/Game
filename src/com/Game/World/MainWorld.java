@@ -1,11 +1,10 @@
 package com.Game.World;
 
-import com.Game.Entity.Enemy.TestBoss;
-import com.Game.Entity.NPC.TestNPC;
+import com.Game.Entity.Enemy.BabyRockEnemy;
+import com.Game.Entity.Enemy.RockEnemy;
 import com.Game.Entity.Player.Player;
-import com.Game.GUI.Inventory.Item;
-import com.Game.GUI.Inventory.ItemList;
-import com.Game.GUI.Inventory.ItemStack;
+import com.Game.Items.ItemList;
+import com.Game.Items.ItemStack;
 import com.Game.Main.MethodHandler;
 import com.Game.Object.SkillingAreas.FishingArea;
 import com.Game.Object.SkillingAreas.Tree;
@@ -51,8 +50,17 @@ public class MainWorld extends World {
         new Tree(1690, 2565, Tree.maple);
         new Tree(2386, 2493, Tree.maple);
 
-        // Boss
-        new TestBoss(1430, 5040);
+        // Rock Enemies
+        new BabyRockEnemy(3296, 4320);
+        new BabyRockEnemy(3468, 4273);
+        new BabyRockEnemy(3597, 4402);
+        new BabyRockEnemy(3456, 4492);
+        new BabyRockEnemy(3244, 4611);
+        new BabyRockEnemy(3559, 4632);
+
+        new RockEnemy(4430, 4547);
+        new RockEnemy(4430, 4724);
+        new RockEnemy(4430, 4951);
 
         // Beach Area
         new FishingArea(885, 5595, FishingArea.clownFish);

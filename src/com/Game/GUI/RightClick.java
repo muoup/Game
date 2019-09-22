@@ -3,7 +3,7 @@ package com.Game.GUI;
 import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.Inventory.InventoryDrag;
 import com.Game.GUI.Inventory.InventoryManager;
-import com.Game.GUI.Inventory.ItemStack;
+import com.Game.Items.ItemStack;
 import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
 import com.Game.World.GroundItem;
@@ -108,7 +108,7 @@ public class RightClick {
                         int maxAdd = accessory.getMaxAmount() - accessory.getAmount();
                         int add = (amount > maxAdd) ? maxAdd : amount;
 
-                        AccessoriesManager.getSlot(selected.getItem().equipStatus).setAmount(add);
+                        AccessoriesManager.addAmount(selected.getItem().equipStatus, add);
                         amount -= add;
 
                         removed += add;

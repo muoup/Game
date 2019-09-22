@@ -1,8 +1,7 @@
 package com.Game.Entity.Enemy;
 
-import com.Game.GUI.Inventory.Item;
-import com.Game.GUI.Inventory.ItemList;
-import com.Game.GUI.Inventory.ItemStack;
+import com.Game.Items.ItemList;
+import com.Game.Items.ItemStack;
 import com.Game.Main.Main;
 import com.Game.Projectile.Bullet;
 import com.Game.World.GroundItem;

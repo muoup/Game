@@ -17,8 +17,6 @@ import com.Util.Other.Settings;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class MethodHandler {
 
@@ -81,10 +79,11 @@ public class MethodHandler {
 
             for (PlayerObject playerObject : playerConnections) playerObject.tick();
 
-            player.render();
-
             for (Enemy enemy : enemies) enemy.updateEnemy();
             for (NPC npc : npcs) npc.update();
+
+            player.render();
+
 
             GUI.render();
 

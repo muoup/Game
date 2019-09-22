@@ -1,6 +1,10 @@
 package com.Game.GUI.Inventory;
 
 import com.Game.GUI.GUI;
+import com.Game.Items.Item;
+import com.Game.Items.ItemList;
+import com.Game.Items.ItemStack;
+import com.Game.Main.Main;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
@@ -21,6 +25,8 @@ public class AccessoriesManager {
     public static final int LEGGING_SLOT = 15;
     public static final int BOOT_SLOT = 19;
 
+    public static float armor = 0;
+
     public static void init() {
         for (int i = 0; i < accessories.length; i++) {
             accessories[i] = Item.emptyStack();
@@ -39,19 +45,29 @@ public class AccessoriesManager {
         }
     }
 
+    public static void addAmount(int slot, int amount) {
+        setSlot(new ItemStack(accessories[slot].getItem(),amount + accessories[slot].getAmount()), slot);
+    }
+
     public static void setSlot(ItemStack item, int slot) {
         if (accessories[slot].getID() == item.getID()) {
             int maxAmount = accessories[slot].getMaxAmount() - accessories[slot].getAmount();
             if (maxAmount > item.getAmount())
                 maxAmount = item.getAmount();
 
+            Main.sendPacket("09" + slot + ":" + item.getID() + ":" + (accessories[slot].getAmount() + maxAmount) + ":" + Main.player.name);
             accessories[slot].addAmount(maxAmount);
         } else {
-            accessories[slot] = item.clone();
+            float prev = accessories[slot].getArmor();
+            accessories[slot] = item;
+            Main.sendPacket("09" + slot + ":" + item.getID() + ":" + item.getAmount() + ":" + Main.player.name);
+            armor -= prev;
+            armor += accessories[slot].getArmor();
         }
     }
 
     public static void clientSetItem(int slot, int id, int amount) {
+        System.out.println("CSI: slot: " + slot + " id: " + id + " amount: " + amount);
         accessories[slot] = new ItemStack(ItemList.values()[id], amount);
     }
 

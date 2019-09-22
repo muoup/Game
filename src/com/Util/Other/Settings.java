@@ -14,6 +14,7 @@ public class Settings {
     public static final float maxDistance = 50;
     public static Font itemFont;
     public static int worldScale = 2;
+    public static final int lvlMax = 30; // Change this in the future...
     public static final Vector2[] resolutions = {
             new Vector2(800, 600),
             new Vector2(1200, 900),

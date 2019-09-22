@@ -2,9 +2,7 @@ package com.Game.Object.SkillingAreas;
 
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.Inventory.InventoryManager;
-import com.Game.GUI.Inventory.Item;
-import com.Game.GUI.Inventory.ItemList;
-import com.Game.GUI.Inventory.ItemStack;
+import com.Game.Items.ItemList;
 import com.Game.GUI.Skills.Skills;
 import com.Game.Main.Main;
 import com.Game.Object.GameObject;

@@ -2,6 +2,8 @@ package com.Game.GUI.Inventory;
 
 import com.Game.GUI.GUI;
 import com.Game.GUI.RightClick;
+import com.Game.Items.Item;
+import com.Game.Items.ItemStack;
 import com.Game.Main.Main;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
@@ -46,12 +48,8 @@ public class InventoryDrag {
         } else if (itemDrag.getID() != 0 && !drag && GUI.inGUI() && !click) {
             int index = getInventoryIndex();
 
-            System.out.println(InventoryManager.getStack(index) + " ' " + InventoryManager.getStack(inventoryIndex));
-
             // Swap the two spaces in case there is already an item in the inventory slot.
             InventoryManager.swapSlots(inventoryIndex, index);
-            System.out.println(InventoryManager.getStack(inventoryIndex) + " " +
-                    InventoryManager.getStack(index));
 
             resetVariables();
         } else if (itemDrag.getID() != 0 && !drag && !GUI.inGUI() && !click) {
@@ -70,15 +68,9 @@ public class InventoryDrag {
                 InventoryManager.getItem(inventoryIndex).ClickIdentities(inventoryIndex);
             }
             resetVariables();
+        } else if (inventoryIndex != -1 && !drag) {
+            resetVariables();
         }
-    }
-
-    private static void resetVariables() {
-        click = true;
-        itemDrag = Item.emptyStack();
-        inventoryIndex = -1;
-        timer = 0f;
-        InventoryManager.draggedIndex = -1;
     }
 
     public static void update() {
@@ -105,6 +97,14 @@ public class InventoryDrag {
         if (inventoryIndex != -1) {
             timer += 1 / Main.fps;
         }
+    }
+
+    private static void resetVariables() {
+        click = true;
+        itemDrag = Item.emptyStack();
+        inventoryIndex = -1;
+        timer = 0f;
+        InventoryManager.draggedIndex = -1;
     }
 
     private static int getInventoryIndex() {

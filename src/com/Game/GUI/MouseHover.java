@@ -1,7 +1,8 @@
 package com.Game.GUI;
 
+import com.Game.Entity.Enemy.Enemy;
 import com.Game.GUI.Skills.Skills;
-import com.Game.Main.Main;
+import com.Game.Main.MethodHandler;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
@@ -42,12 +43,19 @@ public class MouseHover {
         } else {
             statHover = -1;
             draw = Vector2.zero();
+            // TODO: Entity Hover
+            for (Enemy e : MethodHandler.enemies) {
+                if (!Render.onScreen(e.position, e.image))
+                    return;
+                if (Vector2.distance(Input.mousePosition, e.position) <= e.image.getHeight()) {
+                    draw = Input.mousePosition;
+                }
+            }
         }
     }
 
     public static void render() {
-        if (statHover == -1)
-            return;
+
 
         String xp = "Current XP: " + (int) Skills.getExperience(statHover);
         String lvlUp = "XP for Next Level: " + Skills.levelToExp(Skills.getLevel(statHover) + 1);
@@ -55,10 +63,8 @@ public class MouseHover {
         Render.setFont(new Font("Arial", Font.BOLD, 14));
 
         float width = Settings.sWidth(lvlUp);
-
         float x = (Input.mousePosition.x + width * 1.25f > Settings.curResolution().x) ?
                 Input.mousePosition.x - width * 1.1f : Input.mousePosition.x;
-
         Vector2 dPos = new Vector2(x, Input.mousePosition.y);
 
         Render.setColor(Color.BLACK);

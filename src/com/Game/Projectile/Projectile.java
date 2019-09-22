@@ -6,12 +6,10 @@ import com.Game.GUI.Skills.Skills;
 import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
 import com.Game.World.World;
-import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -49,7 +47,7 @@ public class Projectile {
 
     public void setImage(String root) {
         try {
-            this.image = ImageIO.read(getClass().getResource("/res/images/" + root));
+            this.image = ImageIO.read(getClass().getResource("/res/images/Projectiles/" + root));
         } catch (IOException e) {
             e.printStackTrace();
         }

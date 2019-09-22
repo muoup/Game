@@ -1,4 +1,4 @@
-package com.Game.GUI.Inventory;
+package com.Game.Items;
 
 import java.awt.image.BufferedImage;
 
@@ -32,6 +32,10 @@ public class ItemStack {
 
     public String getPlural() {
         return item.getPlural();
+    }
+
+    public float getArmor() {
+        return item.armor;
     }
 
     public ItemStack clone() {

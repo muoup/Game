@@ -3,11 +3,11 @@ package com.Game.Entity.Player;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.GUI;
 import com.Game.GUI.Inventory.AccessoriesManager;
-import com.Game.GUI.TextBox;
 import com.Game.Main.Main;
 import com.Game.Projectile.Projectile;
 import com.Game.World.World;
 import com.Game.listener.Input;
+import com.Util.Math.DeltaMath;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 import com.Util.Other.Settings;
@@ -88,7 +88,12 @@ public class Player {
     }
 
     public void damage(float amount) {
-        health -= amount;
+        health -= amount * damageReduction();
+    }
+
+    public float damageReduction() {
+        float armor = AccessoriesManager.armor;
+        return 100 - (100 / ((armor / 1000) + 1)) + DeltaMath.range(-7.5f, -7.5f);
     }
 
     public void movement() {
@@ -166,7 +171,7 @@ public class Player {
                 yPoints[0],
                 yPoints[2]
         };
-        if ((speed.x < 0 && !CollisionHandler.isFree(x1Points)) || (speed.y > 0 && !CollisionHandler.isFree(x2Points))) {
+        if ((speed.x < 0 && !CollisionHandler.isFree(x1Points)) || (speed.x > 0 && !CollisionHandler.isFree(x2Points))) {
             speed.x = 0;
         }
 

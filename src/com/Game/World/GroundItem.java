@@ -1,13 +1,12 @@
 package com.Game.World;
 
-import com.Game.GUI.Inventory.ItemStack;
+import com.Game.Items.ItemStack;
 import com.Game.Main.MethodHandler;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class GroundItem {

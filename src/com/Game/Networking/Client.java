@@ -200,7 +200,7 @@ public class Client {
             if (i % 2 == 1) {
                 id = Integer.parseInt(index[i]);
             } else {
-                AccessoriesManager.clientSetItem(i / 2 - 1, id, Integer.parseInt(index[2]));
+                AccessoriesManager.clientSetItem(i / 2 - 1, id, Integer.parseInt(index[i]));
             }
         }
     }

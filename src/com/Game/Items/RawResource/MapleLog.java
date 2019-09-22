@@ -1,10 +1,8 @@
-package com.Game.GUI.Inventory.Items.RawResource;
+package com.Game.Items.RawResource;
 
-import com.Game.GUI.Inventory.InventoryManager;
-import com.Game.GUI.Inventory.Item;
-import com.Game.GUI.Inventory.ItemList;
-import com.Game.GUI.Inventory.ItemStack;
-import com.Game.Main.Main;
+import com.Game.Items.Item;
+import com.Game.Items.ItemList;
+import com.Game.Items.ItemStack;
 
 public class MapleLog extends Item {
     public MapleLog(int id, String imageName, String name, String examineText, int maxStack, int worth) {

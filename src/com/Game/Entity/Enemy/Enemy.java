@@ -2,7 +2,6 @@ package com.Game.Entity.Enemy;
 
 import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
-import com.Game.World.GroundItem;
 import com.Game.World.World;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
@@ -16,7 +15,7 @@ public class Enemy {
     public Vector2 position;
     public Vector2 spawnPosition;
 
-    public boolean enabled = true;
+    public boolean enabled = false;
     public boolean target = false;
 
     public float respawnTimer = 0;
@@ -30,6 +29,8 @@ public class Enemy {
     public float health = 0;
 
     public BufferedImage image;
+
+    public String name = "NAME NEEDS TO BE CHANGED";
 
     public Enemy(int x, int y) {
         position = new Vector2(x, y);

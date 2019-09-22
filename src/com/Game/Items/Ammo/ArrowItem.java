@@ -1,9 +1,8 @@
-package com.Game.GUI.Inventory.Items.Ammo;
+package com.Game.Items.Ammo;
 
 import com.Game.GUI.Inventory.AccessoriesManager;
-import com.Game.GUI.Inventory.Item;
+import com.Game.Items.Item;
 import com.Game.Projectile.Arrow;
-import com.Game.Projectile.Bullet;
 import com.Util.Math.Vector2;
 
 public class ArrowItem extends Item {

@@ -1,7 +1,5 @@
 package com.Util.Math;
 
-import java.util.Random;
-
 public class DeltaMath {
     public static int[] fillArray(int content, int length) {
         int[] array = new int[length];
@@ -11,6 +9,10 @@ public class DeltaMath {
         }
 
         return array;
+    }
+
+    public static boolean between(float c, float a, float b) {
+        return c >= a && c <= b;
     }
 
     public static float roundTo(float in, float to) {

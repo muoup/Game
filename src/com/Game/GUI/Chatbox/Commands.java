@@ -1,7 +1,7 @@
 package com.Game.GUI.Chatbox;
 
 import com.Game.GUI.Inventory.InventoryManager;
-import com.Game.GUI.Inventory.ItemList;
+import com.Game.Items.ItemList;
 import com.Game.GUI.Skills.Skills;
 import com.Game.Main.Main;
 import com.Game.Object.SkillingAreas.Tree;

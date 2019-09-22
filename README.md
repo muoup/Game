@@ -13,7 +13,7 @@ Space - Shoot (Mouse to Aim)
 
 E - Interact, Talk, Harvest
 
-Right Click - Pick up and move in inventory
-Left Click - Inspect in inventory
+Left Click - Pick up and drag in inventory; Click to use first right-click option.
+Right Click - Inspect in inventory
 
 Story:

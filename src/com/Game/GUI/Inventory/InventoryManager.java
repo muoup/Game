@@ -2,6 +2,9 @@ package com.Game.GUI.Inventory;
 
 import com.Game.GUI.GUI;
 import com.Game.GUI.RightClick;
+import com.Game.Items.Item;
+import com.Game.Items.ItemList;
+import com.Game.Items.ItemStack;
 import com.Game.Main.Main;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
