@@ -13,7 +13,7 @@ public class MapleLog extends Item {
     }
 
     public void ClickIdentities(int index) {
-        replaceInventory(index, new ItemStack(ItemList.bow, 1));
+        replaceInventory(index, new ItemStack(ItemList.mapleBow, 1));
     }
 
     public void OnRightClick(int index, int option) {

@@ -2,7 +2,7 @@ package com.Game.Items.Ammo;
 
 import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.Items.Item;
-import com.Game.Projectile.Arrow;
+import com.Game.Projectile.RockArrow;
 import com.Util.Math.Vector2;
 
 public class RockArrowItem extends Item {
@@ -13,6 +13,6 @@ public class RockArrowItem extends Item {
     }
 
     public void createProjectile(Vector2 position, Vector2 direction, float damageMultiplier, float expMultiplier) {
-        new Arrow(position, direction, 10 * damageMultiplier, 2f, expMultiplier, true);
+        new RockArrow(position, direction, 10 * damageMultiplier, 2f, expMultiplier, true);
     }
 }

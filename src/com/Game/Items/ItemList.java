@@ -13,14 +13,14 @@ import com.Game.Items.RawResource.Log;
 import com.Game.Items.RawResource.MapleLog;
 import com.Game.Items.Tool.WoodHarp;
 import com.Game.Items.Weapon.Bow;
-import com.Game.Items.Weapon.CrystalBow;
+import com.Game.Items.Weapon.MapleBow;
 
 public enum ItemList {
     empty(new Item(0, "/", "/", "/", 0, 0)),
     wood(new Log(1, "wood.png", "Log", "The remnants of a tree.", 1, 150)),
     bow(new Bow(2, "bow.png", "Bow","Get ready for the power of my bow!", 1, 170)),
     arrow(new ArrowItem(3, "arrow.png", "Arrow", "Some sharp arrows!", 100000, 10)),
-    crystalBow(new CrystalBow(4, "crystalBow.png", "Crystal Bow", "This is really gonna hurt.", 1,450)),
+    mapleBow(new MapleBow(4, "maple_bow.png", "Maple Bow", "This is really gonna hurt.", 1,375)),
     clownfish(new ClownFishFood(5, "clownfish.png", "Clownfish", "This looks quite tasty.", 1,100)),
     bluefish(new BlueFishFood(6, "bluefish.png", "Bluefish", "This looks very tasty.",1, 250)),
     mapleLog(new MapleLog(7, "maplewood.png", "Maple Log", "A sticky log, sounds useful to me.",1, 350)),

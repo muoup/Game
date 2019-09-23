@@ -6,6 +6,8 @@ import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 import com.Util.Other.Settings;
 
+import java.awt.*;
+
 public class PlayerObject {
     private int x, y;
     private String username;
@@ -15,7 +17,8 @@ public class PlayerObject {
         this.x = x;
         this.y = y;
         this.username = username;
-        this.nameOffset = Render.getStringWidth(username) / 2;
+        Render.setFont(Settings.npcFont);
+        this.nameOffset = 0.5f * Render.getStringWidth(username);
     }
 
     public void setPos(int x, int y) {
@@ -37,7 +40,8 @@ public class PlayerObject {
             Vector2 drawPos = new Vector2(getPos().x - World.curWorld.offset.x,
                     getPos().y - World.curWorld.offset.y);
             Render.drawImage(Main.player.image, drawPos.offsetClone(-Main.player.scale / 2));
-            Render.drawText(username, drawPos.subtractClone(nameOffset, 32));
+            Render.setColor(Color.BLACK);
+            Render.drawText(username, drawPos.subtractClone(nameOffset, 48));
         }
     }
 }

@@ -96,7 +96,12 @@ public class RightClick {
 
                 int option = (int) Input.mousePosition.subtract(draw).y / (int) percentBox;
 
-                ItemStack selected = MethodHandler.groundItems.get(groundItem).stack.get(option);
+                GroundItem ground = MethodHandler.groundItems.get(groundItem);
+
+                if (option > ground.stack.size() - 1)
+                    return;
+
+                ItemStack selected = ground.stack.get(option);
 
                 int amount = selected.getAmount();
                 int removed = 0;
@@ -107,6 +112,7 @@ public class RightClick {
                     if (accessory.getID() == selected.getID()) {
                         int maxAdd = accessory.getMaxAmount() - accessory.getAmount();
                         int add = (amount > maxAdd) ? maxAdd : amount;
+                        System.out.println(add + " " + amount);
 
                         AccessoriesManager.addAmount(selected.getItem().equipStatus, add);
                         amount -= add;

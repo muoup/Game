@@ -43,7 +43,7 @@ public class TestBoss extends Enemy {
 
     public void handleDrops() {
         ArrayList<ItemStack> drops = new ArrayList();
-        drops.add(new ItemStack(ItemList.crystalBow, 1));
+        drops.add(new ItemStack(ItemList.mapleBow, 1));
         drops.add(new ItemStack(ItemList.arrow, 250));
 
         new GroundItem(position, drops);

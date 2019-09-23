@@ -55,8 +55,10 @@ public class AccessoriesManager {
             if (maxAmount > item.getAmount())
                 maxAmount = item.getAmount();
 
-            Main.sendPacket("09" + slot + ":" + item.getID() + ":" + (accessories[slot].getAmount() + maxAmount) + ":" + Main.player.name);
-            accessories[slot].addAmount(maxAmount);
+            System.out.println("INFO: " + maxAmount + " " + item.getAmount());
+
+            Main.sendPacket("09" + slot + ":" + item.getID() + ":" + maxAmount + ":" + Main.player.name);
+            accessories[slot].setAmount(maxAmount);
         } else {
             float prev = accessories[slot].getArmor();
             accessories[slot] = item;
@@ -67,7 +69,6 @@ public class AccessoriesManager {
     }
 
     public static void clientSetItem(int slot, int id, int amount) {
-        System.out.println("CSI: slot: " + slot + " id: " + id + " amount: " + amount);
         accessories[slot] = new ItemStack(ItemList.values()[id], amount);
     }
 

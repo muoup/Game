@@ -57,7 +57,7 @@ public class GUI {
         Settings.itemFont = new Font("Arial", Font.PLAIN, (int) Settings.curResolution().x / 75);
 
         for (int i = 0; i < invImgNames.length; i++) {
-            inventoryOptions[i] = Render.getScaledImage(Main.getImage("/GUI/" + invImgNames[i]), select, select);
+            inventoryOptions[i] = Render.getScaledImage(Main.getImage("GUI/" + invImgNames[i]), select, select);
         }
 
         InventoryManager.init();

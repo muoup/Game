@@ -29,7 +29,7 @@ public class Main extends Canvas {
     public static final String connectionCode = "69";
     public static final String messageCode = "13";
     public static boolean isConnected = false;
-    public static final String ipAddress = "localhost";
+    public static final String ipAddress = "67.87.106.143";
 
     public static Player player;
     public static Menu settings;
@@ -62,9 +62,9 @@ public class Main extends Canvas {
         main.run();
     }
 
-    public static void serverConnect(String username, String password, int loginCode) {
+    public static boolean serverConnect(String username, String password, int loginCode) {
         client = new Client(ipAddress, 3112);
-        client.connect(username, password, loginCode);
+        return client.connect(username, password, loginCode);
     }
 
     public static void logout() {
@@ -192,13 +192,21 @@ public class Main extends Canvas {
         return Main.main.getImageFromRoot(root);
     }
 
-    public BufferedImage getImageFromRoot(String root) {
+    public BufferedImage getImageFromRoot(Object root) {
         BufferedImage image = null;
+        InputStream stream = Main.class.getResourceAsStream("/res/images/" + root);
+
+        if (stream == null) {
+            System.err.println("Unrecognized file: /res/images/" + root.toString());
+            return null;
+        }
 
         try {
-            image = ImageIO.read(getClass().getResource("/res/images/" + root));
+            image = ImageIO.read(stream);
         } catch (IOException e) {
             System.err.println("ERROR, IMAGE NOT FOUND: " + root);
+        } catch (IllegalArgumentException e) {
+            System.err.println("ILLEGAL! " + root);
         }
 
         return image;

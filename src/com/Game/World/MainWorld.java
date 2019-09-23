@@ -3,13 +3,9 @@ package com.Game.World;
 import com.Game.Entity.Enemy.BabyRockEnemy;
 import com.Game.Entity.Enemy.RockEnemy;
 import com.Game.Entity.Player.Player;
-import com.Game.Items.ItemList;
-import com.Game.Items.ItemStack;
 import com.Game.Main.MethodHandler;
 import com.Game.Object.SkillingAreas.FishingArea;
 import com.Game.Object.SkillingAreas.Tree;
-
-import java.util.ArrayList;
 
 public class MainWorld extends World {
     public MainWorld() {
@@ -21,9 +17,6 @@ public class MainWorld extends World {
         MethodHandler.objects.clear();
         MethodHandler.groundItems.clear();
         Player.projectiles.clear();
-
-        ArrayList<ItemStack> items = new ArrayList();
-        items.add(new ItemStack(ItemList.arrow, 5));
 
         // Forest Area
         new Tree(1655, 1875, Tree.wood);
@@ -51,12 +44,12 @@ public class MainWorld extends World {
         new Tree(2386, 2493, Tree.maple);
 
         // Rock Enemies
-        new BabyRockEnemy(3296, 4320);
-        new BabyRockEnemy(3468, 4273);
-        new BabyRockEnemy(3597, 4402);
-        new BabyRockEnemy(3456, 4492);
-        new BabyRockEnemy(3244, 4611);
-        new BabyRockEnemy(3559, 4632);
+        new BabyRockEnemy(3496, 4520);
+        new BabyRockEnemy(3668, 4473);
+        new BabyRockEnemy(3797, 4602);
+        new BabyRockEnemy(3656, 4692);
+        new BabyRockEnemy(3444, 4811);
+        new BabyRockEnemy(3759, 4832);
 
         new RockEnemy(4430, 4547);
         new RockEnemy(4430, 4724);

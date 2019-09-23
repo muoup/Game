@@ -78,11 +78,12 @@ public class Client {
         String[] index;
 
         switch (start) {
-            case "01":
-                Main.player.serverIndex = Integer.parseInt(message);
-                break;
             case "02":
                 index = message.split(":");
+                if (message.charAt(0) == 'p') {
+                    JOptionPane.showMessageDialog(null, "That player is already logged in. Wait a second and retry again.");
+                    return;
+                }
                 boolean c = message.charAt(1) == 'c';
                 if (message.charAt(0) == 'l') {
                     if (c) {
@@ -96,20 +97,27 @@ public class Client {
                     } else {
                         JOptionPane.showMessageDialog(null, "That username already exists!");
                     }
-                } else if (message.charAt(0) == 'p') {
-                    JOptionPane.showMessageDialog(null, "That player is already logged in. Wait a second and retry again.");
                 } else {
                     System.err.println("An unexpected login message occured.");
                 }
+                break;
+            case "04":
+                takeSkillData(message.split(":"));
+                break;
+            case "05":
+                takeItemData(message.split(":"));
+                break;
+            case "06":
+                takeAccData(message.split(":"));
+                break;
+            case "12":
+                String[] parts = message.split(":");
+                MethodHandler.playerConnections.add(new PlayerObject(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), parts[2]));
                 break;
             case "13":
             case "55":
                 // Message is received
                 ChatBox.sendMessage(message);
-                break;
-            case "12":
-                String[] parts = message.split(":");
-                MethodHandler.playerConnections.add(new PlayerObject(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), parts[2]));
                 break;
             case "15":
                 String[] movement = message.split(":");
@@ -134,15 +142,6 @@ public class Client {
             case "99":
                 Main.logout();
                 break;
-            case "04":
-                takeSkillData(message.split(":"));
-                break;
-            case "05":
-                takeItemData(message.split(":"));
-                break;
-            case "06":
-                takeAccData(message.split(":"));
-                break;
         }
 
         dataBuffer = new byte[4096];
@@ -164,9 +163,7 @@ public class Client {
             errorCode = Error.SOCKET_EXCEPTION;
             return false;
         }
-        Main.player.name = username;
         send(Main.connectionCode + username + ":" + password + ":" + connectionCode + ":" + (int) Main.player.position.x + ":" + (int) Main.player.position.y);
-        // Wait for server to reply
         listening = true;
 
         listenerThread = new Thread(() -> listen());
@@ -206,14 +203,7 @@ public class Client {
     }
 
     public void joinServer(String username) {
-
-        System.out.println("CLIENT NAME: " + username);
-
-        Main.player.name = username;
         ChatBox.tag = "[" + Main.player.name + "]: ";
-
-        //sendConnectionPacket(username, password);
-        System.out.println("POS: " + Main.player.position);
 
         Main.isConnected = true;
     }
@@ -229,7 +219,6 @@ public class Client {
     }
 
     public void send(byte[] data) {
-        assert(socket.isConnected());
         DatagramPacket packet = new DatagramPacket(data, data.length, serverAddress, port);
         try {
             socket.send(packet);

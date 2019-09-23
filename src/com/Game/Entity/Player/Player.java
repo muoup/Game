@@ -31,7 +31,6 @@ public class Player {
     private float dy = 0;
     private float dMod = 0;
     private float shootTimer = 0;
-    public int serverIndex = -1;
     public String name = null;
 
     public float maxHealth = 100f;
@@ -88,12 +87,14 @@ public class Player {
     }
 
     public void damage(float amount) {
-        health -= amount * damageReduction();
+        float dmg = amount * damageReduction();
+        System.out.println("Damage Taken: " + dmg);
+        health -= dmg;
     }
 
     public float damageReduction() {
         float armor = AccessoriesManager.armor;
-        return 100 - (100 / ((armor / 1000) + 1)) + DeltaMath.range(-7.5f, -7.5f);
+        return 1f + 0.01f * (100 - (100 / ((armor / 1000) + 1)) + DeltaMath.range(-7.5f, -7.5f));
     }
 
     public void movement() {
@@ -147,7 +148,7 @@ public class Player {
 
         if (!movement.equalTo(Vector2.zero())) {
             position.add(movement);
-            Main.sendPacket("15" + Main.player.name + ":" + (int) position.x + ":" + (int) position.y + ":" + serverIndex);
+            Main.sendPacket("15" + Main.player.name + ":" + (int) position.x + ":" + (int) position.y);
         }
     }
 

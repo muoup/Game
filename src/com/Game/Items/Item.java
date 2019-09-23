@@ -21,10 +21,11 @@ public class Item {
     public float armor = 0;
     public int maxStack;
     public int worth;
+    public ItemRequirement requirement = ItemRequirement.none();
 
     public Item(int id, String imageName, String name, String examineText, int maxStack, int worth) {
         this.id = id;
-        this.image = (!imageName.equals("/")) ? Main.main.getImageFromRoot("items/" + imageName) : null;
+        this.image = (!imageName.equals("/")) ? Main.main.getImageFromRoot("Items/" + imageName) : null;
         this.examineText = examineText;
         this.maxStack = maxStack;
         this.name = name;
@@ -75,6 +76,11 @@ public class Item {
     }
 
     public void equipItem(int index) {
+        if (!requirement.meetsRequirement()) {
+            ChatBox.sendMessage(requirement.toString());
+            return;
+        }
+
         ItemStack slotStack = AccessoriesManager.getSlot(equipStatus);
         ItemStack inventoryStack = InventoryManager.getStack(index);
 

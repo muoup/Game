@@ -6,6 +6,7 @@ import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 import com.Util.Other.Settings;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
@@ -50,11 +51,11 @@ public class Login {
             else
                 selected = 0;
 
-            if (!nameField.isBlank() && !passwordField.isBlank()) {
+            if (!nameField.trim().isEmpty() && !passwordField.trim().isEmpty()) {
                 if (Input.mouseInRect(loginPos, buttonSize))
-                    Main.serverConnect(nameField, passwordField, 0);
+                    connect(0);
                 else if (Input.mouseInRect(registerPos, buttonSize))
-                    Main.serverConnect(nameField, passwordField, 1);
+                    connect(1);
             }
         }
         if (selected > 0) {
@@ -63,6 +64,22 @@ public class Login {
             }
         }
 
+    }
+
+    public static void connect(int loginCode) {
+        Main.player.name = nameField.trim();
+        boolean con = Main.serverConnect(nameField, passwordField, loginCode);
+        if (!con) {
+            Client.Error err = Main.client.getErrorCode();
+            if (err == Client.Error.INVALID_HOST) {
+                JOptionPane.showMessageDialog(null, "Cannot connect to server, please wait for it to start up.");
+            } else if (err == Client.Error.SOCKET_EXCEPTION) {
+                JOptionPane.showMessageDialog(null, "There was an error setting up your socket. " +
+                        "\n I have no idea what this means this is just here in case it happens.");
+            } else {
+                JOptionPane.showMessageDialog(null, "There was no error yet you could not connect, I dunno.");
+            }
+        }
     }
 
     public static void resetLogin() {
