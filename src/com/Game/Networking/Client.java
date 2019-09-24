@@ -24,6 +24,7 @@ public class Client {
     private int port;
     private boolean listening = false;
     private byte[] dataBuffer = new byte[4096];
+    private static final String clientVersion = "0.0.1a";
 
     private Error errorCode = Error.NONE;
 
@@ -82,6 +83,9 @@ public class Client {
                 index = message.split(":");
                 if (message.charAt(0) == 'p') {
                     JOptionPane.showMessageDialog(null, "That player is already logged in. Wait a second and retry again.");
+                    return;
+                } else if (message.charAt(0) == 'v') {
+                    JOptionPane.showMessageDialog(null, "You are running the wrong client version! Please update your client.");
                     return;
                 }
                 boolean c = message.charAt(1) == 'c';
@@ -163,7 +167,7 @@ public class Client {
             errorCode = Error.SOCKET_EXCEPTION;
             return false;
         }
-        send(Main.connectionCode + username + ":" + password + ":" + connectionCode + ":" + (int) Main.player.position.x + ":" + (int) Main.player.position.y);
+        send(Main.connectionCode + username + ":" + password + ":" + connectionCode + ":" + (int) Main.player.position.x + ":" + (int) Main.player.position.y + ":" + clientVersion);
         listening = true;
 
         listenerThread = new Thread(() -> listen());

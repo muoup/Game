@@ -59,6 +59,31 @@ public class InventoryManager {
         inventory[index].addAmount(-amount);
     }
 
+    public static int itemCount(ItemList item) {
+        int amount = 0;
+        for (ItemStack stack : inventory) {
+            if (stack.getID() == item.getID())
+                amount += stack.getAmount();
+        }
+        return amount;
+    }
+
+    public static boolean removeItem(ItemList item, int amount) {
+        int remove = amount;
+        for (int i = 0; i < inventory.length; i++) {
+            ItemStack stack = inventory[i];
+            if (stack.getID() == item.getID()) {
+                int removeAmount = (remove > stack.getAmount()) ? stack.getAmount() : remove;
+                removeItem(i, removeAmount);
+                remove -= removeAmount;
+                if (remove == 0)
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
     public static void render() {
         Render.setColor(new Color(255, 138, 4));
 

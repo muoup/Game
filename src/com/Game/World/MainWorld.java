@@ -1,6 +1,7 @@
 package com.Game.World;
 
 import com.Game.Entity.Enemy.BabyRockEnemy;
+import com.Game.Entity.Enemy.Chicken;
 import com.Game.Entity.Enemy.RockEnemy;
 import com.Game.Entity.Player.Player;
 import com.Game.Main.MethodHandler;
@@ -54,6 +55,8 @@ public class MainWorld extends World {
         new RockEnemy(4430, 4547);
         new RockEnemy(4430, 4724);
         new RockEnemy(4430, 4951);
+
+        new Chicken(4394, 2874);
 
         // Beach Area
         new FishingArea(885, 5595, FishingArea.clownFish);

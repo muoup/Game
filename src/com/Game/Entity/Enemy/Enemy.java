@@ -60,11 +60,16 @@ public class Enemy {
 
         if (health <= 0) {
             enabled = false;
+            handleDrops();
+        } else {
             if (target)
-                handleDrops();
-        } else if (target) {
-            AI();
+                AI();
+            passiveAI();
         }
+    }
+
+    public void passiveAI() {
+
     }
 
     public Vector2 getPlayer() {

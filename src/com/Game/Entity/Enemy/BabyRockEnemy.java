@@ -11,7 +11,7 @@ import com.Util.Math.Vector2;
 import java.util.ArrayList;
 
 public class BabyRockEnemy extends Enemy {
-    float piecePercent = 0.25f;
+    float piecePercent = 1f;
     private float speed = 1.25f;
     private float maxDistance = 80f;
     private float timer = 0f;

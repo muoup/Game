@@ -20,7 +20,7 @@ public class MapleLog extends Item {
         switch (option) {
             case 1:
                 // Craft Arrows
-                replaceInventory(index, new ItemStack(ItemList.arrow, 25));
+                replaceInventory(index, new ItemStack(ItemList.arrowShaft, 25));
                 break;
         }
     }

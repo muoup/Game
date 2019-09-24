@@ -33,6 +33,7 @@ public class SkillsManager {
     }
 
     public static void render() {
+        Render.setFont(Settings.itemFont);
         Render.setColor(Color.LIGHT_GRAY);
         Render.drawBounds(GUI.GuiPos, GUI.GUIEnd());
 

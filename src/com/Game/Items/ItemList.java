@@ -8,9 +8,7 @@ import com.Game.Items.Armor.Rock.RockHelmet;
 import com.Game.Items.Armor.Rock.RockLeggings;
 import com.Game.Items.Consumables.Food.BlueFishFood;
 import com.Game.Items.Consumables.Food.ClownFishFood;
-import com.Game.Items.RawResource.Coins;
-import com.Game.Items.RawResource.Log;
-import com.Game.Items.RawResource.MapleLog;
+import com.Game.Items.RawResource.*;
 import com.Game.Items.Tool.WoodHarp;
 import com.Game.Items.Weapon.Bow;
 import com.Game.Items.Weapon.MapleBow;
@@ -30,7 +28,9 @@ public enum ItemList {
     rockchestplate(new RockChestplate(11, "rock_chestplate.png", "Rock Chestplate", "And there they saw a rock.", 1, 5000)),
     rockleggings(new RockLeggings(12, "rock_leggings.png", "Rock Leggings", "It wasn't a rock.", 1, 4000)),
     rockboots(new RockBoots(13, "rock_boots.png", "Rock Boots", "It was a rock lobster.", 1, 2000)),
-    rockarrow(new RockArrowItem(14, "rock_arrow.png", "Rock Arrow", "It was a rock lobster.", 100000, 25));
+    rockarrow(new RockArrowItem(14, "rock_arrow.png", "Rock Arrow", "It was a rock lobster.", 100000, 25)),
+    feather(new Feather(15, "feather.png", "Feather", "Because steel is heavier than feathers.", 100000, 20)),
+    arrowShaft(new ArrowShaft(16, "arrow_shaft.png", "Arrow Shaft", "Not quite the orange kind.", 100000, 10));
 
     public Item item;
 

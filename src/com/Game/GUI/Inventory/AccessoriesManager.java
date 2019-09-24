@@ -122,7 +122,10 @@ public class AccessoriesManager {
                 Render.drawImage(Render.getScaledImage(accessories[i].getImage(), GUI.invSize), rectPos);
             }
         }
+
+        Render.drawRectOutline(GUI.GuiPos.addClone(2, 2), GUI.GUIEnd().subtractClone(2, 2));
     }
+
 
     public static void drawBox(int x, int y) {
         Vector2 rectPos = GUI.getGridPosition(x, y);
@@ -135,7 +138,7 @@ public class AccessoriesManager {
 
         ItemStack cur = accessories[x + y * 4];
 
-        String amount = Integer.toString(cur.getAmount());
+        String amount = InventoryManager.formatAmount(cur.getAmount());
 
         Render.setFont(Settings.itemFont);
 

@@ -9,8 +9,9 @@ public class Log extends Item {
         super(id, imageName, name, examineText, maxStack, worth);
 
         options.add("Craft Bow");
-        options.add("Craft Arrows");
+        options.add("Craft Arrow Shafts");
     }
+
 
     public void ClickIdentities(int index) {
         replaceInventory(index, new ItemStack(ItemList.bow, 1));
@@ -20,7 +21,7 @@ public class Log extends Item {
         switch (option) {
             case 1:
                 // Craft Arrows
-                replaceInventory(index, new ItemStack(ItemList.arrow, 15));
+                replaceInventory(index, new ItemStack(ItemList.arrowShaft, 15));
                 break;
         }
     }

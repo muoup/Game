@@ -14,7 +14,7 @@ public class RockEnemy extends Enemy {
 
     private float speed = 1.5f;
     private float maxDistance = 128f;
-    private float piecePercent = 1.5f;
+    private float piecePercent = 5f;
     private float timer = 0f;
 
     public RockEnemy(int x, int y) {
