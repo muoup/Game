@@ -50,6 +50,7 @@ public class Enemy {
                 health = maxHealth;
                 position = spawnPosition.clone();
                 timer = 0;
+                onRespawn();
             }
 
             return;
@@ -69,6 +70,10 @@ public class Enemy {
     }
 
     public void passiveAI() {
+
+    }
+
+    public void onRespawn() {
 
     }
 

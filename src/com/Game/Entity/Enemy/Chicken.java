@@ -37,10 +37,13 @@ public class Chicken extends Enemy {
         movement = Vector2.magnitudeDirection(position, moveTo);
     }
 
+    public void onRespawn() {
+        setMoveTo();
+    }
+
     public void handleDrops() {
-        System.out.println("Chicken drops: " + position);
         ArrayList<ItemStack> stack = new ArrayList<ItemStack>();
-        stack.add(new ItemStack(ItemList.feather, (int) DeltaMath.range(5, 15)));
+        stack.add(new ItemStack(ItemList.feather, (int) DeltaMath.range(1, 2)));
         new GroundItem(position, stack);
     }
 }

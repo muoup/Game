@@ -55,8 +55,6 @@ public class AccessoriesManager {
             if (maxAmount > item.getAmount())
                 maxAmount = item.getAmount();
 
-            System.out.println("INFO: " + maxAmount + " " + item.getAmount());
-
             Main.sendPacket("09" + slot + ":" + item.getID() + ":" + maxAmount + ":" + Main.player.name);
             accessories[slot].setAmount(maxAmount);
         } else {
