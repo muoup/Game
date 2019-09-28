@@ -1,16 +1,24 @@
 package com.Game.World;
 
+import com.Game.Entity.Enemy.Enemy;
+import com.Game.Entity.NPC.NPC;
+import com.Game.Entity.Player.Player;
 import com.Game.Main.Main;
+import com.Game.Main.MethodHandler;
+import com.Game.Object.GameObject;
+import com.Game.Projectile.Projectile;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 import com.Util.Other.Settings;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class World {
 
     private static World[] worlds = {
-            new MainWorld() // Normal Overworld
+            new MainWorld(), // Normal Overworld
+            new Underground() // Custom Underground Zone
     };
 
     public static World curWorld = worlds[0];
@@ -46,12 +54,14 @@ public class World {
 
     public static void changeWorld(int worldIndex) {
         curWorld = worlds[worldIndex];
-        curWorld.initWorld();
+        curWorld.resetWorld();
+        Main.player.sendMovementPacket();
     }
 
     public static void changeWorld(World world) {
         curWorld = world;
-        curWorld.initWorld();
+        curWorld.resetWorld();
+        Main.player.sendMovementPacket();
     }
 
     // Set the offset of world, possibly for teleportation.
@@ -59,9 +69,22 @@ public class World {
         offset = set;
     }
 
-    // Void for instantiating npcs, items, etc.
-    public void initWorld() {
+    /**
+     * Is called everytime the player attempts to interact with the GameObject
+     */
+    protected void initWorld() {
 
+    }
+
+    // Resets all of the arrays so that new objects can be added in initWorld()
+    public void resetWorld() {
+        MethodHandler.npcs = new ArrayList<NPC>();
+        MethodHandler.enemies = new ArrayList<Enemy>();
+        MethodHandler.objects = new ArrayList<GameObject>();
+        MethodHandler.groundItems = new ArrayList<GroundItem>();
+        Player.projectiles = new ArrayList<Projectile>();
+
+        initWorld();
     }
 
     public void initImage(String name) {

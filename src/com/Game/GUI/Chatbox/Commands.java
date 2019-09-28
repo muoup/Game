@@ -44,12 +44,16 @@ public class Commands {
                 ChatBox.sendMessage(Main.player.position.toString());
                 break;
             case "tp":
-                if (parameters.length == 2) {
+                if (parameters.length == 2 || parameters.length == 3) {
                     Vector2 tp = new Vector2(Integer.parseInt(parameters[0]), Integer.parseInt(parameters[1]));
                     ChatBox.sendMessage("Teleported to: " + tp.toString());
+                    if (parameters.length == 3) {
+                        World.changeWorld(Integer.parseInt(parameters[2]));
+                        ChatBox.sendMessage("Change Subworld");
+                    }
                     Main.player.position = tp.clone();
                 } else {
-                    ChatBox.sendMessage("Correct parameters are (x, y)");
+                    ChatBox.sendMessage("Correct parameters are (x, y) or (x, y, subWorld)");
                 }
                 break;
             case "tpmouse":
@@ -57,7 +61,7 @@ public class Commands {
                 Vector2 tp = Input.mousePosition.add(World.curWorld.offset);
                 break;
             case "resetworld":
-                World.curWorld.initWorld();
+                World.curWorld.resetWorld();
                 break;
             case "newtree":
                 if (!nullParam) {

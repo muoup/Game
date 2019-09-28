@@ -9,7 +9,7 @@ import com.Util.Other.Settings;
 import java.awt.*;
 
 public class PlayerObject {
-    private int x, y;
+    private int x, y, subWorld;
     private String username;
     private float nameOffset;
 
@@ -21,9 +21,10 @@ public class PlayerObject {
         this.nameOffset = 0.5f * Render.getStringWidth(username);
     }
 
-    public void setPos(int x, int y) {
+    public void setPos(int x, int y, int subWorld) {
         this.x = x;
         this.y = y;
+        this.subWorld = subWorld;
     }
 
     public Vector2 getPos() {
@@ -35,7 +36,7 @@ public class PlayerObject {
     }
 
     public void tick() {
-        if (Render.onScreen(getPos(), Main.player.image)) {
+        if (Render.onScreen(getPos(), Main.player.image) && Main.player.subWorld == subWorld) {
             Render.setFont(Settings.npcFont);
             Vector2 drawPos = new Vector2(getPos().x - World.curWorld.offset.x,
                     getPos().y - World.curWorld.offset.y);

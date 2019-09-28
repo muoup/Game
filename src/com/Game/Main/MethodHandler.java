@@ -84,7 +84,6 @@ public class MethodHandler {
 
             player.render();
 
-
             GUI.render();
 
             if (!removeGround.isEmpty()) {

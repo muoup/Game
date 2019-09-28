@@ -1,6 +1,5 @@
 package com.Game.Object;
 
-import com.Game.Entity.Player.Player;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.Main.Main;
 import com.Game.World.World;
@@ -28,7 +27,7 @@ public class GameObject {
 
     public void updateObject() {
 
-        float distance = Vector2.distance(Main.player.position, (image == null) ? position : position.addClone(image.getWidth() / 2, image.getHeight() / 2));
+        float distance = Vector2.distance(Main.player.position, (image == null) ? position : position.addClone(image.getWidth() / 1.5f, image.getHeight() / 1.5f));
 
         if (image != null) {
             if (Render.onScreen(position, image)) {

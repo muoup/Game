@@ -4,7 +4,6 @@ import com.Game.Entity.Player.Player;
 import com.Game.GUI.GUI;
 import com.Game.Networking.Client;
 import com.Game.Networking.Login;
-import com.Game.World.World;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Settings;
@@ -81,8 +80,6 @@ public class Main extends Canvas {
         Settings.npcFont = getFont("npc-text.ttf", 20, Font.BOLD);
 
         methods = new MethodHandler();
-
-        World.changeWorld(0);
 
         initMethods();
     }

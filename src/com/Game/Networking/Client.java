@@ -7,6 +7,7 @@ import com.Game.GUI.Skills.Skills;
 import com.Game.Main.Main;
 import com.Game.Main.Menu;
 import com.Game.Main.MethodHandler;
+import com.Game.World.World;
 import com.Util.Math.Vector2;
 import com.Util.Other.Settings;
 
@@ -127,7 +128,7 @@ public class Client {
                 String[] movement = message.split(":");
                 for (PlayerObject o : MethodHandler.playerConnections) {
                     if (o.getUsername().equals(movement[0].trim())) {
-                        o.setPos(Integer.parseInt(movement[1]), Integer.parseInt(movement[2]));
+                        o.setPos(Integer.parseInt(movement[1]), Integer.parseInt(movement[2]), Integer.parseInt(movement[2]));
                         break;
                     }
                 }
@@ -176,11 +177,12 @@ public class Client {
     }
 
     public void takeSkillData(String[] index) {
-        // 0 - Username; 1 & 2 -> pos; 3-? -> skills;
+        // 0 - Username; 1 & 2 -> pos; 3 -> subWorld; 4-? -> skills;
         Main.player.name = index[0];
         Main.player.position = new Vector2(Integer.parseInt(index[1]), Integer.parseInt(index[2]));
-        for (int i = 3; i < index.length; i++) {
-            Skills.setExperience(i - 3, Float.parseFloat(index[i]));
+        World.changeWorld(Integer.parseInt(index[3]));
+        for (int i = 4; i < index.length; i++) {
+            Skills.setExperience(i - 4, Float.parseFloat(index[i]));
         }
     }
 

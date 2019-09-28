@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 public class Player {
     public Vector2 position;
+    public int subWorld = 0;
     public float speed;
     public Color playerColor;
     public boolean canMove = true;
@@ -27,10 +28,7 @@ public class Player {
     public int scale = 0;
     public BufferedImage image;
     private Vector2 curSpeed = Vector2.zero();
-    private float dx = 0;
-    private float dy = 0;
-    private float dMod = 0;
-    private float shootTimer = 0;
+    private float dx = 0, dy = 0, dMod = 0, shootTimer = 0;
     public String name = null;
 
     public float maxHealth = 100f;
@@ -148,8 +146,19 @@ public class Player {
 
         if (!movement.equalTo(Vector2.zero())) {
             position.add(movement);
-            Main.sendPacket("15" + Main.player.name + ":" + (int) position.x + ":" + (int) position.y);
+            sendMovementPacket();
         }
+    }
+
+    public void tpToPos(int x, int y, int subWorld) {
+        position.x = x;
+        position.y = y;
+        this.subWorld = subWorld;
+        sendMovementPacket();
+    }
+
+    public void sendMovementPacket() {
+        Main.sendPacket("15" + Main.player.name + ":" + (int) position.x + ":" + (int) position.y + ":" + subWorld);
     }
 
     public Vector2 handleCollision(Vector2 curSpeed) {

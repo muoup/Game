@@ -3,8 +3,7 @@ package com.Game.World;
 import com.Game.Entity.Enemy.BabyRockEnemy;
 import com.Game.Entity.Enemy.Chicken;
 import com.Game.Entity.Enemy.RockEnemy;
-import com.Game.Entity.Player.Player;
-import com.Game.Main.MethodHandler;
+import com.Game.Object.AreaTeleporter.CaveEntrance;
 import com.Game.Object.SkillingAreas.FishingArea;
 import com.Game.Object.SkillingAreas.Tree;
 
@@ -14,11 +13,6 @@ public class MainWorld extends World {
     }
 
     public void initWorld() {
-        MethodHandler.npcs.clear();
-        MethodHandler.objects.clear();
-        MethodHandler.groundItems.clear();
-        Player.projectiles.clear();
-
         // Forest Area
         new Tree(1655, 1875, Tree.wood);
         new Tree(1870, 1805, Tree.wood);
@@ -64,5 +58,7 @@ public class MainWorld extends World {
 
         new FishingArea(1179, 5939, FishingArea.blueFish);
         new FishingArea(1250, 6024, FishingArea.blueFish);
+
+        new CaveEntrance(4389, 2867); // Teleporter to underground area.
     }
 }
