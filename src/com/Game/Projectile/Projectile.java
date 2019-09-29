@@ -24,9 +24,9 @@ public class Projectile {
     protected float speed;
     protected boolean rotate;
 
-    private float damage;
+    protected float damage;
     public BufferedImage image;
-    private boolean friendly;
+    protected boolean friendly;
     public int attackStyle;
 
     public Projectile(Vector2 position, Vector2 aim, float damage, float speed, float expMultiplier, boolean friendly) {
@@ -70,7 +70,7 @@ public class Projectile {
 
         Render.drawImage(bullet, position.subtractClone(World.curWorld.offset));
 
-        duration -= 1 / Main.fps;
+        duration -= Main.dTime();
 
         if (duration < 0)
             destroy();
@@ -97,7 +97,7 @@ public class Projectile {
         update();
     }
 
-    private void onHit(Enemy enemy, float damage) {
+    protected void onHit(Enemy enemy, float damage) {
         Skills.addExperience(Skills.RANGED, (int) (damage * expMultiplier));
     }
 
@@ -105,7 +105,7 @@ public class Projectile {
 
     public void update() {}
 
-    private void destroy() {
+    protected void destroy() {
         Player.removeProj.add(this);
     }
 }

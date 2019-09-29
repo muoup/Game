@@ -1,6 +1,5 @@
 package com.Util.Other;
 
-import com.Game.GUI.GUI;
 import com.Game.Main.Main;
 import com.Game.World.World;
 import com.Util.Math.Vector2;
@@ -170,5 +169,9 @@ public class Render {
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
 
         return op.filter(image, null);
+    }
+
+    public static Vector2 getImageSize(Image image) {
+        return new Vector2(image.getWidth(null), image.getHeight(null));
     }
 }

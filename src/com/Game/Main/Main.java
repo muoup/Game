@@ -84,6 +84,10 @@ public class Main extends Canvas {
         initMethods();
     }
 
+    public static double dTime() {
+        return 1 / fps;
+    }
+
     public void initMethods() {
         methods.player = player;
         methods.settings = settings;

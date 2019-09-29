@@ -50,13 +50,13 @@ public class InventoryManager {
 
     public static void update() {
         if (RightClick.coolDown > 0)
-            RightClick.coolDown -= 1 / Main.fps;
+            RightClick.coolDown -= Main.dTime();
 
         InventoryDrag.update();
     }
 
     public static void removeItem(int index, int amount) {
-        inventory[index].addAmount(-amount);
+        setAmount(index, inventory[index].getAmount() - amount);
     }
 
     public static int itemCount(ItemList item) {

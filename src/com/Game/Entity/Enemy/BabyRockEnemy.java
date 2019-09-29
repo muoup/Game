@@ -19,15 +19,14 @@ public class BabyRockEnemy extends Enemy {
     public BabyRockEnemy(int x, int y) {
         super(x, y);
         this.maxHealth = 100f;
-        this.id = 2;
         this.image = getImage("babyRock.png");
         this.respawnTimer = 5f;
         this.maxTarget = 7.5f;
-        this.name = "Baby Rock (LV 1)";
+        this.name = "Baby Rock";
     }
 
     public void AI() {
-        timer += 1 / Main.fps;
+        timer += Main.dTime();
         if (Vector2.distance(Main.player.position, position) > maxDistance) {
             position.add(Vector2.magnitudeDirection(position, getPlayer()).scale(speed));
         }

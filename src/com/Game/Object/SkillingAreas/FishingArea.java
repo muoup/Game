@@ -34,7 +34,7 @@ public class FishingArea extends GameObject {
             return false;
         }
 
-        timer += 1 / Main.fps;
+        timer += Main.dTime();
 
         drawPlayerProgressBar();
 

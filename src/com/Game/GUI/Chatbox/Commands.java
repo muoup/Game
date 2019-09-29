@@ -48,7 +48,7 @@ public class Commands {
                     Vector2 tp = new Vector2(Integer.parseInt(parameters[0]), Integer.parseInt(parameters[1]));
                     ChatBox.sendMessage("Teleported to: " + tp.toString());
                     if (parameters.length == 3) {
-                        World.changeWorld(Integer.parseInt(parameters[2]));
+                        World.changeWorld(Integer.parseInt(parameters[2].trim()));
                         ChatBox.sendMessage("Change Subworld");
                     }
                     Main.player.position = tp.clone();

@@ -1,6 +1,7 @@
 package com.Game.GUI;
 
 import com.Game.GUI.Chatbox.ChatBox;
+import com.Game.GUI.GUIWindow.GUIWindow;
 import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.Inventory.InventoryDrag;
 import com.Game.GUI.Inventory.InventoryManager;
@@ -31,6 +32,7 @@ public class GUI {
     public static Vector2 invSize;
     public static int IntBoxSize;
     public static Vector2 categorySize;
+    private static GUIWindow testGUI;
 
     public static Vector2 GUIEnd() {
         return GuiPos.addClone(4 * IntBoxSize, 5 * IntBoxSize);
@@ -45,6 +47,7 @@ public class GUI {
     }
 
     public static void init() {
+
         Vector2 res = Settings.curResolution();
         inventoryOptions = new Image[invImgNames.length];
         IntBoxSize = (int) (res.x * 0.05f);
@@ -87,7 +90,7 @@ public class GUI {
         }
 
         if (coolDown > 0) {
-            coolDown -= 1 / Main.fps;
+            coolDown -= Main.dTime();
         }
 
         InventoryManager.handleInventory();
@@ -118,6 +121,8 @@ public class GUI {
         RightClick.render();
 
         MouseHover.handleHover(curMain);
+
+        testGUI.tick();
     }
 
     public static void update() {

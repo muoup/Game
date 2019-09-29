@@ -67,7 +67,7 @@ public class Player {
 
     public void update() {
         if (shootTimer > 0)
-            shootTimer -= 1 / Main.fps;
+            shootTimer -= Main.dTime();
 
         movement();
         handleOffset();
@@ -85,14 +85,13 @@ public class Player {
     }
 
     public void damage(float amount) {
-        float dmg = amount * damageReduction();
-        System.out.println("Damage Taken: " + dmg);
+        float dmg = amount - amount * damageReduction();
         health -= dmg;
     }
 
     public float damageReduction() {
         float armor = AccessoriesManager.armor;
-        return 1f + 0.01f * (100 - (100 / ((armor / 1000) + 1)) + DeltaMath.range(-7.5f, -7.5f));
+        return 0.01f * (100 - (100 / ((armor / 1000) + 1)) + DeltaMath.range(-7.5f, 7.5f));
     }
 
     public void movement() {

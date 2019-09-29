@@ -54,6 +54,7 @@ public class World {
 
     public static void changeWorld(int worldIndex) {
         curWorld = worlds[worldIndex];
+        Main.player.subWorld = worldIndex;
         curWorld.resetWorld();
         Main.player.sendMovementPacket();
     }

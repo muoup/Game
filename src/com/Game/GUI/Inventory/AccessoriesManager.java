@@ -61,8 +61,15 @@ public class AccessoriesManager {
             float prev = accessories[slot].getArmor();
             accessories[slot] = item;
             Main.sendPacket("09" + slot + ":" + item.getID() + ":" + item.getAmount() + ":" + Main.player.name);
-            armor -= prev;
-            armor += accessories[slot].getArmor();
+        }
+
+        calculateArmor();
+    }
+
+    public static void calculateArmor() {
+        armor = 0;
+        for (ItemStack item : accessories) {
+            armor += item.getArmor();
         }
     }
 
@@ -123,7 +130,6 @@ public class AccessoriesManager {
 
         Render.drawRectOutline(GUI.GuiPos.addClone(2, 2), GUI.GUIEnd().subtractClone(2, 2));
     }
-
 
     public static void drawBox(int x, int y) {
         Vector2 rectPos = GUI.getGridPosition(x, y);

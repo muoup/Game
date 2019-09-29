@@ -20,7 +20,7 @@ public class Chicken extends Enemy {
         this.id = 3;
         this.image = getImage("chicken.png");
         this.respawnTimer = 0.5f;
-        this.name = "Chicken (LV 1)";
+        this.name = "Chicken";
         setMoveTo();
     }
 

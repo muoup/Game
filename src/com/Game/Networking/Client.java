@@ -206,6 +206,8 @@ public class Client {
                 AccessoriesManager.clientSetItem(i / 2 - 1, id, Integer.parseInt(index[i]));
             }
         }
+
+        AccessoriesManager.calculateArmor();
     }
 
     public void joinServer(String username) {

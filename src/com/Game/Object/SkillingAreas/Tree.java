@@ -28,7 +28,7 @@ public class Tree extends GameObject {
 
     public void update() {
         if (woodAmount == 0) {
-            rpTimer -= 1 / Main.fps;
+            rpTimer -= Main.dTime();
 
             if (rpTimer <= 0) {
                 woodAmount = preset.getWoodAmount();
@@ -52,7 +52,7 @@ public class Tree extends GameObject {
             return false;
         }
 
-        timer += 1 / Main.fps;
+        timer += Main.dTime();
 
         drawPlayerProgressBar();
 

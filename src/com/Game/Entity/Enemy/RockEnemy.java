@@ -24,11 +24,11 @@ public class RockEnemy extends Enemy {
         this.image = getImage("rock.png");
         this.respawnTimer = 7.5f;
         this.maxTarget = 10f;
-        this.name = "Bigger Rock (LV 5)";
+        this.name = "Bigger Rock";
     }
 
     public void AI() {
-        timer += 1 / Main.fps;
+        timer += Main.dTime();
 
         if (Vector2.distance(Main.player.position, position) > maxDistance) {
             position.add(Vector2.magnitudeDirection(position, getPlayer()).scale(speed));

@@ -95,7 +95,7 @@ public class InventoryDrag {
         }
 
         if (inventoryIndex != -1) {
-            timer += 1 / Main.fps;
+            timer += Main.dTime();
         }
     }
 

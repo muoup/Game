@@ -30,7 +30,9 @@ public enum ItemList {
     rockboots(new RockBoots(13, "rock_boots.png", "Rock Boots", "It was a rock lobster.", 1, 2000)),
     rockarrow(new RockArrowItem(14, "rock_arrow.png", "Rock Arrow", "It was a rock lobster.", 100000, 25)),
     feather(new Feather(15, "feather.png", "Feather", "Because steel is heavier than feathers.", 100000, 20)),
-    arrowShaft(new ArrowShaft(16, "arrow_shaft.png", "Arrow Shaft", "Not quite the orange kind.", 100000, 10));
+    arrowShaft(new ArrowShaft(16, "arrow_shaft.png", "Arrow Shaft", "Not quite the orange kind.", 100000, 10)),
+    stringItem(new StringItem(17, "string.png", "String", "Where does the string come from?", 100000, 5)),
+    bowString(new StringItem(18, "bowString.png", "Bow String", "I can combine this with a bow stock.", 1, 20));
 
     public Item item;
 

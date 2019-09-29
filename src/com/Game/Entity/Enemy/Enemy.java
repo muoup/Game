@@ -15,8 +15,9 @@ public class Enemy {
     public Vector2 position;
     public Vector2 spawnPosition;
 
-    public boolean enabled = false;
+    public boolean enabled = true;
     public boolean target = false;
+    public boolean passive = false;
 
     public float respawnTimer = 0;
 
@@ -26,7 +27,7 @@ public class Enemy {
     public float targetTimer = 0;
 
     public float maxHealth = 0;
-    public float health = 0;
+    public float health = 25000f;
 
     public BufferedImage image;
 
@@ -41,7 +42,7 @@ public class Enemy {
 
     public void updateEnemy() {
         if (!enabled) {
-            timer += 1 / Main.fps;
+            timer += Main.dTime();
 
             if (timer > respawnTimer) {
                 enabled = true;
@@ -59,12 +60,14 @@ public class Enemy {
         determineActive();
         renderEnemy();
 
-        if (health <= 0) {
-            enabled = false;
-            handleDrops();
-        } else {
-            if (target)
-                AI();
+        if (target)
+            AI();
+
+        if (!target || target && passive) {
+            if (health < maxHealth)
+                health += maxHealth / 10 * Main.dTime();
+            if (health >= maxHealth)
+                health = maxHealth;
             passiveAI();
         }
     }
@@ -94,15 +97,32 @@ public class Enemy {
         }
     }
 
-    public void determineActive() {
-        targetTimer -= 1 / Main.fps;
+    public void loseTarget() {
 
-        target = targetTimer > 0;
+    }
+
+    public void determineActive() {
+        targetTimer -= Main.dTime();
+
+        if (targetTimer <= 0 && target) {
+            target = false;
+            loseTarget();
+        }
     }
 
     public void damage(float amount) {
-        targetTimer = maxTarget;
+        target();
         health -= amount;
+
+        if (health <= 0) {
+            enabled = false;
+            handleDrops();
+        }
+    }
+
+    public void target() {
+        target = true;
+        targetTimer = maxTarget;
     }
 
     public static BufferedImage getImage(String name) {

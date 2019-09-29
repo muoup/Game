@@ -112,7 +112,6 @@ public class RightClick {
                     if (accessory.getID() == selected.getID()) {
                         int maxAdd = accessory.getMaxAmount() - accessory.getAmount();
                         int add = (amount > maxAdd) ? maxAdd : amount;
-                        System.out.println(add + " " + amount);
 
                         AccessoriesManager.addAmount(selected.getItem().equipStatus, add);
                         amount -= add;
