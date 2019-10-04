@@ -29,7 +29,7 @@ public class Item {
         this.examineText = examineText;
         this.maxStack = maxStack;
         this.name = name;
-        this.options = new ArrayList<String>();
+        this.options = new ArrayList();
         this.worth = worth;
     }
 
@@ -103,21 +103,6 @@ public class Item {
     public void replaceInventory(int index, ItemStack item) {
         InventoryManager.inventory[index] = Item.emptyStack();
         InventoryManager.addItem(item.getItem(), item.getAmount());
-    }
-
-    public void shoot(ItemList[] acceptable, Vector2 position, Vector2 direction, float damageMultiplier, float expMultiplier) {
-        ItemStack stack = AccessoriesManager.getSlot(AccessoriesManager.AMMO_SLOT);
-
-        if (stack.getAmount() <= 0 || stack.getID() == 0)
-            return;
-
-        for (ItemList i : acceptable) {
-            if (stack.getID() == i.getID()) {
-                stack.getItem().createProjectile(position, direction, damageMultiplier, expMultiplier);
-                stack.addAmount(-1);
-                break;
-            }
-        }
     }
 
     public void use(int index) {

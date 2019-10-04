@@ -80,6 +80,9 @@ public class MouseHover {
             draw = Vector2.zero();
             hoverEntity = null;
             for (Enemy e : MethodHandler.enemies) {
+                if (e.image == null)
+                    return;
+
                 if (!Render.onScreen(e.position, e.image) || !e.enabled)
                     continue;
                 if (Vector2.distance(Input.mousePosition, e.position.subtractClone(World.curWorld.offset)) <= e.image.getHeight()) {

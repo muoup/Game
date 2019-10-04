@@ -87,6 +87,11 @@ public class Enemy {
     public void renderEnemy() {
         Vector2 deltaPosition = position.subtractClone(World.curWorld.offset);
 
+        if (image == null) {
+            System.err.println(name + ": " + id + " did not load image correctly :(.");
+            return;
+        }
+
         if (Render.onScreen(position, image)) {
             Render.drawImage(image, deltaPosition.subtract(Render.getDimensions(image).scale(0.5f)));
 

@@ -21,6 +21,9 @@ public class Settings {
             new Vector2(1960, 1280)
     };
 
+    // Change these to make xp faster.
+    public static final float rangedXPMultipler = 1.25f;
+
     public static Font npcFont = null;
 
     public static int fontSize = 25;

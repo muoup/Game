@@ -1,11 +1,8 @@
 package com.Game.World;
 
-import com.Game.Entity.Enemy.Enemy;
-import com.Game.Entity.NPC.NPC;
 import com.Game.Entity.Player.Player;
 import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
-import com.Game.Object.GameObject;
 import com.Game.Projectile.Projectile;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
@@ -79,10 +76,10 @@ public class World {
 
     // Resets all of the arrays so that new objects can be added in initWorld()
     public void resetWorld() {
-        MethodHandler.npcs = new ArrayList<NPC>();
-        MethodHandler.enemies = new ArrayList<Enemy>();
-        MethodHandler.objects = new ArrayList<GameObject>();
-        MethodHandler.groundItems = new ArrayList<GroundItem>();
+        MethodHandler.npcs = new ArrayList();
+        MethodHandler.enemies = new ArrayList();
+        MethodHandler.objects = new ArrayList();
+        MethodHandler.groundItems = new ArrayList();
         Player.projectiles = new ArrayList<Projectile>();
 
         initWorld();

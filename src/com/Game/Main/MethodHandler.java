@@ -31,10 +31,11 @@ public class MethodHandler {
     public static ArrayList<Enemy> enemies;
     public static ArrayList<GroundItem> groundItems;
     public static ArrayList<Projectile> projectiles;
-
-    public static ArrayList<GroundItem> removeGround;
-    public static ArrayList<Projectile> removeProjectiles;
     public static ArrayList<PlayerObject> playerConnections;
+
+    public static ArrayList<Object> remove;
+
+    private static ArrayList[] lists;
 
     public MethodHandler() {
         main = Main.main;
@@ -42,10 +43,16 @@ public class MethodHandler {
         objects = new ArrayList();
         enemies = new ArrayList();
         groundItems = new ArrayList();
-        removeGround = new ArrayList();
         projectiles = new ArrayList();
-        removeProjectiles = new ArrayList();
-        playerConnections = new ArrayList<PlayerObject>();
+        playerConnections = new ArrayList();
+        remove = new ArrayList();
+        lists = new ArrayList[]{
+                npcs,
+                objects,
+                enemies,
+                groundItems,
+                projectiles
+        };
     }
 
     public void update() {
@@ -67,6 +74,24 @@ public class MethodHandler {
         player.update();
 
         GUI.update();
+
+        handleRemove();
+    }
+
+    /**
+     * After every tick, removes the objects from their respective ArrayLists.
+     */
+    private static void handleRemove() {
+        for (Object o : remove)
+        for (ArrayList list : lists) {
+            if (list.contains(o)) {
+                list.remove(o);
+                remove.remove(o);
+                break;
+            }
+        }
+
+        objects.clear();
     }
 
     public void render() {
@@ -76,25 +101,13 @@ public class MethodHandler {
             for (GroundItem groundItem : groundItems) groundItem.updateStack();
             for (Projectile p : projectiles) p.projectileUpdate();
             for (GameObject object : objects) object.updateObject();
-
             for (PlayerObject playerObject : playerConnections) playerObject.tick();
-
             for (Enemy enemy : enemies) enemy.updateEnemy();
             for (NPC npc : npcs) npc.update();
 
             player.render();
 
             GUI.render();
-
-            if (!removeGround.isEmpty()) {
-                groundItems.removeAll(removeGround);
-                removeGround.clear();
-            }
-
-            if (!removeProjectiles.isEmpty()) {
-                projectiles.removeAll(removeProjectiles);
-                removeProjectiles.clear();
-            }
 
             settings.curSelected = 0;
         } else {

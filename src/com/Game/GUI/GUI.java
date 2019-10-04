@@ -121,8 +121,6 @@ public class GUI {
         RightClick.render();
 
         MouseHover.handleHover(curMain);
-
-        testGUI.tick();
     }
 
     public static void update() {

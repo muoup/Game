@@ -139,7 +139,7 @@ public class Client {
             case "66":
                 for (PlayerObject o : MethodHandler.playerConnections) {
                     if (o.getUsername().equals(message)) {
-                        MethodHandler.playerConnections.remove(o);
+                        MethodHandler.remove.add(o);
                         break;
                     }
                 }
