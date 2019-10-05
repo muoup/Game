@@ -24,7 +24,6 @@ public class InventoryManager {
         }
 
         InventoryDrag.init();
-        ItemSets.init();
     }
 
     public static void reset() {

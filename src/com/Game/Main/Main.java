@@ -52,6 +52,7 @@ public class Main extends Canvas {
 
         main.running = true;
 
+        Input.init();
         main.init();
         main.updateFrame();
         main.addKeyListener(input);

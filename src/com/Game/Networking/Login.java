@@ -128,26 +128,29 @@ public class Login {
     }
 
     public static void onType(String type) {
+        if (Main.isConnected)
+            return;
         switch (selected) {
             case 0:
                 return;
             case 1:
-                nameField += type;
-                if (type == "bs") {
-                    nameField = nameField.substring(0, Math.max(0, nameField.length() - 3));
-                }
+                if (type.length() == 1)
+                    nameField += type;
+                if (type.equals("bs"))
+                    nameField = nameField.substring(0, Math.max(0, nameField.length() - 2));
                 if (nameField.length() > nameLimit) {
                     nameField = nameField.substring(0, 15);
                 }
                 break;
             case 2:
-                passwordField += type;
-                if (type == "bs") {
+                if (type.length() == 1)
+                    passwordField += type;
+                if (type.equals("bs"))
                     passwordField = passwordField.substring(0, Math.max(0, passwordField.length() - 3));
-                }
-                if (passwordField.length() > passLimit) {
+                else if (type.equals("en"))
+                    connect(0);
+                if (passwordField.length() > passLimit)
                     passwordField = passwordField.substring(0, 15);
-                }
                 break;
             default:
                 System.err.println("the login screen has malfunctioned");

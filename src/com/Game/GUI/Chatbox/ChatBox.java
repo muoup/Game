@@ -197,9 +197,9 @@ public class ChatBox {
         if (!typing)
             return;
 
-        if (s == "bs") { // Backspace
+        if (s.equals("bs")) { // Backspace
             type = type.substring(0, Math.max(0, type.length() - 1));
-        } else {
+        } else if (!s.equals("en")) {
             type += s;
         }
     }

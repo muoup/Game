@@ -10,8 +10,9 @@ import com.Game.Items.Weapon.Weapon;
  */
 public class BowWeapon extends Weapon {
     public BowWeapon(int id, String imageName, String name, String examineText, int maxStack, int worth) {
-        super(id, imageName, name, examineText, maxStack, worth, ItemSets.arrows);
+        super(id, imageName, name, examineText, maxStack, worth);
 
+        this.itemSet = ItemSets.arrows;
         this.equipStatus = AccessoriesManager.WEAPON_SLOT;
     }
 

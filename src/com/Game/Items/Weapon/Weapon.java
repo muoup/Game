@@ -14,11 +14,10 @@ public class Weapon extends Item {
     protected float weaponDamage;
     protected float accuracy;
 
-    public Weapon(int id, String imageName, String name, String examineText, int maxStack, int worth, ItemSets correct) {
+    public Weapon(int id, String imageName, String name, String examineText, int maxStack, int worth) {
         super(id, imageName, name, examineText, maxStack, worth);
 
-        System.out.println(itemSet);
-        this.itemSet = correct;
+        this.itemSet = ItemSets.none;
         this.equipStatus = AccessoriesManager.WEAPON_SLOT;
     }
 

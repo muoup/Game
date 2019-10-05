@@ -30,6 +30,7 @@ public class Player {
     private Vector2 curSpeed = Vector2.zero();
     private float dx = 0, dy = 0, dMod = 0, shootTimer = 0;
     public String name = null;
+    private final float maxSlide = 8f;
 
     public float maxHealth = 100f;
     public float health = 100f;
@@ -180,6 +181,9 @@ public class Player {
                 yPoints[0],
                 yPoints[2]
         };
+
+        // TODO: Add collision sliding.
+
         if ((speed.x < 0 && !CollisionHandler.isFree(x1Points)) || (speed.x > 0 && !CollisionHandler.isFree(x2Points))) {
             speed.x = 0;
         }

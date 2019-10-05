@@ -8,23 +8,28 @@ import java.awt.event.*;
 
 public class Input implements KeyListener, MouseListener, MouseMotionListener {
 
-    public static boolean[] keys = new boolean[65535];
-    public static boolean[] keysDown = new boolean[65535];
+    public static KeyState[] keys = new KeyState[65535];
     public static boolean[] mouse = new boolean[5];
     public static boolean[] mouseDown = new boolean[5];
     public static Vector2 mousePosition = Vector2.zero();
 
+    public static void init() {
+        for (int i = 0; i < keys.length; i++) {
+            keys[i] = KeyState.released;
+        }
+    }
+
     public static boolean GetKey(int code) {
-        return keys[code];
+        return keys[code].pressed();
     }
 
     public static boolean GetKeyDown(int code) {
-        boolean ret = keysDown[code];
+        KeyState ret = keys[code];
 
-        if (ret)
-            keysDown[code] = false;
+        if (keys[code] == KeyState.pressed)
+            keys[code] = KeyState.inPress;
 
-        return ret;
+        return ret == KeyState.pressed;
     }
 
     public static boolean GetMouse(int button) {
@@ -41,20 +46,36 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-        ChatBox.type((keys[KeyEvent.VK_BACK_SPACE]) ? "bs" : Character.toString(e.getKeyChar()));
-        Login.onType((keys[KeyEvent.VK_BACK_SPACE]) ? "bs" : Character.toString(e.getKeyChar()));
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        Input.keys[e.getKeyCode()] = true;
-        Input.keysDown[e.getKeyCode()] = true;
+        if (Input.keys[e.getKeyCode()] != KeyState.inPress)
+            Input.keys[e.getKeyCode()] = KeyState.pressed;
+
+        String input = Character.toString(e.getKeyChar());
+        int code = e.getKeyCode();
+
+        switch (code) {
+            case KeyEvent.VK_BACK_SPACE:
+                input = "bs";
+                break;
+            case KeyEvent.VK_TAB:
+            case KeyEvent.VK_CONTROL:
+            case KeyEvent.VK_SHIFT:
+                input = "";
+                break;
+            case KeyEvent.VK_ENTER:
+                input = "en";
+                break;
+        }
+        ChatBox.type(input);
+        Login.onType(input);
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        Input.keys[e.getKeyCode()] = false;
-        Input.keysDown[e.getKeyCode()] = false;
+        Input.keys[e.getKeyCode()] = KeyState.released;
     }
 
     @Override
