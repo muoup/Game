@@ -68,6 +68,9 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
             case KeyEvent.VK_ENTER:
                 input = "en";
                 break;
+            case KeyEvent.VK_ESCAPE:
+                input = "es";
+                break;
         }
         ChatBox.type(input);
         Login.onType(input);

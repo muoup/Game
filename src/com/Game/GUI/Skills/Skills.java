@@ -1,7 +1,7 @@
 package com.Game.GUI.Skills;
 
+import com.Game.GUI.SkillPopup.SkillPopup;
 import com.Game.Main.Main;
-import com.Util.Math.DeltaMath;
 
 public class Skills {
     public static int RANGED = 0;
@@ -34,6 +34,7 @@ public class Skills {
         exp[skill] += amount;
         Main.sendPacket("07" + skill + ":" + amount + ":" + Main.player.name);
         deltaLevel(skill);
+        new SkillPopup(skill, amount);
     }
 
     public static void setExperience(int skill, float amount) {

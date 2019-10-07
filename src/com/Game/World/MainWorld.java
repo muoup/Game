@@ -59,6 +59,6 @@ public class MainWorld extends World {
         new FishingArea(1179, 5939, FishingArea.blueFish);
         new FishingArea(1250, 6024, FishingArea.blueFish);
 
-        new CaveEntrance(4389, 2867); // Teleporter to underground area.
+        new CaveEntrance(4389, 2867, CaveEntrance.TeleType.caveEntrance); // Teleporter to underground area.
     }
 }

@@ -13,6 +13,7 @@ public class GroundItem {
     public Vector2 position;
     public ArrayList<ItemStack> stack;
     private Image topImage;
+    private static final float maxDistance = 256f;
 
     public GroundItem(int x, int y, ArrayList<ItemStack> stack) {
         this.position = new Vector2(x, y);
@@ -44,6 +45,20 @@ public class GroundItem {
         }
     }
 
+    public void addItem(ItemStack item) {
+        for (ItemStack s : stack) {
+            if (s.getID() == item.getID()) {
+                s.addAmount(item.getAmount());
+                return;
+            }
+        }
+    }
+
+    public void addItems(ArrayList<ItemStack> stack) {
+        for (ItemStack s : stack)
+            addItem(s);
+    }
+
     public void update() {
         for (int i = 0; i < stack.size(); i++) {
             if (stack.get(i).getAmount() <= 0)
@@ -64,5 +79,16 @@ public class GroundItem {
         }
 
         return null;
+    }
+
+    public static void createGroundItem(Vector2 position, ArrayList<ItemStack> drops) {
+        for (GroundItem i : MethodHandler.groundItems) {
+            if (Vector2.distance(i.position, position) < maxDistance) {
+                i.addItems(drops);
+                return;
+            }
+        }
+
+        new GroundItem(position, drops);
     }
 }

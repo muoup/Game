@@ -1,15 +1,12 @@
 package com.Game.World;
 
-import com.Game.Entity.Player.Player;
 import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
-import com.Game.Projectile.Projectile;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 import com.Util.Other.Settings;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 public class World {
 
@@ -76,11 +73,11 @@ public class World {
 
     // Resets all of the arrays so that new objects can be added in initWorld()
     public void resetWorld() {
-        MethodHandler.npcs = new ArrayList();
-        MethodHandler.enemies = new ArrayList();
-        MethodHandler.objects = new ArrayList();
-        MethodHandler.groundItems = new ArrayList();
-        Player.projectiles = new ArrayList<Projectile>();
+        MethodHandler.remove.addAll(MethodHandler.npcs);
+        MethodHandler.remove.addAll(MethodHandler.enemies);
+        MethodHandler.remove.addAll(MethodHandler.objects);
+        MethodHandler.remove.addAll(MethodHandler.groundItems);
+        MethodHandler.remove.addAll(MethodHandler.npcs);
 
         initWorld();
     }

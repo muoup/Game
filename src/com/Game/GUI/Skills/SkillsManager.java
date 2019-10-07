@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
 
 public class SkillsManager {
 
-    private static BufferedImage[] skillImages;
+    public static BufferedImage[] skillImages;
     public static String[] skillImageNames = {
             "ranged.png",
             "fishing.png",

@@ -1,6 +1,7 @@
 package com.Game.GUI.Chatbox;
 
 import com.Game.GUI.Inventory.InventoryManager;
+import com.Game.GUI.SkillPopup.SkillPopup;
 import com.Game.Items.ItemList;
 import com.Game.GUI.Skills.Skills;
 import com.Game.Main.Main;
@@ -100,6 +101,9 @@ public class Commands {
 
                     InventoryManager.addItem(ItemList.values()[item], amount);
                 }
+                break;
+            case "testpopup":
+                new SkillPopup(1, 1);
                 break;
             default:
                 ChatBox.sendMessage("That is not a valid command, please check your spelling and try again.");

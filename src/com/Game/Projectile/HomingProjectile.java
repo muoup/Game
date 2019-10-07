@@ -9,6 +9,8 @@ import com.Util.Other.Render;
 
 public class HomingProjectile extends Projectile {
 
+    public boolean avoidable;
+
     public HomingProjectile(Vector2 position, float damage, float speed, float expMultiplier, boolean friendly) {
         super(position, Vector2.zero(), damage, speed, expMultiplier, friendly);
     }
@@ -20,10 +22,14 @@ public class HomingProjectile extends Projectile {
 
         Render.drawImage(image, position.subtractClone(World.curWorld.offset));
 
-        duration -= Main.dTime();
+        if (avoidable) {
+            duration -= Main.dTime();
 
-        if (duration < 0)
-            destroy();
+            if (duration < 0)
+                destroy();
+        } else {
+            speed += Main.dTime();
+        }
 
         if (friendly) {
             for (Enemy e : MethodHandler.enemies) {

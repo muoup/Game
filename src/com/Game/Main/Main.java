@@ -79,6 +79,7 @@ public class Main extends Canvas {
         settings = new Menu();
 
         Settings.npcFont = getFont("npc-text.ttf", 20, Font.BOLD);
+        Settings.skillPopupFont = getFont("skill-text.ttf", 16, Font.PLAIN);
 
         methods = new MethodHandler();
 

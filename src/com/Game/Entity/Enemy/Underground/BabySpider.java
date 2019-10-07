@@ -1,5 +1,6 @@
-package com.Game.Entity.Enemy;
+package com.Game.Entity.Enemy.Underground;
 
+import com.Game.Entity.Enemy.Enemy;
 import com.Game.Items.ItemList;
 import com.Game.Items.ItemStack;
 import com.Game.Main.Main;
@@ -36,7 +37,7 @@ public class BabySpider extends Enemy {
         shotTimer -= Main.dTime();
 
         if (shotTimer < 0) {
-            shotTimer = DeltaMath.range(0.25f, 1.25f);
+            shotTimer = DeltaMath.range(0.75f, 1.75f);
             new WebProjectile(position, 12.5f, (speed / shotTimer) * 2.25f, shotTimer * 2.5f);
         }
     }
@@ -62,6 +63,6 @@ public class BabySpider extends Enemy {
     public void handleDrops() {
         ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
         drops.add(new ItemStack(ItemList.stringItem, 1));
-        new GroundItem(position, drops);
+        GroundItem.createGroundItem(position, drops);
     }
 }

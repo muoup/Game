@@ -25,6 +25,7 @@ public class Settings {
     public static final float rangedXPMultipler = 1.25f;
 
     public static Font npcFont = null;
+    public static Font skillPopupFont = null;
 
     public static int fontSize = 25;
     public static boolean fullScreen = false;

@@ -2,7 +2,6 @@ package com.Game.GUI.Chatbox;
 
 import com.Game.GUI.GUI;
 import com.Game.Main.Main;
-import com.Game.Main.Menu;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
@@ -58,8 +57,7 @@ public class ChatBox {
     }
 
     public static void startUp() {
-        sendMessage("Welcome to the Game!");
-        sendMessage("Reminder: If this game ever becomes multiplayer, all progress will most likely be lost.");
+        sendMessage("Welcome " + Main.player.name + ", to the Game!");
     }
 
     public static void render() {
@@ -199,7 +197,9 @@ public class ChatBox {
 
         if (s.equals("bs")) { // Backspace
             type = type.substring(0, Math.max(0, type.length() - 1));
-        } else if (!s.equals("en")) {
+        } else if (s.equals("es")) {
+            typing = false;
+        } else if (s.length() != 2) {
             type += s;
         }
     }

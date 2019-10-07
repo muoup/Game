@@ -54,6 +54,6 @@ public class RockEnemy extends Enemy {
             rand = DeltaMath.range(0, 100);
         }
 
-        new GroundItem(position, stacks);
+        GroundItem.createGroundItem(position, stacks);
     }
 }

@@ -11,8 +11,8 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class Login {
-    private static String nameField = "";
-    private static String passwordField = "";
+    private static String nameField = "Maste";
+    private static String passwordField = "password";
     private static int selected;
     private static Font loginFont;
     private static Color barColor;
@@ -136,8 +136,12 @@ public class Login {
             case 1:
                 if (type.length() == 1)
                     nameField += type;
-                if (type.equals("bs"))
-                    nameField = nameField.substring(0, Math.max(0, nameField.length() - 2));
+                else if (type.equals("bs"))
+                    nameField = nameField.substring(0, Math.max(0, nameField.length() - 1));
+                else if (type.equals("en"))
+                    connect(0);
+                else if (type.equals("es"))
+                    selected = 0;
                 if (nameField.length() > nameLimit) {
                     nameField = nameField.substring(0, 15);
                 }
@@ -145,10 +149,12 @@ public class Login {
             case 2:
                 if (type.length() == 1)
                     passwordField += type;
-                if (type.equals("bs"))
-                    passwordField = passwordField.substring(0, Math.max(0, passwordField.length() - 3));
+                else if (type.equals("bs"))
+                    passwordField = passwordField.substring(0, Math.max(0, passwordField.length() - 1));
                 else if (type.equals("en"))
                     connect(0);
+                else if (type.equals("es"))
+                    selected = 0;
                 if (passwordField.length() > passLimit)
                     passwordField = passwordField.substring(0, 15);
                 break;
