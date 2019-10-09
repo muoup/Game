@@ -25,6 +25,9 @@ public class Chicken extends Enemy {
     }
 
     public void passiveAI() {
+        if (moveTo == null)
+            return;
+
         if (Vector2.distance(position, moveTo) < 32) {
             setMoveTo();
         } else {

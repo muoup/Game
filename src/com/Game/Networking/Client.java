@@ -128,7 +128,7 @@ public class Client {
                 String[] movement = message.split(":");
                 for (PlayerObject o : MethodHandler.playerConnections) {
                     if (o.getUsername().equals(movement[0].trim())) {
-                        o.setPos(Integer.parseInt(movement[1]), Integer.parseInt(movement[2]), Integer.parseInt(movement[2]));
+                        o.setPos(Integer.parseInt(movement[1]), Integer.parseInt(movement[2]), Integer.parseInt(movement[3]));
                         break;
                     }
                 }
