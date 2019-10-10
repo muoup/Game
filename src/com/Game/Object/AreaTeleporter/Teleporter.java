@@ -14,9 +14,9 @@ public class Teleporter extends GameObject {
         this.sub = sub;
     }
 
-    public boolean onInteract() {
+    public void onInteraction() {
+        System.out.println("Interaction");
         Main.player.tpToPos(tx, ty, sub);
         World.changeWorld(sub);
-        return true;
     }
 }

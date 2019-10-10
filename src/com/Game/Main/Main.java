@@ -75,7 +75,7 @@ public class Main extends Canvas {
     public void init() {
         Main.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-        player = new Player(Settings.playerSpawn, 250f, Color.GREEN, 2f);
+        player = new Player(Settings.playerSpawn, 250f, Color.GREEN, 2.75f);
         settings = new Menu();
 
         Settings.npcFont = getFont("npc-text.ttf", 20, Font.BOLD);
@@ -152,6 +152,8 @@ public class Main extends Canvas {
             Graphics g = bs.getDrawGraphics();
 
             Main.graphics = g;
+
+            Input.update();
 
             if (isConnected) {
                 update();

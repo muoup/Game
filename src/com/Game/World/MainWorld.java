@@ -14,29 +14,29 @@ public class MainWorld extends World {
 
     public void initWorld() {
         // Forest Area
-        new Tree(1655, 1875, Tree.wood);
-        new Tree(1870, 1805, Tree.wood);
-        new Tree(2057, 1834, Tree.wood);
-        new Tree(1975, 1982, Tree.wood);
-        new Tree(1788, 2072, Tree.wood);
-        new Tree(1587, 2126, Tree.wood);
-        new Tree(2225, 2049, Tree.wood);
-        new Tree(2070, 2163, Tree.wood);
-        new Tree(1649, 2349, Tree.wood);
-        new Tree(2273, 1869, Tree.wood);
-        new Tree(2191, 1728, Tree.wood);
-        new Tree(1984, 1704, Tree.wood);
-        new Tree(1726, 1744, Tree.wood);
-        new Tree(1509, 1976, Tree.wood);
-        new Tree(1400, 2237, Tree.wood);
-        new Tree(2082, 2378, Tree.wood);
-        new Tree(2393, 1792, Tree.wood);
-        new Tree(2448, 2030, Tree.wood);
-        new Tree(1854, 2309, Tree.maple);
-        new Tree(2316, 2244, Tree.maple);
-        new Tree(2053, 2581, Tree.maple);
-        new Tree(1690, 2565, Tree.maple);
-        new Tree(2386, 2493, Tree.maple);
+//        new Tree(1655, 1875, Tree.wood);
+//        new Tree(1870, 1805, Tree.wood);
+//        new Tree(2057, 1834, Tree.wood);
+//        new Tree(1975, 1982, Tree.wood);
+//        new Tree(1788, 2072, Tree.wood);
+//        new Tree(1587, 2126, Tree.wood);
+//        new Tree(2225, 2049, Tree.wood);
+//        new Tree(2070, 2163, Tree.wood);
+//        new Tree(1649, 2349, Tree.wood);
+//        new Tree(2273, 1869, Tree.wood);
+//        new Tree(2191, 1728, Tree.wood);
+//        new Tree(1984, 1704, Tree.wood);
+//        new Tree(1726, 1744, Tree.wood);
+//        new Tree(1509, 1976, Tree.wood);
+//        new Tree(1400, 2237, Tree.wood);
+//        new Tree(2082, 2378, Tree.wood);
+//        new Tree(2393, 1792, Tree.wood);
+//        new Tree(2448, 2030, Tree.wood);
+//        new Tree(1854, 2309, Tree.oak);
+//        new Tree(2316, 2244, Tree.oak);
+//        new Tree(2053, 2581, Tree.oak);
+//        new Tree(1690, 2565, Tree.oak);
+        new Tree(2386, 2493, Tree.oak);
 
         // Rock Enemies
         new BabyRockEnemy(3496, 4520);
@@ -59,6 +59,6 @@ public class MainWorld extends World {
         new FishingArea(1179, 5939, FishingArea.blueFish);
         new FishingArea(1250, 6024, FishingArea.blueFish);
 
-        new CaveEntrance(4389, 2867, CaveEntrance.TeleType.caveEntrance); // Teleporter to underground area.
+        new CaveEntrance(5188, 3568, CaveEntrance.TeleType.caveEntrance); // Teleporter to underground area.
     }
 }

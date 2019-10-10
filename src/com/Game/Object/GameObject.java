@@ -2,6 +2,7 @@ package com.Game.Object;
 
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.Main.Main;
+import com.Game.Main.MethodHandler;
 import com.Game.World.World;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
@@ -26,26 +27,22 @@ public class GameObject {
     }
 
     public void updateObject() {
+        if (image == null)
+            return;
 
-        float distance = Vector2.distance(Main.player.position, (image == null) ? position : position.addClone(image.getWidth() / 1.5f, image.getHeight() / 1.5f));
+        float distance = Vector2.distance(position.addClone(Render.getImageSize(image).scale(0.5f)), Main.player.position);
 
-        if (image != null) {
-            if (Render.onScreen(position, image)) {
-                Render.drawImage(image,
-                        position.subtractClone(World.curWorld.offset));
-                update();
-            }
-        }
+        if (Render.onScreen(position, image)) {
+            Render.drawImage(image,
+                    position.subtractClone(World.curWorld.offset));
+            update();
+        } else return;
 
-        if (Input.GetKey(KeyEvent.VK_E)
-            && distance < maxDistance
-            && canInteract
-            && !ChatBox.typing) {
+        System.out.println(distance + " -> " + maxDistance);
 
+        if (Input.GetKey(KeyEvent.VK_E) && distance <= maxDistance && !ChatBox.typing && canInteract) {
             canInteract = onInteract();
-        }
-
-        if (!Input.GetKey(KeyEvent.VK_E) || distance > maxDistance) {
+        } else if (!Input.GetKey(KeyEvent.VK_E) || distance > maxDistance) {
             timer = 0;
             canInteract = true;
         }
@@ -55,8 +52,23 @@ public class GameObject {
 
     }
 
+    public static void checkSingleInteract() {
+        for (GameObject object : MethodHandler.objects) {
+            float distance = Vector2.distance(object.position, Main.player.position);
+
+            if (distance < object.maxDistance && !ChatBox.typing) {
+                object.onInteraction();
+                return;
+            }
+        }
+    }
+
     public boolean onInteract() {
         return false;
+    }
+
+    public void onInteraction() {
+
     }
 
     public static BufferedImage getImage(String name) {

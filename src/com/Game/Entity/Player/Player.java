@@ -4,6 +4,7 @@ import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.GUI;
 import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.Main.Main;
+import com.Game.Object.GameObject;
 import com.Game.Projectile.Projectile;
 import com.Game.World.World;
 import com.Game.listener.Input;
@@ -25,6 +26,7 @@ public class Player {
     public boolean canMove = true;
     public float speedMod = 0f;
     public float dashMultiplier = 0f;
+    public float dashTimer = 0f;
     public int scale = 0;
     public BufferedImage image;
     private Vector2 curSpeed = Vector2.zero();
@@ -34,6 +36,8 @@ public class Player {
 
     public float maxHealth = 100f;
     public float health = 100f;
+
+    public float healthRegen = 1f;
 
     public static ArrayList<Projectile> projectiles;
     public static ArrayList<Projectile> removeProj;
@@ -67,8 +71,11 @@ public class Player {
     }
 
     public void update() {
-        if (shootTimer > 0)
-            shootTimer -= Main.dTime();
+        shootTimer -= Main.dTime();
+        dashTimer -= Main.dTime();
+
+        if (health < maxHealth)
+            health += Main.dTime() * healthRegen;
 
         movement();
         handleOffset();
@@ -124,8 +131,13 @@ public class Player {
                 dy += speed;
             }
 
-            if (Input.GetKeyDown(KeyEvent.VK_SHIFT)) {
+            if (Input.GetKeyDown(KeyEvent.VK_E)) {
+                GameObject.checkSingleInteract();
+            }
+
+            if (Input.GetKey(KeyEvent.VK_SHIFT) && dashTimer <= 0) {
                 speedMod = speed * dashMultiplier;
+                dashTimer = 0.75f;
             }
 
             if (Input.GetKey(KeyEvent.VK_SPACE) && shootTimer <= 0) {
@@ -254,6 +266,10 @@ public class Player {
             health = maxHealth;
             position = Settings.playerSpawn.clone();
         }
+    }
+
+    public Vector2 getCenter() {
+        return position.offsetClone(-scale / 2);
     }
 
     public void render() {

@@ -2,8 +2,8 @@ package com.Game.Object.AreaTeleporter;
 
 public class CaveEntrance extends Teleporter {
     public enum TeleType {
-        caveEntrance(726, 278, 1),
-        caveExit(4423, 2991, 0);
+        caveEntrance(784, 230, 1),
+        caveExit(5244, 3628, 0);
 
         public final int x, y, subWorld;
 
@@ -17,6 +17,6 @@ public class CaveEntrance extends Teleporter {
     public CaveEntrance(int x, int y, TeleType teleType) {
         super(x, y, teleType.x, teleType.y, teleType.subWorld);
         this.image = getImage("caveEntrance.png");
-        this.maxDistance = 50f;
+        this.maxDistance = 200f;
     }
 }

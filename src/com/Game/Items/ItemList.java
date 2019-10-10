@@ -2,9 +2,19 @@ package com.Game.Items;
 
 import com.Game.Items.Ammo.ArrowItem;
 import com.Game.Items.Ammo.RockArrowItem;
-import com.Game.Items.Armor.Rock.*;
-import com.Game.Items.Consumables.Food.*;
-import com.Game.Items.RawResource.*;
+import com.Game.Items.Armor.Rock.RockBoots;
+import com.Game.Items.Armor.Rock.RockChestplate;
+import com.Game.Items.Armor.Rock.RockHelmet;
+import com.Game.Items.Armor.Rock.RockLeggings;
+import com.Game.Items.Consumables.Food.BlueFishFood;
+import com.Game.Items.Consumables.Food.ClownFishFood;
+import com.Game.Items.RawResource.ArrowShaft;
+import com.Game.Items.RawResource.Coins;
+import com.Game.Items.RawResource.Feather;
+import com.Game.Items.RawResource.Log.Log;
+import com.Game.Items.RawResource.Log.MapleLog;
+import com.Game.Items.RawResource.Log.OakLog;
+import com.Game.Items.RawResource.StringItem;
 import com.Game.Items.Tool.WoodHarp;
 import com.Game.Items.Weapon.Bows.*;
 
@@ -28,10 +38,11 @@ public enum ItemList {
     arrowShaft(new ArrowShaft(16, "arrow_shaft.png", "Arrow Shaft", "Not quite the orange kind.", 100000, 10)),
     stringItem(new StringItem(17, "string.png", "String", "Where does the string come from?", 100000, 5)),
     bowString(new StringItem(18, "bowString.png", "Bow String", "I can combine this with a bow stock.", 1, 20)),
-    ashBow(new AshBow(19, "ash_bow.png", "Ash Bow", "Tier 10", 1, -1)),
-    pineBow(new PineBow(20, "pine_bow.png", "Pine Bow", "Tier 20", 1, -1)),
-    oakBow(new OakBow(21, "oak_bow.png", "Oak Bow", "Tier 30", 1, -1)),
-    spruceBow(new SpruceBow(22, "spruce_bow.png", "Spruce Bow", "Tier 40", 1, -1));
+    ashBow(new AshBow(19, "ash_bow.png", "Ash Bow", "Tier 10", 1, 0)),
+    pineBow(new PineBow(20, "pine_bow.png", "Pine Bow", "Tier 20", 1, 0)),
+    oakBow(new OakBow(21, "oak_bow.png", "Oak Bow", "Tier 30", 1, 0)),
+    spruceBow(new SpruceBow(22, "spruce_bow.png", "Spruce Bow", "Tier 40", 1, 0)),
+    oakLog(new OakLog(23, "oakwood.png", "Oak Bow", "Tier 30", 1, 0));
 
     public Item item;
 

@@ -28,7 +28,7 @@ public class NPC {
     }
 
     public void update() {
-        if (Input.GetKeyDown(KeyEvent.VK_E) && Vector2.distance(Main.player.position, position) < 150) {
+        if (Input.GetKey(KeyEvent.VK_E) && Vector2.distance(Main.player.position, position) < 150) {
             onInteract();
         }
 

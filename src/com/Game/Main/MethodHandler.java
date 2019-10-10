@@ -33,7 +33,6 @@ public class MethodHandler {
     public static ArrayList<Projectile> projectiles;
     public static ArrayList<PlayerObject> playerConnections;
     public static ArrayList<SkillPopup> skillPopups;
-    public static ArrayList<Object> remove;
 
     private static ArrayList[] lists;
 
@@ -45,16 +44,7 @@ public class MethodHandler {
         groundItems = new ArrayList();
         projectiles = new ArrayList();
         playerConnections = new ArrayList();
-        remove = new ArrayList();
         skillPopups = new ArrayList();
-        lists = new ArrayList[]{
-                npcs,
-                objects,
-                enemies,
-                groundItems,
-                projectiles,
-                skillPopups
-        };
     }
 
     public void update() {
@@ -76,24 +66,6 @@ public class MethodHandler {
         player.update();
 
         GUI.update();
-    }
-
-    /**
-     * After every tick, removes the objects from their respective ArrayLists.
-     */
-    private static void handleRemove() {
-        for (int i = 0; i < remove.size(); i++) {
-            Object o = remove.get(i);
-            for (ArrayList list : lists) {
-                if (list.contains(o)) {
-                    list.remove(o);
-                    remove.remove(o);
-                    break;
-                }
-            }
-        }
-
-        remove.clear();
     }
 
     public void render() {
@@ -134,6 +106,7 @@ public class MethodHandler {
             player.render();
 
             GUI.render();
+            World.curWorld.renderMiniMap();
 
             for (int i = 0; i < skillPopups.size(); i++) {
                 SkillPopup popup = skillPopups.get(i);
@@ -142,8 +115,6 @@ public class MethodHandler {
             }
 
             settings.curSelected = 0;
-
-            handleRemove();
         } else {
             // Enter Pause Menu
             settings.render();

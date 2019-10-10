@@ -30,8 +30,7 @@ public class SkillPopup {
         this.skillMessage = "+  " + (int) amount;
         this.duration = DeltaMath.range(1.75f, 2f);
         this.speed = DeltaMath.range(45.5f, 47.5f);
-        this.position =
-                GUI.GuiPos.addClone(GUI.invSize.x * 4 / 2f - 16 + DeltaMath.range(-96, 96), -350);
+        this.position = new Vector2(GUI.invSize.x * 4 / 2f - 16 + DeltaMath.range(-96, 96), -350);
 
         MethodHandler.skillPopups.add(this);
     }
@@ -41,7 +40,7 @@ public class SkillPopup {
         position.y -= speed * Main.dTime();
 
         if (duration < 0) {
-            MethodHandler.remove.add(this);
+            MethodHandler.skillPopups.remove(this);
         }
     }
 

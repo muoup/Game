@@ -21,6 +21,10 @@ public class DeltaMath {
         return dIn * to;
     }
 
+    public static float maxmin(float in, float b, float t) {
+        return Math.max(Math.min(t, in), b);
+    }
+
     public static float logb(float base, float number) {
         return (float) (Math.log10(number) / Math.log10(base));
     }

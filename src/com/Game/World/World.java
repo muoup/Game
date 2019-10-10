@@ -2,13 +2,18 @@ package com.Game.World;
 
 import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
+import com.Util.Math.DeltaMath;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 import com.Util.Other.Settings;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class World {
+
+    private static final int miniMapSize = 512;
+    private static final int miniMapScale = 256;
 
     private static World[] worlds = {
             new MainWorld(), // Normal Overworld
@@ -73,11 +78,11 @@ public class World {
 
     // Resets all of the arrays so that new objects can be added in initWorld()
     public void resetWorld() {
-        MethodHandler.remove.addAll(MethodHandler.npcs);
-        MethodHandler.remove.addAll(MethodHandler.enemies);
-        MethodHandler.remove.addAll(MethodHandler.objects);
-        MethodHandler.remove.addAll(MethodHandler.groundItems);
-        MethodHandler.remove.addAll(MethodHandler.npcs);
+        MethodHandler.npcs.clear();
+        MethodHandler.enemies.clear();
+        MethodHandler.objects.clear();
+        MethodHandler.groundItems.clear();
+        MethodHandler.projectiles.clear();
 
         initWorld();
     }
@@ -91,9 +96,30 @@ public class World {
 
     // Render the buffered image of the world, this will be called in the methods.java generally
     public void renderWorld() {
-        BufferedImage subImage = worldImage.getSubimage((int) World.curWorld.offset.x / Settings.worldScale, (int)World.curWorld.offset.y / Settings.worldScale,
-                (int) Settings.curResolution().x / Settings.worldScale, (int)Settings.curResolution().y / Settings.worldScale);
+        Vector2 start = new Vector2(World.curWorld.offset.x / Settings.worldScale, World.curWorld.offset.y / Settings.worldScale);
+        Vector2 scale = new Vector2(Settings.curResolution().x / Settings.worldScale, Settings.curResolution().y / Settings.worldScale);
 
-        Render.drawImage(Render.getScaledImage(subImage, Settings.curResolution()), Vector2.zero());
+        BufferedImage subImage = worldImage.getSubimage((int) start.x, (int) start.y, (int) scale.x, (int) scale.y);
+
+        BufferedImage imageMap = Render.getScaledImage(subImage, Settings.curResolution());
+
+        Render.drawImage(imageMap, Vector2.zero());
+
+    }
+
+    public void renderMiniMap() {
+        Vector2 screenSize = Settings.curResolution();
+        Vector2 offset = World.curWorld.offset.addClone(screenSize.scaleClone(0.5f));
+
+        Vector2 pos = new Vector2(DeltaMath.maxmin(offset.x / Settings.worldScale - miniMapSize, 0, worldImage.getWidth() - miniMapSize * 2),
+                DeltaMath.maxmin(offset.y / Settings.worldScale  - miniMapSize, 0, worldImage.getHeight() - miniMapSize * 2));
+
+        BufferedImage imageMap = worldImage.getSubimage((int) pos.x, (int) pos.y, miniMapSize * 2, miniMapSize * 2);
+        imageMap = Render.getScaledImage(imageMap, Vector2.identity(miniMapScale));
+
+        Render.setColor(Color.BLACK);
+
+        Render.drawRectangle(screenSize.x - miniMapScale - 40, 40, imageMap.getWidth() + 8, imageMap.getHeight() + 8);
+        Render.drawImage(imageMap, new Vector2(screenSize.x - miniMapScale - 36, 44));
     }
 }

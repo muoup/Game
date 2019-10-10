@@ -66,7 +66,7 @@ public class GroundItem {
         }
 
         if (stack.size() == 0)
-            MethodHandler.remove.add(this);
+            MethodHandler.groundItems.remove(this);
     }
 
     public static GroundItem mouseOver() {

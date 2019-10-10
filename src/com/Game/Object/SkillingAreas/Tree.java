@@ -2,8 +2,8 @@ package com.Game.Object.SkillingAreas;
 
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.Inventory.InventoryManager;
-import com.Game.Items.ItemList;
 import com.Game.GUI.Skills.Skills;
+import com.Game.Items.ItemList;
 import com.Game.Main.Main;
 import com.Game.Object.GameObject;
 import com.Util.Math.DeltaMath;
@@ -15,13 +15,14 @@ public class Tree extends GameObject {
     float rpTimer;
 
     public static TreePreset wood = new TreePreset(0);
-    public static TreePreset maple = new TreePreset(1);
+    public static TreePreset oak = new TreePreset(3);
+    public static TreePreset maple = new TreePreset(5);
 
     public Tree(int x, int y, TreePreset preset) {
         super(x, y);
 
         image = getImage(preset.treeImage);
-        maxDistance = 32f;
+        maxDistance = 64f;
         woodAmount = preset.getWoodAmount();
         this.preset = preset;
     }
@@ -35,6 +36,7 @@ public class Tree extends GameObject {
                 image = getImage(preset.treeImage);
             }
         }
+
     }
 
     public boolean onInteract() {
@@ -93,7 +95,19 @@ class TreePreset {
                 wood = ItemList.wood;
                 treeImage = "tree.png";
                 break;
-            case 1:
+            case 3:
+                // Oak Tree
+                xp = 55;
+                minTimer = 5.5f;
+                maxTimer = 13f;
+                minWood = 1;
+                maxWood = 12;
+                lvlReq = 10;
+                wood = ItemList.wood;
+                treeImage = "oakTree.png";
+                break;
+            case 4:
+                // Maple Tree
                 xp = 65;
                 minTimer = 6.5f;
                 maxTimer = 14f;

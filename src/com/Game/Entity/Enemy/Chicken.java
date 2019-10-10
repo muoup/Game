@@ -16,7 +16,7 @@ public class Chicken extends Enemy {
 
     public Chicken(int x, int y) {
         super(x, y);
-        this.maxHealth = 25f;
+        this.maxHealth = 10f;
         this.id = 3;
         this.image = getImage("chicken.png");
         this.respawnTimer = 0.5f;

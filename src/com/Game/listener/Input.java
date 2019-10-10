@@ -8,6 +8,7 @@ import java.awt.event.*;
 
 public class Input implements KeyListener, MouseListener, MouseMotionListener {
 
+    private static boolean[] keysPressed = new boolean[65535];
     public static KeyState[] keys = new KeyState[65535];
     public static boolean[] mouse = new boolean[5];
     public static boolean[] mouseDown = new boolean[5];
@@ -24,12 +25,13 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
     }
 
     public static boolean GetKeyDown(int code) {
-        KeyState ret = keys[code];
-
-        if (keys[code] == KeyState.pressed)
-            keys[code] = KeyState.inPress;
-
-        return ret == KeyState.pressed;
+//        KeyState ret = keys[code];
+//
+//        if (keys[code] == KeyState.pressed)
+//            keys[code] = KeyState.inPress;
+//
+//        return ret == KeyState.pressed;
+        return keys[code] == KeyState.pressed;
     }
 
     public static boolean GetMouse(int button) {
@@ -50,8 +52,7 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (Input.keys[e.getKeyCode()] != KeyState.inPress)
-            Input.keys[e.getKeyCode()] = KeyState.pressed;
+        keysPressed[e.getKeyCode()] = true;
 
         String input = Character.toString(e.getKeyChar());
         int code = e.getKeyCode();
@@ -76,9 +77,27 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
         Login.onType(input);
     }
 
+    public static void update() {
+        for (int i = 0; i < keysPressed.length; i++) {
+            boolean key = keysPressed[i];
+
+            if (!key) {
+                keys[i] = KeyState.released;
+                continue;
+            }
+
+            if (keys[i] == KeyState.pressed) {
+                keys[i] = KeyState.inPress;
+            } else if (keys[i] == KeyState.released) {
+                keys[i] = KeyState.pressed;
+            }
+        }
+    }
+
     @Override
     public void keyReleased(KeyEvent e) {
-        Input.keys[e.getKeyCode()] = KeyState.released;
+        Input.keysPressed[e.getKeyCode()] = false;
+        //Input.keys[e.getKeyCode()] = KeyState.released;
     }
 
     @Override
