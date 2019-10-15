@@ -6,6 +6,7 @@ import com.Game.Items.ItemList;
 import com.Game.GUI.Skills.Skills;
 import com.Game.Main.Main;
 import com.Game.Object.SkillingAreas.Tree;
+import com.Game.Object.SkillingAreas.TreePreset;
 import com.Game.World.World;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
@@ -71,12 +72,12 @@ public class Commands {
                     String type = parameters[0];
 
                     switch(type) {
-                        case "wood":
-                            new Tree(x, y, Tree.wood);
-                            System.out.println("new Tree(" + x + ", " + y + ", Tree.wood);");
+                        case "log":
+                            new Tree(x, y, TreePreset.tree);
+                            System.out.println("new Tree(" + x + ", " + y + ", Tree.log);");
                             break;
                         case "maple":
-                            new Tree(x, y, Tree.maple);
+                            new Tree(x, y, TreePreset.mapleTree);
                             System.out.println("new Tree(" + x + ", " + y + ", Tree.maple);");
                             break;
                         default:

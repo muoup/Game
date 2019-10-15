@@ -46,7 +46,7 @@ public class RockEnemy extends Enemy {
 
     public void handleDrops() {
         ArrayList stacks = new ArrayList<ItemStack>();
-        stacks.add(new ItemStack(ItemList.rockarrow, (int) DeltaMath.range(2, 20)));
+        stacks.add(new ItemStack(ItemList.rockArrow, (int) DeltaMath.range(2, 20)));
         float rand = DeltaMath.range(0, 100);
         while (rand <= piecePercent) {
             stacks.add(new ItemStack(ItemList.values()[Math.round(DeltaMath.range(10, 13))], 1));

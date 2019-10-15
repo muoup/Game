@@ -5,6 +5,7 @@ import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.RightClick;
 import com.Game.Main.Main;
+import com.Util.Math.DeltaMath;
 import com.Util.Math.Vector2;
 
 import java.awt.image.BufferedImage;
@@ -55,7 +56,7 @@ public class Item {
         }
 
         if (option == RightClick.options.size() - 1)
-            ChatBox.sendMessage(examineText);
+            ChatBox.sendMessage(name + " " + examineText);
 
         if (option == RightClick.options.size() - 2)
             InventoryManager.setItem(index, emptyStack());
@@ -107,6 +108,37 @@ public class Item {
 
     public void use(int index) {
 
+    }
+
+    public int combine(int index, ItemList use, ItemList create, int amt) {
+        int amount = InventoryManager.itemCount(use);
+        amount = Math.min(amt, amount);
+        amount = Math.min(amount, InventoryManager.getStack(index).getAmount());
+        if (amount == 0) {
+            ChatBox.sendMessage("You need some " + use.name() + " to do this.");
+            return 0;
+        }
+        InventoryManager.removeItem(use, amount);
+        InventoryManager.removeItem(getItemList(), amount);
+        InventoryManager.addItem(create, amount);
+
+        return amount;
+    }
+
+    public int convert(int amountPer, int maxCreate, ItemList create) {
+        int use = InventoryManager.itemCount(getItemList());
+        int make = (int) DeltaMath.maxmin(use / amountPer, 0, maxCreate);
+        if (make == 0) {
+            ChatBox.sendMessage("You need " + amountPer + " " + name + " to make this.");
+            return 0;
+        }
+        InventoryManager.removeItem(getItemList(), make * amountPer);
+        InventoryManager.addItem(create, make);
+        return amountPer;
+    }
+
+    public ItemList getItemList() {
+        return ItemList.values()[id];
     }
 
     public float getArmor() {

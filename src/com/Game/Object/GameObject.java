@@ -38,8 +38,6 @@ public class GameObject {
             update();
         } else return;
 
-        System.out.println(distance + " -> " + maxDistance);
-
         if (Input.GetKey(KeyEvent.VK_E) && distance <= maxDistance && !ChatBox.typing && canInteract) {
             canInteract = onInteract();
         } else if (!Input.GetKey(KeyEvent.VK_E) || distance > maxDistance) {

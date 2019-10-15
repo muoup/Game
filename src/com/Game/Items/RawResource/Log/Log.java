@@ -20,13 +20,14 @@ public class Log extends Item {
     }
 
     public void ClickIdentities(int index) {
+        // Craft Bow
         replaceInventory(index, new ItemStack((bow == null) ? ItemList.bow : bow, 1));
     }
 
     public void OnRightClick(int index, int option) {
         switch (option) {
             case 1:
-                // Craft Arrows
+                // Craft Arrow Shafts
                 replaceInventory(index, new ItemStack(ItemList.arrowShaft, arrowShaft));
                 break;
         }

@@ -103,7 +103,7 @@ public class ChatBox {
         Render.setColor(new Color(40, 38, 34));
         Render.drawBorderedRect(bPos, bSize);
 
-        Render.setColor(inBar() && Input.GetMouse(1) ? new Color(181, 160, 108) :
+        Render.setColor(moveBar && Input.GetMouse(1) ? new Color(181, 160, 108) :
                 new Color(181, 151, 57));
         Render.drawBorderedRect(bPos.addClone(0, scroll), new Vector2(bSize.x, height));
     }
@@ -236,10 +236,11 @@ public class ChatBox {
 
         scrollDown = (scroll == (int) (maxScroll - height)) || (height == bSize.y);
 
-        if (msg.rawMessage.substring(0, 2).equals("::")) {
-            Commands.onCommand(msg);
-            return;
-        }
+        if (msg.message.length() > 1)
+            if (msg.rawMessage.substring(0, 2).equals("::")) {
+                Commands.onCommand(msg);
+                return;
+            }
 
         // Send message to server
         Main.sendPacket(Main.messageCode + msg.message);

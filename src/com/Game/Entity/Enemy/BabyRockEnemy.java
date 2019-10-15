@@ -41,7 +41,7 @@ public class BabyRockEnemy extends Enemy {
 
     public void handleDrops() {
         ArrayList stacks = new ArrayList<ItemStack>();
-        stacks.add(new ItemStack(ItemList.rockarrow, (int) DeltaMath.range(1, 10)));
+        stacks.add(new ItemStack(ItemList.rockArrow, (int) DeltaMath.range(1, 10)));
         float rand = DeltaMath.range(0, 100);
         while (rand <= piecePercent) {
             stacks.add(new ItemStack(ItemList.values()[Math.round(DeltaMath.range(10, 13))], 1));

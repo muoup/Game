@@ -4,7 +4,6 @@ import com.Game.GUI.GUI;
 import com.Game.GUI.RightClick;
 import com.Game.Items.Item;
 import com.Game.Items.ItemList;
-import com.Game.Items.ItemSets;
 import com.Game.Items.ItemStack;
 import com.Game.Main.Main;
 import com.Util.Math.Vector2;
@@ -67,6 +66,15 @@ public class InventoryManager {
                 amount += stack.getAmount();
         }
         return amount;
+    }
+
+    public static ItemStack findStack(ItemList item) {
+        for (ItemStack stack : inventory) {
+            if (stack.getID() == item.getID())
+                return stack;
+        }
+
+        return null;
     }
 
     public static boolean removeItem(ItemList item, int amount) {
