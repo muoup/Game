@@ -23,7 +23,7 @@ public class GameObject {
     public GameObject(int x, int y) {
         this.position = new Vector2(x, y);
 
-        Main.methods.objects.add(this);
+        MethodHandler.objects.add(this);
     }
 
     public void updateObject() {

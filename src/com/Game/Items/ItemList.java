@@ -37,14 +37,14 @@ public enum ItemList {
     arrowShaft(new ArrowShaft(16, "arrow_shaft.png", "Arrow Shaft", "Not quite the orange kind.", 100000, 10)),
     stringItem(new StringItem(17, "string.png", "String", "Where does the string come from?", 100000, 5)),
     bowString(new StringItem(18, "bow_string.png", "Bow String", "I can combine this with a bow stock.", 1, 20)),
-    ashBow(new AshBow(19, "ash_bow.png", "Ash Bow", "Tier 10", 1, 0)),
-    pineBow(new PineBow(20, "pine_bow.png", "Pine Bow", "Tier 20", 1, 0)),
-    oakBow(new OakBow(21, "oak_bow.png", "Oak Bow", "Tier 30", 1, 0)),
-    spruceBow(new SpruceBow(22, "spruce_bow.png", "Spruce Bow", "Tier 40", 1, 0)),
-    oakLog(new OakLog(23, "oak_wood.png", "Oak Wood", "Tier 30", 1, 0)),
-    pineLog(new PineLog(24, "pine_wood.png", "Pine Wood", "Tier 20", 1, 0)),
-    spruceLog(new SpruceLog(25, "spruce_wood.png", "Spruce Wood", "Tier 40", 1, 0)),
-    ashLog(new AshLog(26, "ash_wood.png", "Ash Wood", "Tier 10", 1, 0));
+    ashBow(new AshBow(19, "ash_bow.png", "Ash Bow", "Tier 10", 1, 1)),
+    pineBow(new PineBow(20, "pine_bow.png", "Pine Bow", "Tier 20", 1, 1)),
+    oakBow(new OakBow(21, "oak_bow.png", "Oak Bow", "Tier 30", 1, 1)),
+    spruceBow(new SpruceBow(22, "spruce_bow.png", "Spruce Bow", "Tier 40", 1, 1)),
+    oakLog(new OakLog(23, "oak_wood.png", "Oak Wood", "Tier 30", 1, 1)),
+    pineLog(new PineLog(24, "pine_wood.png", "Pine Wood", "Tier 20", 1, 1)),
+    spruceLog(new SpruceLog(25, "spruce_wood.png", "Spruce Wood", "Tier 40", 1, 1)),
+    ashLog(new AshLog(26, "ash_wood.png", "Ash Wood", "Tier 10", 1, 1));
 
     public Item item;
 

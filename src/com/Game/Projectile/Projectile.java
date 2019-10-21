@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+// TODO: Projectiles are wacko, plz fix.
 public class Projectile {
     protected Vector2 position;
     protected Vector2 initPos;
@@ -51,6 +52,8 @@ public class Projectile {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        position.subtractClone(Render.getImageSize(image).scale(0.5f));
+        image = Render.getScaledImage(image, scale);
     }
 
     public void projectileUpdate() {

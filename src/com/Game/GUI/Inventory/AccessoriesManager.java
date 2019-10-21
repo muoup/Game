@@ -128,7 +128,7 @@ public class AccessoriesManager {
             }
         }
 
-        Render.drawRectOutline(GUI.GuiPos.addClone(2, 2), GUI.GUIEnd().subtractClone(2, 2));
+    //    Render.drawRectOutline(GUI.GuiPos.addClone(2, 2), GUI.GUIEnd().subtractClone(2, 2));
     }
 
     public static void drawBox(int x, int y) {

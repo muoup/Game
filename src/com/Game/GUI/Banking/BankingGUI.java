@@ -10,7 +10,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
-public class BankingGUI extends GUIWindow{
+public class BankingGUI extends GUIWindow {
     // TODO: Save bank to server after full client-side implementation
     // TODO: Determine positions for bank item slots to make them render correctly
 

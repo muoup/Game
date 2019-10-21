@@ -3,8 +3,11 @@ package com.Game.Entity.Player;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.GUI;
 import com.Game.GUI.Inventory.AccessoriesManager;
+import com.Game.Items.Item;
+import com.Game.Items.ItemStack;
 import com.Game.Main.Main;
 import com.Game.Object.GameObject;
+import com.Game.Projectile.Fist;
 import com.Game.Projectile.Projectile;
 import com.Game.World.World;
 import com.Game.listener.Input;
@@ -141,8 +144,11 @@ public class Player {
             }
 
             if (Input.GetKey(KeyEvent.VK_SPACE) && shootTimer <= 0) {
-                AccessoriesManager.getSlot(AccessoriesManager.WEAPON_SLOT).
-                        getItem().useWeapon(position, Input.mousePosition.addClone(World.curWorld.offset));
+                ItemStack accessory = AccessoriesManager.getSlot(AccessoriesManager.WEAPON_SLOT);
+                if (accessory.getID() == 0)
+                    new Fist(getCenter(), Input.mousePosition.addClone(World.curWorld.offset));
+                else
+                    accessory.getItem().useWeapon(getCenter(), Input.mousePosition.addClone(World.curWorld.offset));
                 shootTimer = 0.25f;
             }
 
@@ -193,8 +199,6 @@ public class Player {
                 yPoints[0],
                 yPoints[2]
         };
-
-        // TODO: Add collision sliding.
 
         if ((speed.x < 0 && !CollisionHandler.isFree(x1Points)) || (speed.x > 0 && !CollisionHandler.isFree(x2Points))) {
             speed.x = 0;

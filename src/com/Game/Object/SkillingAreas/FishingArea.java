@@ -8,6 +8,8 @@ import com.Game.Main.Main;
 import com.Game.Object.GameObject;
 import com.Util.Math.DeltaMath;
 
+import java.awt.image.BufferedImage;
+
 public class FishingArea extends GameObject {
 
     public static FishingPreset clownFish = new FishingPreset(0);
@@ -18,8 +20,8 @@ public class FishingArea extends GameObject {
     public FishingArea(int x, int y, FishingPreset preset) {
         super(x, y);
 
-        image = null;
-        maxDistance = 70f;
+        image = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+        maxDistance = 128f;
         this.preset = preset;
     }
 
