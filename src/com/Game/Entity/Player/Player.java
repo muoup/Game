@@ -33,7 +33,7 @@ public class Player {
     public int scale = 0;
     public BufferedImage image;
     private Vector2 curSpeed = Vector2.zero();
-    private float dx = 0, dy = 0, dMod = 0, shootTimer = 0;
+    public float dx = 0, dy = 0, dMod = 0, shootTimer = 0;
     public String name = null;
     private final float maxSlide = 8f;
 
@@ -149,7 +149,6 @@ public class Player {
                     new Fist(getCenter(), Input.mousePosition.addClone(World.curWorld.offset));
                 else
                     accessory.getItem().useWeapon(getCenter(), Input.mousePosition.addClone(World.curWorld.offset));
-                shootTimer = 0.25f;
             }
 
             dMod = speedMod;

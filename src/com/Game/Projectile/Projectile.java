@@ -43,6 +43,11 @@ public class Projectile {
         direction = Vector2.magnitudeDirection(position, aim).scale(speed);
 
         Player.projectiles.add(this);
+        setCooldown(0.2f);
+    }
+
+    public void setCooldown(float timer) {
+        Main.player.shootTimer = timer;
     }
 
     public void setImage(String root) {
@@ -53,6 +58,10 @@ public class Projectile {
         }
         image = Render.getScaledImage(image, scale);
         position.offset(-(image.getWidth() - Main.player.image.getWidth()) / 2);
+    }
+
+    public Vector2 getCenter() {
+        return position.addClone(Render.getImageSize(image).scale(0.5f));
     }
 
     public void projectileUpdate() {
@@ -71,7 +80,6 @@ public class Projectile {
         }
 
         Render.drawImage(bullet, position.subtractClone(World.curWorld.offset));
-        Render.drawRectOutline(position.subtractClone(World.curWorld.offset), Render.getImageSize(bullet));
 
         duration -= Main.dTime();
 
@@ -83,14 +91,14 @@ public class Projectile {
                 if (!e.enabled)
                     continue;
 
-                if (Vector2.distance(e.position, position) < e.image.getWidth() + scale.x) {
+                if (Vector2.distance(e.position, getCenter()) < (e.image.getWidth() + image.getWidth()) / 2f) {
                     e.damage(damage);
                     onHit(e, damage);
                     destroy();
                 }
             }
         } else {
-            if (Vector2.distance(Main.player.position, position) < scale.x + 16) {
+            if (Vector2.distance(Main.player.position, getCenter()) < scale.x + 16) {
                 Main.player.damage(damage);
                 destroy();
             }
