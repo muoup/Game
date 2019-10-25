@@ -187,24 +187,18 @@ public class Client {
     }
 
     public void takeItemData(String[] index) {
-        int id = 0;
         for (int i = 1; i < index.length; i++) {
-            if (i % 2 == 1) {
-                id = Integer.parseInt(index[i]);
-            } else {
-                InventoryManager.clientSetItem(i / 2 - 1, id, Integer.parseInt(index[i]));
-            }
+            String[] itemData = index[i].split(" ");
+            InventoryManager.clientSetItem(i - 1,
+                    Integer.parseInt(itemData[0]), Integer.parseInt(itemData[1]), Integer.parseInt(itemData[2]));
         }
     }
 
     public void takeAccData(String[] index) {
-        int id = 0;
         for (int i = 1; i < index.length; i++) {
-            if (i % 2 == 1) {
-                id = Integer.parseInt(index[i]);
-            } else {
-                AccessoriesManager.clientSetItem(i / 2 - 1, id, Integer.parseInt(index[i]));
-            }
+            String[] itemData = index[i].split(" ");
+            AccessoriesManager.clientSetItem(i - 1,
+                    Integer.parseInt(itemData[0]), Integer.parseInt(itemData[1]), Integer.parseInt(itemData[2]));
         }
 
         AccessoriesManager.calculateArmor();

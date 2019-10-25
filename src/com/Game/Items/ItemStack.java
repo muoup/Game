@@ -7,11 +7,22 @@ public class ItemStack {
     private Item item;
     private int amount;
     private int maxAmount;
+    private int data;
 
     public ItemStack(Item item, int amount) {
         this.item = item;
         this.amount = amount;
         this.maxAmount = item.maxStack;
+        this.data = 0;
+    }
+
+    public ItemStack(Item item, int amount, int data) {
+        this.item = item;
+        this.amount = amount;
+        this.maxAmount = item.maxStack;
+        this.data = data;
+
+        item.onDataSet(data);
     }
 
     public ItemStack(ItemList item, int amount) {
@@ -28,6 +39,10 @@ public class ItemStack {
 
     public int getMaxAmount() {
         return maxAmount;
+    }
+
+    public int getData() {
+        return data;
     }
 
     public String getPlural() {
@@ -68,5 +83,10 @@ public class ItemStack {
 
     public void addAmount(int amount) {
         setAmount(this.amount + amount);
+    }
+
+    public void setData(int data) {
+        this.data = data;
+        item.onDataSet(data);
     }
 }

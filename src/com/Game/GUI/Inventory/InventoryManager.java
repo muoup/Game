@@ -168,8 +168,9 @@ public class InventoryManager {
         setItem(slot2, temp);
     }
 
-    public static void clientSetItem(int slot, int id, int amount) {
+    public static void clientSetItem(int slot, int id, int amount, int data) {
         inventory[slot] = new ItemStack(ItemList.values()[id], amount);
+        inventory[slot].setData(data);
     }
 
     public static int addItem(ItemList item, int amount) {

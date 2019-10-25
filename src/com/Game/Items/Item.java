@@ -22,16 +22,27 @@ public class Item {
     public float armor = 0;
     public int maxStack;
     public int worth;
+    public String imageName;
     public ItemRequirement requirement = ItemRequirement.none();
 
     public Item(int id, String imageName, String name, String examineText, int maxStack, int worth) {
         this.id = id;
-        this.image = (!imageName.equals("/")) ? Main.main.getImageFromRoot("Items/" + imageName) : null;
         this.examineText = examineText;
         this.maxStack = maxStack;
         this.name = name;
         this.options = new ArrayList();
         this.worth = worth;
+        this.imageName = imageName;
+
+        setImage(imageName);
+    }
+
+    public void setImage(String root) {
+        image = (!root.equals("/")) ? Main.main.getImageFromRoot("Items/" + root) : null;
+    }
+
+    public void onDataSet(int data) {
+
     }
 
     public static ItemStack emptyStack() {
@@ -56,7 +67,7 @@ public class Item {
         }
 
         if (option == RightClick.options.size() - 1)
-            ChatBox.sendMessage(name + " " + examineText);
+            ChatBox.sendMessage(examineText);
 
         if (option == RightClick.options.size() - 2)
             InventoryManager.setItem(index, emptyStack());

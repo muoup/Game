@@ -73,8 +73,9 @@ public class AccessoriesManager {
         }
     }
 
-    public static void clientSetItem(int slot, int id, int amount) {
+    public static void clientSetItem(int slot, int id, int amount, int data) {
         accessories[slot] = new ItemStack(ItemList.values()[id], amount);
+        accessories[slot].setData(data);
     }
 
     public static void render() {

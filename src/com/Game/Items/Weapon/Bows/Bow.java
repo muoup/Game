@@ -8,4 +8,12 @@ public class Bow extends BowWeapon {
 
         setWeaponTier(1);
     }
+
+    public void onDataSet(int data) {
+        if (data == 0) {
+            setImage("unstrung_" + imageName);
+        } else {
+            setImage(imageName);
+        }
+    }
 }
