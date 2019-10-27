@@ -10,18 +10,11 @@ public class Log extends Item {
 
     public Log(int id, String imageName, String name, String examineText, int maxStack, int worth) {
         super(id, imageName, name, examineText, maxStack, worth);
-
-        setOptions();
-    }
-
-    public void setOptions() {
-        options.add("Craft Bow");
-        options.add("Craft Arrow Shafts");
     }
 
     public void ClickIdentities(int index) {
         // Craft Bow
-        replaceInventory(index, new ItemStack((bow == null) ? ItemList.bow : bow, 1));
+        replaceInventory(index, new ItemStack((bow == null) ? ItemList.bow : bow, 1, 0));
     }
 
     public void OnRightClick(int index, int option) {
@@ -31,5 +24,11 @@ public class Log extends Item {
                 replaceInventory(index, new ItemStack(ItemList.arrowShaft, arrowShaft));
                 break;
         }
+    }
+
+    public void setData(ItemStack stack) {
+        stack.options.clear();
+        stack.options.add("Craft Bow");
+        stack.options.add("Craft Arrow Shafts");
     }
 }

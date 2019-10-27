@@ -70,7 +70,7 @@ public class GUIItemSlot extends GUIElement {
     }
 
     public void setAmount(int amount) {
-        stack.addAmount(amount);
+        stack.amount = amount;
     }
 
     public void addAmount(int amount) {

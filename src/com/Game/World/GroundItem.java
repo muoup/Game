@@ -48,7 +48,7 @@ public class GroundItem {
     public void addItem(ItemStack item) {
         for (ItemStack s : stack) {
             if (s.getID() == item.getID()) {
-                s.addAmount(item.getAmount());
+                s.amount += item.getAmount();
                 return;
             }
         }

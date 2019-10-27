@@ -15,10 +15,10 @@ public class Tree extends GameObject {
     public Tree(int x, int y, TreePreset preset) {
         super(x, y);
 
+        this.preset = preset;
         image = getImage(preset.imageName);
         maxDistance = 64f;
         woodAmount = preset.getWoodAmount();
-        this.preset = preset;
     }
 
     public void update() {

@@ -106,14 +106,14 @@ public class RightClick {
                 int amount = selected.getAmount();
                 int removed = 0;
 
-                if (selected.getItem().equipStatus != -1) {
-                    ItemStack accessory = AccessoriesManager.getSlot(selected.getItem().equipStatus);
+                if (selected.getEquipmentStatus() != -1) {
+                    ItemStack accessory = AccessoriesManager.getSlot(selected.equipStatus);
 
                     if (accessory.getID() == selected.getID()) {
                         int maxAdd = accessory.getMaxAmount() - accessory.getAmount();
                         int add = (amount > maxAdd) ? maxAdd : amount;
 
-                        AccessoriesManager.addAmount(selected.getItem().equipStatus, add);
+                        AccessoriesManager.addAmount(selected.getEquipmentStatus(), add);
                         amount -= add;
 
                         removed += add;
@@ -122,7 +122,7 @@ public class RightClick {
 
                 removed += InventoryManager.addItem(selected.getItem(), amount);
 
-                MethodHandler.groundItems.get(groundItem).stack.get(option).addAmount(-removed);
+                MethodHandler.groundItems.get(groundItem).stack.get(option).amount -= removed;
             }
         }
     }
@@ -151,10 +151,10 @@ public class RightClick {
 
         Render.setFont(Settings.itemFont);
 
-        if (item.getItem().equipStatus != -1)
+        if (item.getEquipmentStatus() != -1)
             options.add("Equip");
 
-        options.addAll(item.getItem().options);
+        options.addAll(item.options);
 
         for (String s : options) {
             if (Render.getStringWidth(s) > maxWidth)

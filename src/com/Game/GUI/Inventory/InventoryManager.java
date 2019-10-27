@@ -77,11 +77,23 @@ public class InventoryManager {
         return null;
     }
 
-    public static boolean removeItem(ItemList item, int amount) {
+    public static int getIndex(ItemStack stack) {
+        for (int i = 0; i < inventory.length; i++) {
+            if (stack.getID() == inventory[i].getID() &&
+                    stack.getAmount() == inventory[i].getAmount() &&
+                        stack.getData() == inventory[i].getData()) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    public static boolean removeItem(ItemList item, int amount, int data) {
         int remove = amount;
         for (int i = 0; i < inventory.length; i++) {
             ItemStack stack = inventory[i];
-            if (stack.getID() == item.getID()) {
+            if (stack.getID() == item.getID() && stack.getData() == data) {
                 int removeAmount = (remove > stack.getAmount()) ? stack.getAmount() : remove;
                 removeItem(i, removeAmount);
                 remove -= removeAmount;
@@ -91,6 +103,10 @@ public class InventoryManager {
         }
 
         return true;
+    }
+
+    public static boolean removeItem(ItemList item, int amount) {
+        return removeItem(item, amount, 0);
     }
 
     public static void render() {
@@ -140,13 +156,8 @@ public class InventoryManager {
 
     public static void setAmount(int slot, int amount) {
         ItemStack stack = getStack(slot);
-        stack.setAmount(amount);
+        stack.amount = amount;
         setItem(slot, stack);
-    }
-
-    public static void setID(int slot, int id) {
-        ItemStack stack = getStack(slot);
-        stack.setItem(ItemList.values()[id]);
     }
 
     public static void addAmount(int slot, int amount) {
@@ -156,10 +167,9 @@ public class InventoryManager {
     public static int useIndex = -1;
 
     public static void setItem(int slot, ItemStack item) {
-        inventory[slot].setItem(ItemList.values()[item.getID()]);
-        inventory[slot].setAmount(item.getAmount());
+        inventory[slot] = item;
 
-        Main.sendPacket("08" + slot + ":" + item.getID() + ":" + item.getAmount() + ":" + Main.player.name);
+        Main.sendPacket("08" + slot + ":" + item.getID() + ":" + item.getAmount() + ":" + item.getData() + ":" + Main.player.name);
     }
 
     public static void swapSlots(int slot1, int slot2) {
@@ -169,18 +179,21 @@ public class InventoryManager {
     }
 
     public static void clientSetItem(int slot, int id, int amount, int data) {
-        inventory[slot] = new ItemStack(ItemList.values()[id], amount);
-        inventory[slot].setData(data);
+        if (id == 3)
+            System.out.println("Slot: " + slot);
+        inventory[slot] = new ItemStack(ItemList.values()[id], amount, data);
     }
 
-    public static int addItem(ItemList item, int amount) {
+    public static int addItem(ItemList item, int amount, int data) {
         int amt = amount;
         int add = amount;
 
         for (int i = 0; i < inventory.length; i++) {
             add = amount;
 
-            if (inventory[i].getID() == item.item.id && inventory[i].getAmount() < item.maxStack()) {
+            if (inventory[i].getID() == item.item.id
+                    && inventory[i].getData() == data
+                    && inventory[i].getAmount() < item.maxStack()) {
                 if (add > item.maxStack() - inventory[i].getAmount()) {
                     add = item.maxStack() - inventory[i].getAmount();
                 }
@@ -202,7 +215,7 @@ public class InventoryManager {
                     add = item.maxStack();
                 }
 
-                setItem(i, new ItemStack(item, add));
+                setItem(i, new ItemStack(item, add, data));
 
                 amount -= add;
             }
@@ -212,6 +225,14 @@ public class InventoryManager {
         }
 
         return amt - add;
+    }
+
+    public static int addItem(Item item, int amount, int data) {
+        return addItem(ItemList.values()[item.id], amount, data);
+    }
+
+    public static int addItem(ItemList item, int amount) {
+        return addItem(item, amount, 0);
     }
 
     public static int addItem(Item item, int amount) {
@@ -240,5 +261,14 @@ public class InventoryManager {
 
     public static Item getItem(int inventoryIndex) {
         return inventory[inventoryIndex].getItem();
+    }
+
+    public static void setData(int slot, int data) {
+        ItemStack oldStack = inventory[slot];
+        setItem(slot, new ItemStack(ItemList.values()[oldStack.getID()], oldStack.getAmount(), data));
+    }
+
+    public static int getData(int index) {
+        return inventory[index].getData();
     }
 }

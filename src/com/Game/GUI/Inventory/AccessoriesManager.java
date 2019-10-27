@@ -50,17 +50,17 @@ public class AccessoriesManager {
     }
 
     public static void setSlot(ItemStack item, int slot) {
-        if (accessories[slot].getID() == item.getID()) {
+        if (accessories[slot].getID() == item.getID()
+            && accessories[slot].getData() == item.getData()) {
             int maxAmount = accessories[slot].getMaxAmount() - accessories[slot].getAmount();
             if (maxAmount > item.getAmount())
                 maxAmount = item.getAmount();
 
-            Main.sendPacket("09" + slot + ":" + item.getID() + ":" + maxAmount + ":" + Main.player.name);
-            accessories[slot].setAmount(maxAmount);
+            Main.sendPacket("09" + slot + ":" + item.getID() + ":" + maxAmount + ":" + item.getData() + ":" + Main.player.name);
+            accessories[slot].amount = maxAmount;
         } else {
-            float prev = accessories[slot].getArmor();
             accessories[slot] = item;
-            Main.sendPacket("09" + slot + ":" + item.getID() + ":" + item.getAmount() + ":" + Main.player.name);
+            Main.sendPacket("09" + slot + ":" + item.getID() + ":" + item.getAmount() + ":" + item.getData() + ":" + Main.player.name);
         }
 
         calculateArmor();
@@ -163,7 +163,7 @@ public class AccessoriesManager {
 
                 ItemStack stack = accessories[index].clone();
 
-                InventoryManager.addItem(stack.getItem(), stack.getAmount());
+                InventoryManager.addItem(stack.getItem(), stack.getAmount(), stack.getData());
 
                 setSlot(Item.emptyStack(), index);
             }

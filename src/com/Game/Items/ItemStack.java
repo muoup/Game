@@ -1,32 +1,52 @@
 package com.Game.Items;
 
+import com.Game.Main.Main;
+
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class ItemStack {
 
-    private Item item;
-    private int amount;
-    private int maxAmount;
-    private int data;
-
-    public ItemStack(Item item, int amount) {
-        this.item = item;
-        this.amount = amount;
-        this.maxAmount = item.maxStack;
-        this.data = 0;
-    }
+    public Item item;
+    public int amount;
+    public int maxAmount;
+    public int data;
+    public ArrayList<String> options = new ArrayList<String>();
+    public ItemRequirement requirement = ItemRequirement.none();
+    public BufferedImage image;
+    public int equipStatus;
+    public float armor;
 
     public ItemStack(Item item, int amount, int data) {
         this.item = item;
         this.amount = amount;
         this.maxAmount = item.maxStack;
-        this.data = data;
 
-        item.onDataSet(data);
+        setData(data);
+    }
+
+    public ItemStack(Item item, int amount) {
+        this(item, amount, 0);
     }
 
     public ItemStack(ItemList item, int amount) {
-        this(item.item, amount);
+        this(item.item, amount, 0);
+    }
+
+    public ItemStack(ItemList item, int amount, int data) {
+        this(item.item, amount, data);
+    }
+
+    public void setImage(String imageName) {
+        this.image = Main.getImage("Items/" + imageName);
+    }
+
+    public void setEquipStatus(int equipStatus) {
+        this.equipStatus = equipStatus;
+    }
+
+    public void setRequirement(ItemRequirement requirement) {
+        this.requirement = requirement;
     }
 
     public int getID() {
@@ -50,11 +70,15 @@ public class ItemStack {
     }
 
     public float getArmor() {
-        return item.armor;
+        return armor;
+    }
+
+    public int getEquipmentStatus() {
+        return equipStatus;
     }
 
     public ItemStack clone() {
-        return new ItemStack(item, amount);
+        return new ItemStack(item, amount, data);
     }
 
     public String toString() {
@@ -70,23 +94,20 @@ public class ItemStack {
     }
 
     public BufferedImage getImage() {
-        return item.image;
-    }
-
-    public void setItem(ItemList item) {
-        this.item = item.item;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
-
-    public void addAmount(int amount) {
-        setAmount(this.amount + amount);
+        return image;
     }
 
     public void setData(int data) {
         this.data = data;
-        item.onDataSet(data);
+        options.clear();
+        takeData();
+        item.setData(this);
+    }
+
+    public void takeData() {
+        this.image = item.image;
+        this.armor = item.armor;
+        this.equipStatus = item.equipStatus;
+        this.requirement = item.requirement;
     }
 }

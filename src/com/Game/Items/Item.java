@@ -10,39 +10,38 @@ import com.Util.Math.Vector2;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Item {
-    public ArrayList<String> options;
+    public ArrayList<String> options = new ArrayList<String>();
 
-    public int equipStatus = -1;
-    public int id;
-    public String name;
-    public BufferedImage image;
-    public String examineText;
-    public float armor = 0;
-    public int maxStack;
-    public int worth;
-    public String imageName;
-    public ItemRequirement requirement = ItemRequirement.none();
+    public final int id; // ID of the item
+    public final String name; // Name of the item, will eventually be used when the ItemStacks if hovered over.
+    public final String examineText; // Text printed in ChatBox when examined
+    public final int maxStack; // Maximum amount allowed in one stack in the inventory
+    public final int worth; // How much the item is worth when sold
+    public final String imageName; // Name of the image (use as basic image, other data values may have different images
+    public final BufferedImage image; // Default image (use as basic image, other data values may have different images)
+    public int equipStatus = -1; // Equipment status of an item, default if nothing is set in setData(ItemStack stack)
+    public float armor = 0; // Armor amount, default if nothing is set in setData(ItemStack stack)
+    public ItemRequirement requirement = ItemRequirement.none(); // Requirements to use an item.
 
     public Item(int id, String imageName, String name, String examineText, int maxStack, int worth) {
         this.id = id;
         this.examineText = examineText;
         this.maxStack = maxStack;
         this.name = name;
-        this.options = new ArrayList();
         this.worth = worth;
         this.imageName = imageName;
-
-        setImage(imageName);
+        this.image = (!imageName.equals("/")) ? Main.getImage("Items/" + imageName) : null;
     }
 
-    public void setImage(String root) {
-        image = (!root.equals("/")) ? Main.main.getImageFromRoot("Items/" + root) : null;
+    public BufferedImage getImage() {
+        return image;
     }
 
-    public void onDataSet(int data) {
-
+    public BufferedImage getImage(String root) {
+        return Main.getImage("Items/" + root);
     }
 
     public static ItemStack emptyStack() {
@@ -50,11 +49,11 @@ public class Item {
     }
 
     public void ClickIdentities(int index) {
-        if (equipStatus != -1) {
+        if (InventoryManager.getStack(index).equipStatus != -1) {
             equipItem(index);
+        } else {
+            OnClick(index);
         }
-
-        OnClick(index);
     }
 
     public void OnClick(int index) {
@@ -79,6 +78,10 @@ public class Item {
 
     }
 
+    public void setData(ItemStack stack) {
+
+    }
+
     public void useWeapon(Vector2 position, Vector2 direction) {
 
     }
@@ -88,37 +91,55 @@ public class Item {
     }
 
     public void equipItem(int index) {
-        if (!requirement.meetsRequirement()) {
-            ChatBox.sendMessage(requirement.toString());
+        ItemStack stack = InventoryManager.getStack(index);
+        ItemStack slotStack = AccessoriesManager.getSlot(stack.equipStatus);
+
+        if (stack.requirement.meetsRequirement()) {
+            ChatBox.sendMessage(stack.requirement.toString());
             return;
         }
 
-        ItemStack slotStack = AccessoriesManager.getSlot(equipStatus);
-        ItemStack inventoryStack = InventoryManager.getStack(index);
-
         if (slotStack.getID() == id) {
-            int add = inventoryStack.getAmount();
+            int add = stack.getAmount();
 
             if (add > slotStack.getMaxAmount() - slotStack.getAmount())
                 add = slotStack.getMaxAmount() - slotStack.getAmount();
 
-            AccessoriesManager.addAmount(equipStatus, add);
+            AccessoriesManager.addAmount(stack.getEquipmentStatus(), add);
             InventoryManager.addAmount(index, -add);
 
         } else {
             ItemStack invHolder = InventoryManager.getStack(index).clone();
-            InventoryManager.setItem(index, AccessoriesManager.getSlot(equipStatus));
-            AccessoriesManager.setSlot(new ItemStack(this, invHolder.getAmount()), equipStatus);
+            InventoryManager.setItem(index, AccessoriesManager.getSlot(stack.equipStatus));
+            AccessoriesManager.setSlot(
+                    new ItemStack(this, invHolder.getAmount(), invHolder.getData()),
+                    stack.equipStatus);
         }
     }
 
     public void replaceInventory(int index, ItemStack item) {
-        InventoryManager.inventory[index] = Item.emptyStack();
-        InventoryManager.addItem(item.getItem(), item.getAmount());
+        InventoryManager.setItem(index, emptyStack());
+        InventoryManager.addItem(item);
     }
 
     public void use(int index) {
 
+    }
+
+    public int getData(int index) {
+        return InventoryManager.getData(index);
+    }
+
+    public boolean combine(int index, ItemList use, int maxUse, int newData) {
+        int useAmount = Math.min(maxUse, InventoryManager.itemCount(use));
+        if (useAmount == 0) {
+            ChatBox.sendMessage("You need some " + use.item.name + " to complete this action.");
+            return false;
+        }
+
+        InventoryManager.removeItem(use, useAmount);
+        InventoryManager.setData(index, newData);
+        return true;
     }
 
     public int combine(int index, ItemList use, ItemList create, int amt) {
@@ -126,9 +147,11 @@ public class Item {
         amount = Math.min(amt, amount);
         amount = Math.min(amount, InventoryManager.getStack(index).getAmount());
         if (amount == 0) {
-            ChatBox.sendMessage("You need some " + use.name() + " to do this.");
+            ChatBox.sendMessage("You need some " + use.item.name + " to do this.");
             return 0;
         }
+
+        System.out.println(amount);
         InventoryManager.removeItem(use, amount);
         InventoryManager.removeItem(getItemList(), amount);
         InventoryManager.addItem(create, amount);
@@ -152,15 +175,15 @@ public class Item {
         return ItemList.values()[id];
     }
 
-    public float getArmor() {
-        return armor;
-    }
-
     public String getPlural() {
         return name + "s";
     }
 
     public ItemStack getSingleStack() {
         return new ItemStack(this, 1);
+    }
+
+    public ArrayList<String> createOptions(String... optionList) {
+        return (ArrayList<String>) Arrays.asList(optionList);
     }
 }

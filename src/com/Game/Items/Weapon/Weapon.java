@@ -34,7 +34,7 @@ public class Weapon extends Item {
         for (int i : acceptable.items) {
             if (stack.getID() == i) {
                 stack.getItem().createProjectile(position, direction, dmgMultipler(damageMultiplier), expMultiplier);
-                stack.addAmount(-1);
+                stack.amount--;
                 break;
             }
         }
