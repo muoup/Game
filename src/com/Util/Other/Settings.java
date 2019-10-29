@@ -14,7 +14,10 @@ public class Settings {
     public static final float maxDistance = 50;
     public static Font itemFont;
     public static int worldScale = 2;
-    public static final int lvlMax = 30; // Change this in the future...
+    // In case xp rates are too fast, I'll cap leveling
+    // This'll increase over time when more content is released
+    public static final int lvlMax = 50;
+    public static float dashTimer = .75f;
     public static final Vector2[] resolutions = {
             new Vector2(800, 600),
             new Vector2(1200, 900),
@@ -22,7 +25,7 @@ public class Settings {
     };
 
     // Change these to make xp faster.
-    public static final float rangedXPMultipler = 1.25f;
+    public static final float rangedXPMultiplier = 8.5f;
 
     public static Font npcFont = null;
     public static Font skillPopupFont = null;

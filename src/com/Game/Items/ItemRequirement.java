@@ -28,6 +28,6 @@ public class ItemRequirement {
     }
 
     public boolean meetsRequirement() {
-        return Skills.getLevel(skill) > level;
+        return Skills.getLevel(skill) >= level;
     }
 }

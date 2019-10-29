@@ -25,6 +25,7 @@ public class Item {
     public int equipStatus = -1; // Equipment status of an item, default if nothing is set in setData(ItemStack stack)
     public float armor = 0; // Armor amount, default if nothing is set in setData(ItemStack stack)
     public ItemRequirement requirement = ItemRequirement.none(); // Requirements to use an item.
+    public float expMultiplier = 1f;
 
     public Item(int id, String imageName, String name, String examineText, int maxStack, int worth) {
         this.id = id;
@@ -94,7 +95,7 @@ public class Item {
         ItemStack stack = InventoryManager.getStack(index);
         ItemStack slotStack = AccessoriesManager.getSlot(stack.equipStatus);
 
-        if (stack.requirement.meetsRequirement()) {
+        if (!stack.requirement.meetsRequirement()) {
             ChatBox.sendMessage(stack.requirement.toString());
             return;
         }
@@ -151,7 +152,6 @@ public class Item {
             return 0;
         }
 
-        System.out.println(amount);
         InventoryManager.removeItem(use, amount);
         InventoryManager.removeItem(getItemList(), amount);
         InventoryManager.addItem(create, amount);

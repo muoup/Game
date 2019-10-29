@@ -3,7 +3,6 @@ package com.Game.Entity.Player;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.GUI;
 import com.Game.GUI.Inventory.AccessoriesManager;
-import com.Game.Items.Item;
 import com.Game.Items.ItemStack;
 import com.Game.Main.Main;
 import com.Game.Object.GameObject;
@@ -138,9 +137,9 @@ public class Player {
                 GameObject.checkSingleInteract();
             }
 
-            if (Input.GetKey(KeyEvent.VK_SHIFT) && dashTimer <= 0) {
+            if (Input.GetKeyDown(KeyEvent.VK_SHIFT) && dashTimer <= 0) {
                 speedMod = speed * dashMultiplier;
-                dashTimer = 0.75f;
+                dashTimer = Settings.dashTimer;
             }
 
             if (Input.GetKey(KeyEvent.VK_SPACE) && shootTimer <= 0) {
@@ -249,19 +248,24 @@ public class Player {
         }
     }
 
-    public void renderStats() {
-        // Draw Health Bar
-        Render.setColor(Color.LIGHT_GRAY);
-        Render.drawRectangle(GUI.GuiPos.subtractClone(new Vector2(0, 18)),
-                new Vector2(GUI.IntBoxSize * 4 * (health / maxHealth), 16));
+    public void drawBar(Vector2 startPos, Color color, float current, float max) {
 
-        Render.setColor(Color.RED);
-        Render.drawRectangle(GUI.GuiPos.subtractClone(new Vector2(0, 18)),
-                new Vector2(GUI.IntBoxSize * 4 * (health / maxHealth), 16));
+        Render.setColor(Color.LIGHT_GRAY);
+        Render.drawRectangle(startPos,
+                new Vector2(GUI.IntBoxSize * 4, 16));
+
+        Render.setColor(color);
+        Render.drawRectangle(startPos,
+                new Vector2(GUI.IntBoxSize * 4 * (current / max), 16));
 
         Render.setColor(Color.BLACK);
-        Render.drawRectOutline(GUI.GuiPos.subtractClone(new Vector2(0, 18)),
+        Render.drawRectOutline(startPos,
                 new Vector2(GUI.IntBoxSize * 4, 16));
+    }
+
+    public void renderStats() {
+        drawBar(GUI.GuiPos.subtractClone(new Vector2(0, 36)), Color.RED, health, maxHealth);
+        drawBar(GUI.GuiPos.subtractClone(new Vector2(0, 18)), Color.CYAN.darker(), Settings.dashTimer - Math.max(0, dashTimer), Settings.dashTimer);
 
         if (health <= 0) {
             ChatBox.sendMessage("Oh no. You are dead!");

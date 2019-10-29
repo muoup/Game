@@ -8,5 +8,6 @@ public class PineLog extends Log {
 
         bow = ItemList.pineBow;
         arrowShaft = 30;
+        setTier(20);
     }
 }

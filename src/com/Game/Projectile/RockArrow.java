@@ -8,7 +8,7 @@ public class RockArrow extends Projectile {
         this.rotate = true;
         this.duration = 1.25f;
         this.attackStyle = 1;
-        this.scale = Vector2.identity(4);
+        this.scale = Vector2.identity(32);
         setImage("rock_arrow.png");
     }
 }

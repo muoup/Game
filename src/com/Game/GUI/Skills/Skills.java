@@ -1,12 +1,15 @@
 package com.Game.GUI.Skills;
 
+import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.SkillPopup.SkillPopup;
 import com.Game.Main.Main;
+import com.Util.Other.Settings;
 
 public class Skills {
     public static int RANGED = 0;
     public static int FISHING = 1;
     public static int WOODCUTTING = 2;
+    public static int FLETCHING = 3;
 
     public static int skillAmt;
 
@@ -15,7 +18,8 @@ public class Skills {
     public static String[] skillNames = {
             "Archery",
             "Fishing",
-            "Woodcutting"
+            "Woodcutting",
+            "Fletching"
     };
     private static boolean[] levelUp;
 
@@ -31,6 +35,11 @@ public class Skills {
     }
 
     public static void addExperience(int skill, float amount) {
+        if (getLevel(skill) >= Settings.lvlMax) {
+            ChatBox.sendMessage("You have reached the maximum level. This amount will be increased in the future.");
+            return;
+        }
+
         exp[skill] += amount;
         Main.sendPacket("07" + skill + ":" + amount + ":" + Main.player.name);
         deltaLevel(skill);
@@ -82,7 +91,7 @@ public class Skills {
     }
 
     public static int getLevel(int skill) {
-        return lvl[skill];
+        return Math.max(1, lvl[skill]);
     }
 
     public static boolean isLevelUp(int skill) {

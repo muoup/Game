@@ -179,8 +179,6 @@ public class InventoryManager {
     }
 
     public static void clientSetItem(int slot, int id, int amount, int data) {
-        if (id == 3)
-            System.out.println("Slot: " + slot);
         inventory[slot] = new ItemStack(ItemList.values()[id], amount, data);
     }
 

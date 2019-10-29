@@ -8,5 +8,6 @@ public class AshLog extends Log {
 
         bow = ItemList.ashBow;
         arrowShaft = 25;
+        setTier(10);
     }
 }

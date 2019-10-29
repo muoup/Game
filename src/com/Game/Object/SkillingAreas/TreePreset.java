@@ -6,18 +6,18 @@ import com.Util.Math.DeltaMath;
 
 public enum TreePreset {
 
-    tree("tree.png", 45, 5f, 12.5f,
+    tree("tree.png", 40, 5f, 12.5f,
             2, 9, 1, ItemList.log),
-    ash("ash_tree.png", 45, 5f, 12.5f,
+    ash("ash_tree.png", 60, 5f, 12.5f,
             2, 9, 10, ItemList.ashLog),
-    pine("pine_tree.png", 55, 5.5f, 13,
+    pine("pine_tree.png", 80, 5.5f, 13,
             1, 12, 20, ItemList.pineLog),
-    oakTree("oak_tree.png", 55, 5.5f, 13,
+    oakTree("oak_tree.png", 120, 5.5f, 13,
             1, 12, 30, ItemList.oakLog),
     spruce("spruce_tree.png", 65, 6.5f, 14,
-            1, 7, 40, ItemList.spruceLog),
+            1, 7, 140, ItemList.spruceLog),
     mapleTree("maple_tree.png", 65, 6.5f, 14,
-            1, 7, 50, ItemList.mapleLog);
+            1, 7, 180, ItemList.mapleLog);
 
     float xp, minTimer, maxTimer;
     int minWood, maxWood, lvlReq;

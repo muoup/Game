@@ -8,5 +8,6 @@ public class MapleLog extends Log {
 
         bow = ItemList.mapleBow;
         arrowShaft = 35;
+        setTier(50);
     }
 }

@@ -22,7 +22,7 @@ public class Weapon extends Item {
     }
 
     public void useWeapon(Vector2 position, Vector2 direction) {
-        shoot(itemSet, position, direction, 1f, 1f);
+        shoot(itemSet, position, direction, 1f, expMultiplier);
     }
 
     public void shoot(ItemSets acceptable, Vector2 position, Vector2 direction, float damageMultiplier, float expMultiplier) {

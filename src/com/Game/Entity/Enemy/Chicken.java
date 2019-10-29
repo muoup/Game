@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class Chicken extends Enemy {
     private Vector2 moveTo;
     private Vector2 movement;
-    private float maxRadius = 160;
+    private float maxRadius = 140;
     private float speed = 1f;
 
     public Chicken(int x, int y) {
@@ -19,7 +19,7 @@ public class Chicken extends Enemy {
         this.maxHealth = 10f;
         this.id = 3;
         this.image = getImage("chicken.png");
-        this.respawnTimer = 0.5f;
+        this.respawnTimer = 5.0f;
         this.name = "Chicken";
         setMoveTo();
     }
@@ -46,7 +46,7 @@ public class Chicken extends Enemy {
 
     public void handleDrops() {
         ArrayList<ItemStack> stack = new ArrayList<ItemStack>();
-        stack.add(new ItemStack(ItemList.feather, (int) DeltaMath.range(1, 2)));
+        stack.add(new ItemStack(ItemList.feather, (int) DeltaMath.range(5, 15)));
         GroundItem.createGroundItem(position, stack);
     }
 }

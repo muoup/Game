@@ -15,23 +15,23 @@ public class MainWorld extends World {
 
     public void initWorld() {
         // Forest Area
-//        new Tree(1655, 1875, Tree.log);
-//        new Tree(1870, 1805, Tree.log);
-//        new Tree(2057, 1834, Tree.log);
-//        new Tree(1975, 1982, Tree.log);
-//        new Tree(1788, 2072, Tree.log);
-//        new Tree(1587, 2126, Tree.log);
-//        new Tree(2225, 2049, Tree.log);
-//        new Tree(2070, 2163, Tree.log);
-//        new Tree(1649, 2349, Tree.log);
-//        new Tree(2273, 1869, Tree.log);
-//        new Tree(2191, 1728, Tree.log);
-//        new Tree(1984, 1704, Tree.log);
-//        new Tree(1726, 1744, Tree.log);
-//        new Tree(1509, 1976, Tree.log);
-//        new Tree(1400, 2237, Tree.log);
-//        new Tree(2082, 2378, Tree.log);
-//        new Tree(2393, 1792, Tree.log);
+        new Tree(1655, 1875, TreePreset.tree);
+        new Tree(1870, 1805, TreePreset.tree);
+        new Tree(2057, 1834, TreePreset.tree);
+        new Tree(1975, 1982, TreePreset.tree);
+        new Tree(1788, 2072, TreePreset.tree);
+        new Tree(1587, 2126, TreePreset.tree);
+        new Tree(2225, 2049, TreePreset.tree);
+        new Tree(2070, 2163, TreePreset.tree);
+        new Tree(1649, 2349, TreePreset.tree);
+        new Tree(2273, 1869, TreePreset.tree);
+        new Tree(2191, 1728, TreePreset.tree);
+        new Tree(1984, 1704, TreePreset.tree);
+        new Tree(1726, 1744, TreePreset.tree);
+        new Tree(1509, 1976, TreePreset.tree);
+        new Tree(1400, 2237, TreePreset.tree);
+        new Tree(2082, 2378, TreePreset.tree);
+        new Tree(2393, 1792, TreePreset.tree);
         new Tree(2448, 2030, TreePreset.tree);
         new Tree(1854, 2309, TreePreset.ash);
         new Tree(2316, 2244, TreePreset.pine);
@@ -52,6 +52,10 @@ public class MainWorld extends World {
         new RockEnemy(4430, 4951);
 
         new Chicken(4394, 2874);
+        new Chicken(4223, 2764);
+        new Chicken(4223, 2993);
+        new Chicken(4532, 2993);
+        new Chicken(4532, 2696);
 
         // Beach Area
         new FishingArea(885, 5595, FishingArea.clownFish);

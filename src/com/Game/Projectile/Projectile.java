@@ -8,6 +8,7 @@ import com.Game.Main.MethodHandler;
 import com.Game.World.World;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
+import com.Util.Other.Settings;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -56,6 +57,16 @@ public class Projectile {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        if (image == null) {
+            System.err.println("Cannot find image: " + root);
+            return;
+        }
+
+        if (scale == null) {
+            scale = Vector2.identity(8);
+        }
+
         image = Render.getScaledImage(image, scale);
         position.offset(-(image.getWidth() - Main.player.image.getWidth()) / 2);
     }
@@ -109,7 +120,7 @@ public class Projectile {
     }
 
     protected void onHit(Enemy enemy, float damage) {
-        Skills.addExperience(Skills.RANGED, (int) (damage * expMultiplier));
+        Skills.addExperience(Skills.RANGED, (int) (damage * expMultiplier * Settings.rangedXPMultiplier));
     }
 
     public void render() {}

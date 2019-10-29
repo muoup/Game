@@ -8,5 +8,6 @@ public class SpruceLog extends Log {
 
         bow = ItemList.spruceBow;
         arrowShaft = 35;
+        setTier(40);
     }
 }

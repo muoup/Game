@@ -8,5 +8,6 @@ public class OakLog extends Log {
 
         bow = ItemList.oakBow;
         arrowShaft = 20;
+        setTier(30);
     }
 }

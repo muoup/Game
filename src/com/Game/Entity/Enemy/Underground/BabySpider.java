@@ -19,7 +19,7 @@ public class BabySpider extends Enemy {
     public BabySpider(int x, int y) {
         super(x, y);
         this.image = getImage("babySpider.png");
-        this.maxHealth = 25;
+        this.maxHealth = 12.5f;
         this.speed = 2.5f;
         this.maxDistance = 125f;
         this.shotTimer = DeltaMath.range(0, 0.0525f);

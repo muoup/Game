@@ -214,10 +214,6 @@ public class Main extends Canvas {
             System.err.println("ILLEGAL! " + root);
         }
 
-        if (root == "bow_string.png") {
-            System.out.println(image);
-        }
-
         return image;
     }
 

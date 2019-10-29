@@ -1,7 +1,10 @@
 package com.Game.Items.RawResource.Log;
 
+import com.Game.GUI.Chatbox.ChatBox;
+import com.Game.GUI.Skills.Skills;
 import com.Game.Items.Item;
 import com.Game.Items.ItemList;
+import com.Game.Items.ItemRequirement;
 import com.Game.Items.ItemStack;
 
 public class Log extends Item {
@@ -10,18 +13,31 @@ public class Log extends Item {
 
     public Log(int id, String imageName, String name, String examineText, int maxStack, int worth) {
         super(id, imageName, name, examineText, maxStack, worth);
+        setTier(1);
+    }
+
+    public void setTier(int tier) {
+        requirement = new ItemRequirement(Skills.FLETCHING, tier);
     }
 
     public void ClickIdentities(int index) {
         // Craft Bow
-        replaceInventory(index, new ItemStack((bow == null) ? ItemList.bow : bow, 1, 0));
+        if (requirement.meetsRequirement()) {
+            replaceInventory(index, new ItemStack((bow == null) ? ItemList.bow : bow, 1, 0));
+            Skills.addExperience(Skills.FLETCHING, 25 * (1 + requirement.getLevel() / 5));
+        }
     }
 
     public void OnRightClick(int index, int option) {
         switch (option) {
             case 1:
                 // Craft Arrow Shafts
-                replaceInventory(index, new ItemStack(ItemList.arrowShaft, arrowShaft));
+                if (requirement.meetsRequirement()) {
+                    replaceInventory(index, new ItemStack(ItemList.arrowShaft, arrowShaft));
+                    Skills.addExperience(Skills.FLETCHING, 20 * (1 + requirement.getLevel() / 5));
+                } else {
+                    ChatBox.sendMessage(requirement.toString());
+                }
                 break;
         }
     }

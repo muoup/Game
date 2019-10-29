@@ -17,7 +17,8 @@ public class SkillsManager {
     public static String[] skillImageNames = {
             "ranged.png",
             "fishing.png",
-            "woodcutting.png"
+            "woodcutting.png",
+            "fletching.png"
     };
 
     public static void init() {

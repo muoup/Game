@@ -4,11 +4,11 @@ import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.Items.Item;
 import com.Game.Items.ItemList;
+import com.Game.Items.ItemStack;
 
 public class ArrowShaft extends Item {
     public ArrowShaft(int id, String imageName, String name, String examineText, int maxStack, int worth) {
         super(id, imageName, name, examineText, maxStack, worth);
-        options.add("Combine");
     }
 
     public void OnClick(int index) {
@@ -22,5 +22,9 @@ public class ArrowShaft extends Item {
         InventoryManager.removeItem(ItemList.feather, amount);
         InventoryManager.removeItem(ItemList.arrowShaft, amount);
         InventoryManager.addItem(ItemList.arrow, amount);
+    }
+
+    public void setData(ItemStack stack) {
+        stack.options.add("Combine");
     }
 }

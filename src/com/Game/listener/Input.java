@@ -97,7 +97,6 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
     @Override
     public void keyReleased(KeyEvent e) {
         Input.keysPressed[e.getKeyCode()] = false;
-        //Input.keys[e.getKeyCode()] = KeyState.released;
     }
 
     @Override
