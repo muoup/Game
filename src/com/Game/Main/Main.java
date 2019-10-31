@@ -28,7 +28,7 @@ public class Main extends Canvas {
     public static final String connectionCode = "69";
     public static final String messageCode = "13";
     public static boolean isConnected = false;
-    public static final String ipAddress = "localhost";
+    public static final String ipAddress = "hacksugar.asuscomm.com";
 
     public static Player player;
     public static Menu settings;
