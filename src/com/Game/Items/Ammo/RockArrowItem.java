@@ -13,6 +13,6 @@ public class RockArrowItem extends Item {
     }
 
     public void createProjectile(Vector2 position, Vector2 direction, float damageMultiplier, float expMultiplier) {
-        new RockArrow(position, direction, 10 * damageMultiplier, 2f, expMultiplier, true);
+        new RockArrow(position, direction, 2.5f * damageMultiplier, 2f, expMultiplier, true);
     }
 }

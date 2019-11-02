@@ -44,7 +44,8 @@ public enum ItemList {
     oakLog(new OakLog(23, "oak_wood.png", "Oak Wood", "Tier 30", 1, 1)),
     pineLog(new PineLog(24, "pine_wood.png", "Pine Wood", "Tier 20", 1, 1)),
     spruceLog(new SpruceLog(25, "spruce_wood.png", "Spruce Wood", "Tier 40", 1, 1)),
-    ashLog(new AshLog(26, "ash_wood.png", "Ash Wood", "Tier 10", 1, 1));
+    ashLog(new AshLog(26, "ash_wood.png", "Ash Wood", "Tier 10", 1, 1)),
+    seaWeed(new AshLog(27, "sea_wood.png", "Sea Weed", "Tasty", 1, 1));
 
     public Item item;
 

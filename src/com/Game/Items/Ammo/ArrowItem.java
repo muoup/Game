@@ -13,6 +13,6 @@ public class ArrowItem extends Item {
     }
 
     public void createProjectile(Vector2 position, Vector2 direction, float damageMultiplier, float expMultiplier) {
-        new Arrow(position, direction, 10 * damageMultiplier, 2f, expMultiplier, true);
+        new Arrow(position, direction, 1.25f * damageMultiplier, 2f, expMultiplier, true);
     }
 }

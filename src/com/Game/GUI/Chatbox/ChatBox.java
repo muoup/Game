@@ -141,7 +141,8 @@ public class ChatBox {
         Vector2 v1 = gPos.addClone(gPos.x * 0.5f, gPos.x * 0.25f)
                 .subtractClone(0, (distScroll == 0) ? 0 : (scroll * distScroll) / gSize.y);
 
-        for (Message msg : messages) {
+        for (int i = 0; i < messages.size(); i++) {
+            Message msg = messages.get(i);
             float y2 = v1.y + msg.getHeight();
 
             if (y2 > gPos.y && y2 < gPos.y + gSize.y) {

@@ -25,6 +25,7 @@ public class RockEnemy extends Enemy {
         this.respawnTimer = 7.5f;
         this.maxTarget = 10f;
         this.name = "Bigger Rock";
+        setMaxHealth(250);
     }
 
     public void AI() {

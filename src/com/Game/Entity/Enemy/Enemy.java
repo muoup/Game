@@ -40,6 +40,11 @@ public class Enemy {
         MethodHandler.enemies.add(this);
     }
 
+    public void setMaxHealth(float amount) {
+        this.maxHealth = amount;
+        this.health = amount;
+    }
+
     public void updateEnemy() {
         if (!enabled) {
             timer += Main.dTime();

@@ -16,11 +16,11 @@ public class Chicken extends Enemy {
 
     public Chicken(int x, int y) {
         super(x, y);
-        this.maxHealth = 10f;
         this.id = 3;
         this.image = getImage("chicken.png");
         this.respawnTimer = 5.0f;
         this.name = "Chicken";
+        setMaxHealth(10);
         setMoveTo();
     }
 

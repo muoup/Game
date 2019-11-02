@@ -272,6 +272,8 @@ public class Player {
 
             health = maxHealth;
             position = Settings.playerSpawn.clone();
+            subWorld = 0;
+            sendMovementPacket();
         }
     }
 

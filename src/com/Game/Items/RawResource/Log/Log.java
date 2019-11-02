@@ -25,6 +25,8 @@ public class Log extends Item {
         if (requirement.meetsRequirement()) {
             replaceInventory(index, new ItemStack((bow == null) ? ItemList.bow : bow, 1, 0));
             Skills.addExperience(Skills.FLETCHING, 25 * (1 + requirement.getLevel() / 5));
+        } else {
+            ChatBox.sendMessage(requirement.toString());
         }
     }
 

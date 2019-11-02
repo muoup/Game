@@ -18,11 +18,11 @@ public class BabyRockEnemy extends Enemy {
 
     public BabyRockEnemy(int x, int y) {
         super(x, y);
-        this.maxHealth = 100f;
         this.image = getImage("babyRock.png");
         this.respawnTimer = 5f;
         this.maxTarget = 7.5f;
         this.name = "Baby Rock";
+        setMaxHealth(100);
     }
 
     public void AI() {

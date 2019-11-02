@@ -12,7 +12,6 @@ public class Weapon extends Item {
     protected Projectile projectile;
     protected ItemSets itemSet;
     protected float weaponDamage;
-    protected float accuracy;
 
     public Weapon(int id, String imageName, String name, String examineText, int maxStack, int worth) {
         super(id, imageName, name, examineText, maxStack, worth);
@@ -25,7 +24,11 @@ public class Weapon extends Item {
         shoot(itemSet, position, direction, 1f, expMultiplier);
     }
 
-    public void shoot(ItemSets acceptable, Vector2 position, Vector2 direction, float damageMultiplier, float expMultiplier) {
+    public float getMultiplier() {
+        return 1f;
+    }
+
+    public void shoot(ItemSets acceptable, Vector2 position, Vector2 direction, float damage, float expMultiplier) {
         ItemStack stack = AccessoriesManager.getSlot(AccessoriesManager.AMMO_SLOT);
 
         if (stack.getAmount() <= 0 || stack.getID() == 0)
@@ -33,7 +36,7 @@ public class Weapon extends Item {
 
         for (int i : acceptable.items) {
             if (stack.getID() == i) {
-                stack.getItem().createProjectile(position, direction, dmgMultipler(damageMultiplier), expMultiplier);
+                stack.getItem().createProjectile(position, direction, dmgMultiplier(damage) * getMultiplier(), expMultiplier);
                 stack.amount--;
                 break;
             }
@@ -41,7 +44,7 @@ public class Weapon extends Item {
     }
 
     // TODO: Implement Weapon Accuracy
-    public float dmgMultipler(float damage) {
+    public float dmgMultiplier(float damage) {
         return DeltaMath.range(weaponDamage * 0.9f, weaponDamage * 1.1f);
     }
 }

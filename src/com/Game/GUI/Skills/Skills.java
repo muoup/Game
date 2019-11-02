@@ -30,7 +30,7 @@ public class Skills {
         levelUp = new boolean[skillAmt];
 
         for (int i = 0; i < lvl.length; i++) {
-            deltaLevel(i);
+            deltaLevel(i, false);
         }
     }
 
@@ -42,25 +42,30 @@ public class Skills {
 
         exp[skill] += amount;
         Main.sendPacket("07" + skill + ":" + amount + ":" + Main.player.name);
-        deltaLevel(skill);
+        deltaLevel(skill, true);
         new SkillPopup(skill, amount);
     }
 
     public static void setExperience(int skill, float amount) {
         exp[skill] = amount;
-        deltaLevel(skill);
+        deltaLevel(skill, false);
     }
 
     public static void setLevel(int skill, int level) {
         addExperience(skill, levelToExp(level) - exp[skill]);
     }
 
-    private static void deltaLevel(int skill) {
+    private static void deltaLevel(int skill, boolean lvlUp) {
         int level = expToLevel(exp[skill]);
+        int initLevel = getLevel(skill);
 
         if (level > lvl[skill]) {
             levelUp[skill] = true;
             lvl[skill] = level;
+        }
+
+        if (lvlUp && initLevel < level) {
+            ChatBox.sendMessage("Congratulations, you have reached level " + lvl[skill] + " " + Skills.skillNames[skill] + ".");
         }
     }
 

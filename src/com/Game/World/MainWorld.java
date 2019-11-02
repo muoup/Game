@@ -5,6 +5,7 @@ import com.Game.Entity.Enemy.Chicken;
 import com.Game.Entity.Enemy.RockEnemy;
 import com.Game.Object.AreaTeleporter.CaveEntrance;
 import com.Game.Object.SkillingAreas.FishingArea;
+import com.Game.Object.SkillingAreas.FishingPreset;
 import com.Game.Object.SkillingAreas.Tree;
 import com.Game.Object.SkillingAreas.TreePreset;
 
@@ -58,11 +59,11 @@ public class MainWorld extends World {
         new Chicken(4532, 2696);
 
         // Beach Area
-        new FishingArea(885, 5595, FishingArea.clownFish);
-        new FishingArea(971, 5697, FishingArea.clownFish);
+        new FishingArea(885, 5595, FishingPreset.clownFish);
+        new FishingArea(971, 5697, FishingPreset.clownFish);
 
-        new FishingArea(1179, 5939, FishingArea.blueFish);
-        new FishingArea(1250, 6024, FishingArea.blueFish);
+        new FishingArea(1179, 5939, FishingPreset.blueFish);
+        new FishingArea(1250, 6024, FishingPreset.blueFish);
 
         new CaveEntrance(5188, 3568, CaveEntrance.TeleType.caveEntrance); // Teleporter to underground area.
     }
