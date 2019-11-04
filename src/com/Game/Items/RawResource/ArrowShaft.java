@@ -1,7 +1,6 @@
 package com.Game.Items.RawResource;
 
-import com.Game.GUI.Chatbox.ChatBox;
-import com.Game.GUI.Inventory.InventoryManager;
+import com.Game.GUI.Skills.Skills;
 import com.Game.Items.Item;
 import com.Game.Items.ItemList;
 import com.Game.Items.ItemStack;
@@ -12,16 +11,8 @@ public class ArrowShaft extends Item {
     }
 
     public void OnClick(int index) {
-        int amount = InventoryManager.itemCount(ItemList.feather);
-        amount = Math.min(15, amount);
-        amount = Math.min(amount, InventoryManager.getStack(index).getAmount());
-        if (amount == 0) {
-            ChatBox.sendMessage("You need some arrow shafts to do this.");
-            return;
-        }
-        InventoryManager.removeItem(ItemList.feather, amount);
-        InventoryManager.removeItem(ItemList.arrowShaft, amount);
-        InventoryManager.addItem(ItemList.arrow, amount);
+        int c_amt = combine(index, ItemList.feather, ItemList.arrow, 15);
+        Skills.addExperience(Skills.WOODCUTTING, 1.5f * c_amt);
     }
 
     public void setData(ItemStack stack) {

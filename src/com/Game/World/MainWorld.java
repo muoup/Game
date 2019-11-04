@@ -65,6 +65,10 @@ public class MainWorld extends World {
         new FishingArea(1179, 5939, FishingPreset.blueFish);
         new FishingArea(1250, 6024, FishingPreset.blueFish);
 
+        // Harbor Area
+        new FishingArea(5092, 1602, FishingPreset.seaWeed);
+        new FishingArea(5303, 1681, FishingPreset.seaWeed);
+
         new CaveEntrance(5188, 3568, CaveEntrance.TeleType.caveEntrance); // Teleporter to underground area.
     }
 }

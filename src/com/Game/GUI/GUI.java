@@ -19,20 +19,14 @@ public class GUI {
 
     private static float coolDown = 0f;
     private static Image[] inventoryOptions;
-    private static String[] invImgNames = {
+    public static int select, IntBoxSize, curMain = 0;
+    public static Vector2 below, GuiPos, invSize, categorySize;
+    public static GUIWindow currentGUI = GUIWindow.emptyGUI;
+    private static final String[] invImgNames = {
             "backpack.png",
             "accessories.png",
             "levels.png"
     };
-    private static Vector2 below;
-
-    public static int curMain = 0;
-    public static int select;
-    public static Vector2 GuiPos;
-    public static Vector2 invSize;
-    public static int IntBoxSize;
-    public static Vector2 categorySize;
-    private static GUIWindow testGUI;
 
     public static Vector2 GUIEnd() {
         return GuiPos.addClone(4 * IntBoxSize, 5 * IntBoxSize);
@@ -96,26 +90,12 @@ public class GUI {
         InventoryManager.handleInventory();
         AccessoriesManager.handleInventory();
 
-        switch (curMain) {
-            case 0:
-                InventoryManager.render();
-                InventoryManager.update();
-                break;
-            case 1:
-                AccessoriesManager.render();
-                AccessoriesManager.update();
-                break;
-            case 2:
-                SkillsManager.render();
-                SkillsManager.update();
-                break;
-            default:
-                System.err.println("There is something wrong.");
-                break;
-        }
+        handleInventory();
 
         ChatBox.update();
         ChatBox.render();
+
+        currentGUI.tick();
 
         RightClick.update();
         RightClick.render();
@@ -137,6 +117,26 @@ public class GUI {
             curMain = selection;
 
             coolDown = 0.2f;
+        }
+    }
+
+    public static void handleInventory() {
+        switch (curMain) {
+            case 0:
+                InventoryManager.render();
+                InventoryManager.update();
+                break;
+            case 1:
+                AccessoriesManager.render();
+                AccessoriesManager.update();
+                break;
+            case 2:
+                SkillsManager.render();
+                SkillsManager.update();
+                break;
+            default:
+                System.err.println("There is something wrong.");
+                break;
         }
     }
 }

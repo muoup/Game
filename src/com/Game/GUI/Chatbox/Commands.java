@@ -1,9 +1,11 @@
 package com.Game.GUI.Chatbox;
 
+import com.Game.GUI.Banking.BankingGUI;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.SkillPopup.SkillPopup;
 import com.Game.Items.ItemList;
 import com.Game.GUI.Skills.Skills;
+import com.Game.Items.ItemStack;
 import com.Game.Main.Main;
 import com.Game.Object.SkillingAreas.Tree;
 import com.Game.Object.SkillingAreas.TreePreset;
@@ -105,6 +107,9 @@ public class Commands {
                 break;
             case "testpopup":
                 new SkillPopup(1, 1);
+                break;
+            case "bankitem":
+                BankingGUI.addItem(new ItemStack(ItemList.log, 1));
                 break;
             default:
                 ChatBox.sendMessage("That is not a valid command, please check your spelling and try again.");

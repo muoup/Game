@@ -8,11 +8,9 @@ import com.Game.Items.Armor.Rock.RockHelmet;
 import com.Game.Items.Armor.Rock.RockLeggings;
 import com.Game.Items.Consumables.Food.BlueFishFood;
 import com.Game.Items.Consumables.Food.ClownFishFood;
-import com.Game.Items.RawResource.ArrowShaft;
-import com.Game.Items.RawResource.Coins;
-import com.Game.Items.RawResource.Feather;
+import com.Game.Items.Consumables.Food.Seaweed;
+import com.Game.Items.RawResource.*;
 import com.Game.Items.RawResource.Log.*;
-import com.Game.Items.RawResource.StringItem;
 import com.Game.Items.Tool.WoodHarp;
 import com.Game.Items.Weapon.Bows.*;
 
@@ -36,7 +34,7 @@ public enum ItemList {
     feather(new Feather(15, "feather.png", "Feather", "Because steel is heavier than feathers.", 100000, 20)),
     arrowShaft(new ArrowShaft(16, "arrow_shaft.png", "Arrow Shaft", "Not quite the orange kind.", 100000, 10)),
     stringItem(new StringItem(17, "string.png", "String", "Where does the string come from?", 100000, 5)),
-    bowString(new StringItem(18, "bow_string.png", "Bow String", "I can combine this with a bow stock.", 1, 20)),
+    bowString(new BowString(18, "bow_string.png", "Bow String", "I can combine this with a bow stock.", 1, 20)),
     ashBow(new AshBow(19, "ash_bow.png", "Ash Bow", "Tier 10", 1, 1)),
     pineBow(new PineBow(20, "pine_bow.png", "Pine Bow", "Tier 20", 1, 1)),
     oakBow(new OakBow(21, "oak_bow.png", "Oak Bow", "Tier 30", 1, 1)),
@@ -45,7 +43,7 @@ public enum ItemList {
     pineLog(new PineLog(24, "pine_wood.png", "Pine Wood", "Tier 20", 1, 1)),
     spruceLog(new SpruceLog(25, "spruce_wood.png", "Spruce Wood", "Tier 40", 1, 1)),
     ashLog(new AshLog(26, "ash_wood.png", "Ash Wood", "Tier 10", 1, 1)),
-    seaWeed(new AshLog(27, "sea_wood.png", "Sea Weed", "Tasty", 1, 1));
+    seaWeed(new Seaweed(27, "sea_weed.png", "Sea Weed", "Tasty..?", 1, 1));
 
     public Item item;
 

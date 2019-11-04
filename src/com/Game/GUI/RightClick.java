@@ -84,7 +84,7 @@ public class RightClick {
                 RightClick.coolDown = 0.1f;
                 render = false;
             } else {
-                if (MethodHandler.groundItems.size() == 0) {
+                if (MethodHandler.groundItems.size() - 1 < groundItem) {
                     render = false;
                     return;
                 }
