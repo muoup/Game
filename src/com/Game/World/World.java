@@ -17,7 +17,8 @@ public class World {
 
     private static World[] worlds = {
             new MainWorld(), // Normal Overworld
-            new Underground() // Custom Underground Zone
+            new Underground(), // Custom Underground Zone
+            new ChessDungeon()
     };
 
     public static World curWorld = worlds[0];
@@ -114,7 +115,7 @@ public class World {
         Vector2 pos = new Vector2(DeltaMath.maxmin(offset.x / Settings.worldScale - miniMapSize, 0, worldImage.getWidth() - miniMapSize * 2),
                 DeltaMath.maxmin(offset.y / Settings.worldScale  - miniMapSize, 0, worldImage.getHeight() - miniMapSize * 2));
 
-        BufferedImage imageMap = worldImage.getSubimage((int) pos.x, (int) pos.y, miniMapSize * 2, miniMapSize * 2);
+        BufferedImage imageMap = worldImage.getSubimage((int) pos.x, (int) pos.y, Math.min(miniMapSize * 2, worldImage.getWidth()), Math.min(miniMapSize * 2, worldImage.getHeight()));
         imageMap = Render.getScaledImage(imageMap, Vector2.identity(miniMapScale));
 
         Render.setColor(Color.BLACK);

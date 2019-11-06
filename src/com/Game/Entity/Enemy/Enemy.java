@@ -22,6 +22,7 @@ public class Enemy {
     public float respawnTimer = 0;
 
     public float timer = 0;
+    public float timer2 = 0;
 
     public float maxTarget = 0;
     public float targetTimer = 0;
@@ -45,7 +46,13 @@ public class Enemy {
         this.health = amount;
     }
 
+    public void setScale(int x, int y) {
+        this.image = Render.getScaledImage(image, x, y);
+    }
+
     public void updateEnemy() {
+        update();
+
         if (!enabled) {
             timer += Main.dTime();
 
@@ -75,6 +82,10 @@ public class Enemy {
                 health = maxHealth;
             passiveAI();
         }
+    }
+
+    public void update() {
+
     }
 
     public void passiveAI() {
