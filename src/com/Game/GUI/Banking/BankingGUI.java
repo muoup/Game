@@ -1,13 +1,12 @@
 package com.Game.GUI.Banking;
 
 import com.Game.GUI.GUIWindow.GUIItemSlot;
+import com.Game.GUI.GUIWindow.GUILibrary;
 import com.Game.GUI.GUIWindow.GUIWindow;
 import com.Game.Items.ItemStack;
-import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class BankingGUI extends GUIWindow {
@@ -19,16 +18,12 @@ public class BankingGUI extends GUIWindow {
      */
     private ArrayList<GUIItemSlot> itemStacks;
 
-    public void init() {
+    public BankingGUI() {
         itemStacks = new ArrayList<GUIItemSlot>();
 
-        setColor(new Color(162, 166, 56));
-        setPosition(100, 100);
-        setSize(1000, 800);
-
-        for (GUIItemSlot slots : itemStacks) {
-            addElement(slots);
-        }
+        setColor(new Color(166, 134, 76));
+        setPosition(5, 5);
+        setSize(65, 40);
     }
 
     private void addItemSlot(ItemStack stack) {
@@ -39,7 +34,11 @@ public class BankingGUI extends GUIWindow {
      * When the player attempts to deposit an item into their bank, call this method
      * @param stack The ItemStack that they are attempting to insert.
      */
-    public void addItem(ItemStack stack) {
+    public static void addItem(ItemStack stack) {
+        GUILibrary.bankingGUI.inputItem(stack);
+    }
+
+    public void inputItem(ItemStack stack) {
         for (GUIItemSlot slot : itemStacks) {
             if (slot.getID() == stack.getID()) {
                 slot.addAmount(stack.getAmount());
@@ -55,6 +54,6 @@ public class BankingGUI extends GUIWindow {
     }
 
     public void render() {
-
+        drawItems(itemStacks, new Vector2(25), getSize().subtractClone(25, 25), 5);
     }
 }

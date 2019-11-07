@@ -16,7 +16,7 @@ public class FishingArea extends GameObject {
         super(x, y);
 
         image = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
-        maxDistance = 128f;
+        maxDistance = 32f;
         this.preset = preset;
     }
 

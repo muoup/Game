@@ -2,6 +2,8 @@ package com.Game.Entity.Player;
 
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.GUI;
+import com.Game.GUI.GUIWindow.GUILibrary;
+import com.Game.GUI.GUIWindow.GUIWindow;
 import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.Items.ItemStack;
 import com.Game.Main.Main;
@@ -148,6 +150,12 @@ public class Player {
                     new Fist(getCenter(), Input.mousePosition.addClone(World.curWorld.offset));
                 else
                     accessory.getItem().useWeapon(getCenter(), Input.mousePosition.addClone(World.curWorld.offset));
+            }
+
+            if (Input.GetKeyDown(KeyEvent.VK_TAB)) {
+                GUI.currentGUI = (GUI.currentGUI.isEmpty()) ?
+                        GUILibrary.bankingGUI :
+                        GUIWindow.emptyGUI;
             }
 
             dMod = speedMod;

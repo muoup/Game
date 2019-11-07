@@ -12,6 +12,11 @@ public class Vector2 {
         this.y = y;
     }
 
+    public Vector2(float xy) {
+        this.x = xy;
+        this.y = xy;
+    }
+
     public Vector2 clone() {
         return new Vector2(x, y);
     }

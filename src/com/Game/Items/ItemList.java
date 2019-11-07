@@ -8,7 +8,6 @@ import com.Game.Items.Armor.Rock.RockHelmet;
 import com.Game.Items.Armor.Rock.RockLeggings;
 import com.Game.Items.Consumables.Food.BlueFishFood;
 import com.Game.Items.Consumables.Food.ClownFishFood;
-import com.Game.Items.Consumables.Food.Seaweed;
 import com.Game.Items.RawResource.ArrowShaft;
 import com.Game.Items.RawResource.Coins;
 import com.Game.Items.RawResource.Feather;
@@ -46,7 +45,7 @@ public enum ItemList {
     pineLog(new PineLog(24, "pine_wood.png", "Pine Wood", "Tier 20", 1, 1)),
     spruceLog(new SpruceLog(25, "spruce_wood.png", "Spruce Wood", "Tier 40", 1, 1)),
     ashLog(new AshLog(26, "ash_wood.png", "Ash Wood", "Tier 10", 1, 1)),
-    seaWeed(new Seaweed(27, "sea_wood.png", "Sea Weed", "Tasty", 1, 1));
+    seaWeed(new AshLog(27, "sea_wood.png", "Sea Weed", "Tasty", 1, 1));
 
     public Item item;
 

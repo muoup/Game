@@ -5,7 +5,7 @@ import com.Game.Items.ItemStack;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 
-import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Represents a single item render on a GUI. Add one of these to a GUIWindow
@@ -57,7 +57,7 @@ public class GUIItemSlot extends GUIElement {
         return stack.getID();
     }
 
-    public Image getImage() {
+    public BufferedImage getImage() {
         return stack.getImage();
     }
 

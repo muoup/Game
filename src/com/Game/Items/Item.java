@@ -159,6 +159,23 @@ public class Item {
         return amount;
     }
 
+    public int combine(int index, ItemList use, ItemList create, int amt, int data) {
+        int amount = InventoryManager.itemCount(use);
+        amount = Math.min(amt, amount);
+        amount = Math.min(amount, InventoryManager.getStack(index).getAmount());
+        if (amount == 0) {
+            ChatBox.sendMessage("You need some " + use.item.name + " to do this.");
+            return 0;
+        }
+
+        InventoryManager.removeItem(use, amount);
+        InventoryManager.removeItem(getItemList(), amount);
+        int in = InventoryManager.addItem(create, amount);
+        InventoryManager.setData(in, data);
+
+        return amount;
+    }
+
     public int convert(int amountPer, int maxCreate, ItemList create) {
         int use = InventoryManager.itemCount(getItemList());
         int make = (int) DeltaMath.maxmin(use / amountPer, 0, maxCreate);

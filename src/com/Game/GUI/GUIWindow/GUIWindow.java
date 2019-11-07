@@ -3,6 +3,7 @@ package com.Game.GUI.GUIWindow;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
+import com.Util.Other.Settings;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
  * Create A GUIWindow and add GUIElements that it will Render
  */
 public class GUIWindow {
+    public static final GUIWindow emptyGUI = new GUIWindow();
     private Vector2 startOffset;
     private Vector2 size;
     private Color color;
@@ -36,20 +38,30 @@ public class GUIWindow {
         this.startOffset = startOffset;
     }
 
+    public boolean isEmpty() {
+        return (size.compareTo(Vector2.zero()) == 0);
+    }
+
     public void setSize(Vector2 size) {
         this.size = size;
     }
 
-    public void setSize(float x, float y) {
+    private void size(float x, float y) {
         this.size = new Vector2(x, y);
     }
 
-    public void setPosition(Vector2 startOffset) {
-        this.startOffset = startOffset;
+    private void position(float x, float y) {
+        this.startOffset = new Vector2(x, y);
     }
 
-    public void setPosition(float x, float y) {
-        this.startOffset = new Vector2(x, y);
+    public void setSize(float xPercentage, float yPercentage) {
+        Vector2 screenSize = Settings.curResolution();
+        size(screenSize.x * xPercentage / 100, screenSize.y * yPercentage / 100);
+    }
+
+    public void setPosition(float xPercentage, float yPercentage) {
+        Vector2 screenSize = Settings.curResolution();
+        position(screenSize.x * xPercentage / 100, screenSize.y * yPercentage / 100);
     }
 
     public void setColor(Color color) {
@@ -66,6 +78,9 @@ public class GUIWindow {
 
     public void addElement(GUIElement element) {
         elements.add(element);
+    }
+    void setPosition(Vector2 startOffset) {
+        this.startOffset = startOffset;
     }
 
     public void tick() {
@@ -86,7 +101,6 @@ public class GUIWindow {
     }
 
     protected void render() {
-
     }
 
     public GUIElement inElement() {
@@ -97,5 +111,32 @@ public class GUIWindow {
         }
 
         return null;
+    }
+
+    /**
+     * Draws an array of ItemSlots. Mostly used for banking interface.
+     * @param itemSlots List of items
+     * @param startPosition Start position on GUIScreen (Relative to window)
+     * @param maxSize Maximum size of the GUIItemSlots, if they are not in this size, they are not drawn
+     * @param padding Padding between ItemSlots sop they are not bunched together
+     */
+    public void drawItems(ArrayList<GUIItemSlot> itemSlots,
+                          Vector2 startPosition,
+                          Vector2 maxSize,
+                          float padding) {
+
+        int maxRowAmount = (int) (maxSize.x / (padding + 48));
+
+        if (maxRowAmount == 0) {
+            System.out.println("MaxRowAmount is zero!");
+            System.out.println(maxSize);
+            return;
+        }
+
+        for (int i = 0; i < itemSlots.size(); i++) {
+            GUIItemSlot stack = itemSlots.get(i);
+            int x = i % maxRowAmount;
+            int y = i / maxRowAmount;
+        }
     }
 }

@@ -10,5 +10,6 @@ public class RockArrow extends Projectile {
         this.attackStyle = 1;
         this.scale = Vector2.identity(32);
         setImage("rock_arrow.png");
+        setCooldown(0.35f);
     }
 }

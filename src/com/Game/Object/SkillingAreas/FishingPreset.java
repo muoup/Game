@@ -8,8 +8,10 @@ public enum FishingPreset {
 
     clownFish(35, 1.5f, 6.5f,
             1, ItemList.clownfish),
-    blueFish(65, 5f, 12.5f,
-            10, ItemList.bluefish);
+    blueFish(65, 3f, 8.5f,
+            10, ItemList.bluefish),
+    seaWeed(95, 2.5f, 7.5f,
+            20, ItemList.seaWeed);
 
     float xp, minTimer, maxTimer;
     int lvlReq;

@@ -11,5 +11,6 @@ public class Arrow extends Projectile {
         this.attackStyle = 1;
         this.scale = Vector2.identity(32);
         setImage("arrow.png");
+        setCooldown(0.4f);
     }
 }
