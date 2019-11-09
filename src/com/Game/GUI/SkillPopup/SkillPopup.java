@@ -49,7 +49,7 @@ public class SkillPopup {
         Render.setFont(Settings.npcFont);
         Render.setColor(Color.BLACK);
         Render.drawImage(skillImage, position);
-        Render.drawText(skillMessage, position.addClone(-32, 28));
+        Render.drawText(skillMessage, position.addClone(-Render.getStringWidth(skillMessage) - 12.5f, 28));
         Render.drawRectangle(Vector2.zero(), Vector2.zero());
         Render.setColor(dColor);
     }

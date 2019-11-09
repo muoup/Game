@@ -14,10 +14,10 @@ public enum TreePreset {
             1, 12, 20, ItemList.pineLog),
     oakTree("oak_tree.png", 120, 2.75f, 6.5f,
             1, 12, 30, ItemList.oakLog),
-    spruce("spruce_tree.png", 65, 3.25f, 7f,
-            1, 7, 140, ItemList.spruceLog),
-    mapleTree("maple_tree.png", 65, 3.25f, 7f,
-            1, 7, 180, ItemList.mapleLog);
+    spruce("spruce_tree.png", 160, 3.25f, 7f,
+            1, 7, 40, ItemList.spruceLog),
+    mapleTree("maple_tree.png", 200, 3.25f, 7f,
+            1, 7, 50, ItemList.mapleLog);
 
     float xp, minTimer, maxTimer;
     int minWood, maxWood, lvlReq;

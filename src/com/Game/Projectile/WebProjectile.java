@@ -7,6 +7,6 @@ public class WebProjectile extends HomingProjectile {
         super(position, damage, speed, 0, false);
         setImage("web.png");
         this.avoidable = false;
-        this.scale = Vector2.identity(24);
+        setScale(12);
     }
 }

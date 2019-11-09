@@ -9,8 +9,8 @@ public class Arrow extends Projectile {
         this.rotate = true;
         this.duration = 1.25f;
         this.attackStyle = 1;
-        this.scale = Vector2.identity(32);
+        setScale(16);
         setImage("arrow.png");
-        setCooldown(0.4f);
+        setCooldown(0.45f);
     }
 }

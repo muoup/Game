@@ -27,7 +27,7 @@ public class BowWeapon extends Weapon {
      */
     public void setWeaponTier(int tier) {
         // For now this just 0.3 times the tier (including 1)
-        weaponDamage = (float) (Math.floor(tier / 10) + 1) * 2.5f;
+        weaponDamage = (float) (Math.floor(tier / 10) + 1) * 0.365f + 1.785f;
         requirement = new ItemRequirement(0, tier);
         expMultiplier = 1 + 0.125f * tier;
     }

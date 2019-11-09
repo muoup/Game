@@ -8,11 +8,9 @@ import com.Game.Items.Armor.Rock.RockHelmet;
 import com.Game.Items.Armor.Rock.RockLeggings;
 import com.Game.Items.Consumables.Food.BlueFishFood;
 import com.Game.Items.Consumables.Food.ClownFishFood;
-import com.Game.Items.RawResource.ArrowShaft;
-import com.Game.Items.RawResource.Coins;
-import com.Game.Items.RawResource.Feather;
+import com.Game.Items.Consumables.Food.Seaweed;
+import com.Game.Items.RawResource.*;
 import com.Game.Items.RawResource.Log.*;
-import com.Game.Items.RawResource.StringItem;
 import com.Game.Items.Tool.WoodHarp;
 import com.Game.Items.Weapon.Bows.*;
 
@@ -45,7 +43,12 @@ public enum ItemList {
     pineLog(new PineLog(24, "pine_wood.png", "Pine Wood", "Tier 20", 1, 1)),
     spruceLog(new SpruceLog(25, "spruce_wood.png", "Spruce Wood", "Tier 40", 1, 1)),
     ashLog(new AshLog(26, "ash_wood.png", "Ash Wood", "Tier 10", 1, 1)),
-    seaWeed(new AshLog(27, "sea_wood.png", "Sea Weed", "Tasty", 1, 1));
+    seaWeed(new Seaweed(27, "sea_weed.png", "Sea Weed", "Tasty", 1, 1)),
+    stone(new Seaweed(27, "stone.png", "Sea Weed", "Tasty", 1, 1)),
+    copperOre(new Ore(28, "copper_ore.png", "Sea Weed", "Tasty", 1, 1)),
+    tinOre(new Ore(29, "tin_ore.png", "Sea Weed", "Tasty", 1, 1)),
+    ironOre(new Ore(30, "iron_ore.png", "Sea Weed", "Tasty", 1, 1)),
+    goldOre(new Ore(31, "gold_ore.png", "Sea Weed", "Tasty", 1, 1));
 
     public Item item;
 
@@ -59,5 +62,9 @@ public enum ItemList {
 
     public int getID() {
         return item.id;
+    }
+
+    public ItemStack singleStack() {
+        return new ItemStack(this, 1);
     }
 }

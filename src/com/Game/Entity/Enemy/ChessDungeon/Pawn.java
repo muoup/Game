@@ -2,18 +2,18 @@ package com.Game.Entity.Enemy.ChessDungeon;
 
 import com.Game.Entity.Enemy.Enemy;
 import com.Game.Main.Main;
-import com.Game.Projectile.ChessProjectile;
+import com.Game.Projectile.PawnProjectile;
 
 public class Pawn extends Enemy {
-    public Pawn(int x, int y) {
+    public Pawn(int x, int y, boolean white) {
         super(x, y);
         setMaxHealth(35);
-        this.image = getImage("/ChessDungeon/pawn.png");
+        this.image = getImage("ChessDungeon/" + (white ? "" : "black_") + "pawn.png");
         this.name = "Chessboard Pawn";
         this.id = 35;
-        this.respawnTimer = 5.0f;
+        this.respawnTimer = 25.0f;
         this.maxTarget = 4.5f;
-        this.timer = 0;
+        this.timer = 0.0f;
         this.passive = false;
         setScale(96, 96);
     }
@@ -22,9 +22,8 @@ public class Pawn extends Enemy {
         timer += Main.dTime();
         timer2 += Main.dTime();
 
-        if (timer2 > 0.55f) {
-            new ChessProjectile(position, Main.player.position,  22.5f);
-
+        if (timer2 > 0.65f) {
+            new PawnProjectile(position, Main.player.position,  25.5f);
             timer2 = 0;
         }
     }

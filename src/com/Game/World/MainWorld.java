@@ -1,9 +1,8 @@
 package com.Game.World;
 
-import com.Game.Entity.Enemy.BabyRockEnemy;
 import com.Game.Entity.Enemy.Chicken;
-import com.Game.Entity.Enemy.RockEnemy;
 import com.Game.Object.AreaTeleporter.CaveEntrance;
+import com.Game.Object.AreaTeleporter.InvisibleTeleporter;
 import com.Game.Object.SkillingAreas.FishingArea;
 import com.Game.Object.SkillingAreas.FishingPreset;
 import com.Game.Object.SkillingAreas.Tree;
@@ -40,18 +39,9 @@ public class MainWorld extends World {
         new Tree(1690, 2565, TreePreset.spruce);
         new Tree(2386, 2493, TreePreset.mapleTree);
 
-        // Rock Enemies
-        new BabyRockEnemy(3496, 4520);
-        new BabyRockEnemy(3668, 4473);
-        new BabyRockEnemy(3797, 4602);
-        new BabyRockEnemy(3656, 4692);
-        new BabyRockEnemy(3444, 4811);
-        new BabyRockEnemy(3759, 4832);
+        // Rocks
 
-        new RockEnemy(4430, 4547);
-        new RockEnemy(4430, 4724);
-        new RockEnemy(4430, 4951);
-
+        // Chickens
         new Chicken(4394, 2874);
         new Chicken(4223, 2764);
         new Chicken(4223, 2993);
@@ -65,6 +55,12 @@ public class MainWorld extends World {
         new FishingArea(1179, 5939, FishingPreset.blueFish);
         new FishingArea(1250, 6024, FishingPreset.blueFish);
 
+        new FishingArea(5306, 1678, FishingPreset.seaWeed);
+        new FishingArea(5103, 1604, FishingPreset.seaWeed);
+
         new CaveEntrance(5188, 3568, CaveEntrance.TeleType.caveEntrance); // Teleporter to underground area.
+
+        // Teleporter to Chess Dungeon
+        new InvisibleTeleporter(5507, 1643, 135, 125, 2);
     }
 }

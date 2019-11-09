@@ -13,6 +13,7 @@ public class ChessDungeon extends World {
         new InvisibleTeleporter(135, 125,5507, 1643,  0);
 
         // Chessboard Pieces
-        new Pawn(502, 122);
+        new Pawn(502, 122, true);
+        new Pawn(598, 122, false);
     }
 }

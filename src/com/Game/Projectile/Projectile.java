@@ -44,7 +44,7 @@ public class Projectile {
         direction = Vector2.magnitudeDirection(position, aim).scale(speed);
 
         Player.projectiles.add(this);
-        setCooldown(0.2f);
+        setCooldown(0.35f);
     }
 
     public void setCooldown(float timer) {
@@ -67,8 +67,13 @@ public class Projectile {
             scale = Vector2.identity(8);
         }
 
-        image = Render.getScaledImage(image, scale);
         position.offset(-(image.getWidth() - Main.player.image.getWidth()) / 2);
+        image = Render.getScaledImage(image, scale.x, scale.y);
+    }
+
+    public void setScale(int scale) {
+        this.scale = new Vector2(scale);
+        this.image = Render.getScaledImage(image, scale, scale);
     }
 
     public Vector2 getCenter() {
@@ -109,7 +114,7 @@ public class Projectile {
                 }
             }
         } else {
-            if (Vector2.distance(Main.player.position, getCenter()) < scale.x + 16) {
+            if (Vector2.distance(Main.player.position, getCenter()) < scale.x) {
                 Main.player.damage(damage);
                 destroy();
             }

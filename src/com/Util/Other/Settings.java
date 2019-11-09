@@ -25,7 +25,7 @@ public class Settings {
     };
 
     // Change these to make xp faster.
-    public static final float rangedXPMultiplier = 8.5f;
+    public static final float rangedXPMultiplier = 2.75f;
 
     public static Font npcFont = null;
     public static Font skillPopupFont = null;

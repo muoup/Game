@@ -46,7 +46,7 @@ public class Chicken extends Enemy {
 
     public void handleDrops() {
         ArrayList<ItemStack> stack = new ArrayList<ItemStack>();
-        stack.add(new ItemStack(ItemList.feather, (int) DeltaMath.range(5, 15)));
+        stack.add(new ItemStack(ItemList.feather, (int) DeltaMath.range(4, 9)));
         GroundItem.createGroundItem(position, stack);
     }
 }
