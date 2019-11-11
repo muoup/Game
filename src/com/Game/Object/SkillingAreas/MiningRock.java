@@ -46,7 +46,7 @@ public class MiningRock extends GameObject {
         }
 
         if (InventoryManager.isFull()) {
-            ChatBox.sendMessage("You do not have any inventory space to complete this action!");
+            ChatBox.sendMessage("You do not have any state space to complete this action!");
             return false;
         }
 

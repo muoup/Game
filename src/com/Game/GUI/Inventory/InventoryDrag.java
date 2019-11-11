@@ -13,7 +13,7 @@ import com.Util.Other.Settings;
 import java.awt.image.BufferedImage;
 
 public class InventoryDrag {
-    public static ItemStack itemDrag; // The item that is being dragged by the mouse, after the mouse is released, set that inventory space to the item stack.
+    public static ItemStack itemDrag; // The item that is being dragged by the mouse, after the mouse is released, set that state space to the item stack.
     private static int inventoryIndex = -1; // The space that the item left when being dragged
     private static Vector2 initMousePos = Vector2.zero();
     private static boolean drag = false;
@@ -48,12 +48,12 @@ public class InventoryDrag {
         } else if (itemDrag.getID() != 0 && !drag && GUI.inGUI() && !click) {
             int index = getInventoryIndex();
 
-            // Swap the two spaces in case there is already an item in the inventory slot.
+            // Swap the two spaces in case there is already an item in the state slot.
             InventoryManager.swapSlots(inventoryIndex, index);
 
             resetVariables();
         } else if (itemDrag.getID() != 0 && !drag && !GUI.inGUI() && !click) {
-            // When the player attempts to drag the item outside the inventory
+            // When the player attempts to drag the item outside the state
             InventoryManager.inventory[inventoryIndex] = itemDrag.clone();
             itemDrag = Item.emptyStack();
             click = true;

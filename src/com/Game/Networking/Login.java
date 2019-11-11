@@ -11,7 +11,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class Login {
-    private static String nameField = "Masterdust12";
+    private static String nameField = "Admin";
     private static String passwordField = "password";
     private static int selected;
     private static Font loginFont;

@@ -18,7 +18,7 @@ public class Item {
     public final int id; // ID of the item
     public final String name; // Name of the item, will eventually be used when the ItemStacks if hovered over.
     public final String examineText; // Text printed in ChatBox when examined
-    public final int maxStack; // Maximum amount allowed in one stack in the inventory
+    public final int maxStack; // Maximum amount allowed in one stack in the state
     public final int worth; // How much the item is worth when sold
     public final String imageName; // Name of the image (use as basic image, other data values may have different images
     public final BufferedImage image; // Default image (use as basic image, other data values may have different images)

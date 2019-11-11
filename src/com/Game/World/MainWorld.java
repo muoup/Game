@@ -44,6 +44,8 @@ public class MainWorld extends World {
 //        new MiningRock(3444, 4811);
 //        new MiningRock(3759, 4832);
 
+        new Furnace(4421, 4716);
+
         // Chickens
         new Chicken(4394, 2874);
         new Chicken(4223, 2764);

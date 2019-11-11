@@ -21,7 +21,7 @@ public class RightClick {
     public static Vector2 draw = Vector2.zero();
     public static Vector2 deltaDraw = Vector2.zero();
     public static boolean render = false;
-    public static State inventory = State.none;
+    public static State state = State.none;
     public static int groundItem;
     public static UsableGameObject object;
     public static ArrayList<String> options;
@@ -54,14 +54,17 @@ public class RightClick {
     }
 
     public static void update() {
+        if (!render)
+            state = null;
+
         if (Input.GetMouseDown(3)) {
             groundItem = 0;
-            inventory = (GUI.inGUI()) ? State.inventory : State.none;
+            state = (GUI.inGUI()) ? State.inventory : State.none;
 
-            if (inventory == State.inventory && GUI.curMain == 0)
+            if (state == State.inventory && GUI.curMain == 0)
                 inventoryRightClick();
 
-            if (inventory == State.none)
+            if (state == State.none)
                 groundRightClick();
         }
 
@@ -72,7 +75,7 @@ public class RightClick {
 
         if (render && Input.GetMouse(1)) {
             // Select Right Click Option
-            if (inventory == State.inventory) {
+            if (state == State.inventory) {
                 Vector2 deltaDraw = draw.subtractClone(GUI.GuiPos);
 
                 int xx = (int) deltaDraw.x / GUI.IntBoxSize;
@@ -86,7 +89,7 @@ public class RightClick {
 
                 RightClick.coolDown = 0.1f;
                 render = false;
-            } else if (inventory == State.groundItem) {
+            } else if (state == State.groundItem) {
                 if (MethodHandler.groundItems.size() - 1 < groundItem) {
                     render = false;
                     return;
@@ -126,7 +129,7 @@ public class RightClick {
                 removed += InventoryManager.addItem(selected.getItem(), amount);
 
                 MethodHandler.groundItems.get(groundItem).stack.get(option).amount -= removed;
-            } else if (inventory == State.object) {
+            } else if (state == State.object) {
                 if (Vector2.distance(Main.player.position, object.position) > 512) {
                     render = false;
                     return;
@@ -147,6 +150,8 @@ public class RightClick {
             return;
 
         maxWidth = 0;
+
+        state = State.inventory;
 
         Vector2 deltaMouse = Input.mousePosition.subtractClone(GUI.GuiPos);
 
@@ -190,10 +195,13 @@ public class RightClick {
         GroundItem hover = GroundItem.mouseOver();
         UsableGameObject object = GameObject.mouseOver();
 
-        if (hover == null && object != null)
+        if (hover == null && object != null) {
             objectRightClick(object);
-        else if (hover == null)
             return;
+        } else if (hover == null)
+            return;
+
+        state = State.groundItem;
 
         groundItem = MethodHandler.groundItems.indexOf(hover);
 
@@ -225,6 +233,11 @@ public class RightClick {
     private static void objectRightClick(UsableGameObject object) {
         RightClick.object = object;
 
+        if (object == null)
+            return;
+
+        state = State.object;
+
         maxWidth = 0;
 
         render = true;
@@ -232,6 +245,8 @@ public class RightClick {
         deltaDraw = draw.clone();
 
         maxWidth = 0;
+
+        object.onRightClick();
 
         options.clear();
         options.addAll(object.options);

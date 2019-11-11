@@ -77,6 +77,15 @@ public class InventoryManager {
         return null;
     }
 
+    public static ItemStack findStack(ItemList item, int data) {
+        for (ItemStack stack : inventory) {
+            if (stack.getID() == item.getID() && stack.getData() == data)
+                return stack;
+        }
+
+        return null;
+    }
+
     public static int getIndex(ItemStack stack) {
         for (int i = 0; i < inventory.length; i++) {
             if (stack.getID() == inventory[i].getID() &&
@@ -87,6 +96,25 @@ public class InventoryManager {
         }
 
         return -1;
+    }
+
+    public static int getAmount(ItemList list) {
+        int amount = 0;
+        for (ItemStack s : inventory) {
+            if (s.getID() == list.getID())
+                amount += s.getAmount();
+        }
+        return amount;
+    }
+
+    public static int getAmount(ItemList list, int data) {
+        int amount = 0;
+        for (ItemStack s : inventory) {
+            if (s.getID() == list.getID() && s.getData() == data)
+                amount += s.getAmount();
+        }
+
+        return amount;
     }
 
     public static boolean removeItem(ItemList item, int amount, int data) {

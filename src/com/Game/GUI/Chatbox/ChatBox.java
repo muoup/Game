@@ -22,7 +22,7 @@ public class ChatBox {
 
     // There is not harm in touching these but it will not change it.
     // They are changed every tick to help with cleaning up math when rendering the chatbox.
-    private static Vector2 size = Vector2.zero(); // Size of inventory for below variables.
+    private static Vector2 size = Vector2.zero(); // Size of state for below variables.
     protected static Vector2 bSize; // Chat Box scrollbar size.
     protected static Vector2 gSize; // Chat Box GUI size.
     private static Vector2 mSize; // Chat Message Bar size.

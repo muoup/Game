@@ -18,4 +18,8 @@ public class UsableGameObject extends GameObject {
     public void onOption(int option) {
 
     }
+
+    public void onRightClick() {
+
+    }
 }

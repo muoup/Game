@@ -73,7 +73,6 @@ public class Projectile {
 
     public void setScale(int scale) {
         this.scale = new Vector2(scale);
-        this.image = Render.getScaledImage(image, scale, scale);
     }
 
     public Vector2 getCenter() {

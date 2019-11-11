@@ -28,7 +28,10 @@ public class GameObject {
 
     public static UsableGameObject mouseOver() {
         for (GameObject obj : MethodHandler.objects) {
-            if (Vector2.distance(obj.position, Input.mousePosition) < obj.image.getWidth() / 2
+            if (obj.position == null || obj.image == null)
+                continue;
+            if (Vector2.distance(obj.position.addClone(Render.getImageSize(obj.image).scale(0.5f)), Input.mousePosition.addClone(World.curWorld.offset))
+                    < Math.max(obj.image.getWidth(), obj.image.getHeight())
                 && obj instanceof UsableGameObject) {
                 return (UsableGameObject) obj;
             }

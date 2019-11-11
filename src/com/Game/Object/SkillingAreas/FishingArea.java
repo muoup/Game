@@ -27,7 +27,7 @@ public class FishingArea extends GameObject {
         }
 
         if (InventoryManager.isFull()) {
-            ChatBox.sendMessage("You do not have any inventory space!");
+            ChatBox.sendMessage("You do not have any state space!");
             return false;
         }
 
