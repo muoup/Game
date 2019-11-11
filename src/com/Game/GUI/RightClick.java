@@ -6,6 +6,8 @@ import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.Items.ItemStack;
 import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
+import com.Game.Object.GameObject;
+import com.Game.Object.UsableGameObject;
 import com.Game.World.GroundItem;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
@@ -19,8 +21,9 @@ public class RightClick {
     public static Vector2 draw = Vector2.zero();
     public static Vector2 deltaDraw = Vector2.zero();
     public static boolean render = false;
-    public static boolean inventory = false;
+    public static State inventory = State.none;
     public static int groundItem;
+    public static UsableGameObject object;
     public static ArrayList<String> options;
     public static float percentBox;
     private static float maxWidth = 0;
@@ -53,12 +56,12 @@ public class RightClick {
     public static void update() {
         if (Input.GetMouseDown(3)) {
             groundItem = 0;
-            inventory = GUI.inGUI();
+            inventory = (GUI.inGUI()) ? State.inventory : State.none;
 
-            if (inventory && GUI.curMain == 0)
+            if (inventory == State.inventory && GUI.curMain == 0)
                 inventoryRightClick();
 
-            if (!inventory)
+            if (inventory == State.none)
                 groundRightClick();
         }
 
@@ -69,7 +72,7 @@ public class RightClick {
 
         if (render && Input.GetMouse(1)) {
             // Select Right Click Option
-            if (inventory) {
+            if (inventory == State.inventory) {
                 Vector2 deltaDraw = draw.subtractClone(GUI.GuiPos);
 
                 int xx = (int) deltaDraw.x / GUI.IntBoxSize;
@@ -83,7 +86,7 @@ public class RightClick {
 
                 RightClick.coolDown = 0.1f;
                 render = false;
-            } else {
+            } else if (inventory == State.groundItem) {
                 if (MethodHandler.groundItems.size() - 1 < groundItem) {
                     render = false;
                     return;
@@ -123,6 +126,18 @@ public class RightClick {
                 removed += InventoryManager.addItem(selected.getItem(), amount);
 
                 MethodHandler.groundItems.get(groundItem).stack.get(option).amount -= removed;
+            } else if (inventory == State.object) {
+                if (Vector2.distance(Main.player.position, object.position) > 512) {
+                    render = false;
+                    return;
+                }
+
+                int option = (int) Input.mousePosition.subtract(draw).y / (int) percentBox;
+
+                if (option > options.size() - 1)
+                    return;
+
+                object.onOption(option);
             }
         }
     }
@@ -173,8 +188,11 @@ public class RightClick {
 
     private static void groundRightClick() {
         GroundItem hover = GroundItem.mouseOver();
+        UsableGameObject object = GameObject.mouseOver();
 
-        if (hover == null)
+        if (hover == null && object != null)
+            objectRightClick(object);
+        else if (hover == null)
             return;
 
         groundItem = MethodHandler.groundItems.indexOf(hover);
@@ -204,6 +222,30 @@ public class RightClick {
             deltaDraw.x = Settings.curResolution().x - maxWidth * 1.1f;
     }
 
+    private static void objectRightClick(UsableGameObject object) {
+        RightClick.object = object;
+
+        maxWidth = 0;
+
+        render = true;
+        draw = Input.mousePosition.clone();
+        deltaDraw = draw.clone();
+
+        maxWidth = 0;
+
+        options.clear();
+        options.addAll(object.options);
+
+        for (String s : options) {
+            maxWidth = Math.max(maxWidth, Render.getStringWidth(s));
+        }
+
+        Render.setFont(Settings.itemFont);
+
+        if (maxWidth * 1.1f + deltaDraw.x > Settings.curResolution().x)
+            deltaDraw.x = Settings.curResolution().x - maxWidth * 1.1f;
+    }
+
     public static boolean onPopup() {
         Vector2 top = deltaDraw.subtractClone(15f, 15f);
         Vector2 bottom = deltaDraw.addClone(maxWidth + 15f, percentBox * options.size() + 15f);
@@ -213,4 +255,8 @@ public class RightClick {
 
         return false;
     }
+}
+
+enum State {
+    none, inventory, groundItem, object
 }

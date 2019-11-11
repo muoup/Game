@@ -26,6 +26,17 @@ public class GameObject {
         MethodHandler.objects.add(this);
     }
 
+    public static UsableGameObject mouseOver() {
+        for (GameObject obj : MethodHandler.objects) {
+            if (Vector2.distance(obj.position, Input.mousePosition) < obj.image.getWidth() / 2
+                && obj instanceof UsableGameObject) {
+                return (UsableGameObject) obj;
+            }
+        }
+
+        return null;
+    }
+
     public void updateObject() {
         if (image == null)
             return;
@@ -99,5 +110,9 @@ public class GameObject {
         Render.drawRectangle(sPos, rect);
 
 
+    }
+
+    public void setScale(int x, int y) {
+        this.image = Render.getScaledImage(image, x, y);
     }
 }

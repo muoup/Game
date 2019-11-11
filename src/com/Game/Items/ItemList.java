@@ -44,11 +44,11 @@ public enum ItemList {
     spruceLog(new SpruceLog(25, "spruce_wood.png", "Spruce Wood", "Tier 40", 1, 1)),
     ashLog(new AshLog(26, "ash_wood.png", "Ash Wood", "Tier 10", 1, 1)),
     seaWeed(new Seaweed(27, "sea_weed.png", "Sea Weed", "Tasty", 1, 1)),
-    stone(new Seaweed(27, "stone.png", "Sea Weed", "Tasty", 1, 1)),
-    copperOre(new Ore(28, "copper_ore.png", "Sea Weed", "Tasty", 1, 1)),
-    tinOre(new Ore(29, "tin_ore.png", "Sea Weed", "Tasty", 1, 1)),
-    ironOre(new Ore(30, "iron_ore.png", "Sea Weed", "Tasty", 1, 1)),
-    goldOre(new Ore(31, "gold_ore.png", "Sea Weed", "Tasty", 1, 1));
+    stone(new Ore(28, "stone.png", "Stone", "Tier 1", 1, 1)),
+    copperOre(new Ore(29, "copper_ore.png", "Copper Ore", "Tier 10", 1, 1)),
+    tinOre(new Ore(30, "tin_ore.png", "Tin Ore", "Tier 10", 1, 1)),
+    ironOre(new Ore(31, "iron_ore.png", "Iron Ore", "Tier 20", 1, 1)),
+    goldOre(new Ore(32, "gold_ore.png", "Gold Ore", "Tier 30", 1, 1));
 
     public Item item;
 

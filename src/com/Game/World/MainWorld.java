@@ -3,10 +3,7 @@ package com.Game.World;
 import com.Game.Entity.Enemy.Chicken;
 import com.Game.Object.AreaTeleporter.CaveEntrance;
 import com.Game.Object.AreaTeleporter.InvisibleTeleporter;
-import com.Game.Object.SkillingAreas.FishingArea;
-import com.Game.Object.SkillingAreas.FishingPreset;
-import com.Game.Object.SkillingAreas.Tree;
-import com.Game.Object.SkillingAreas.TreePreset;
+import com.Game.Object.SkillingAreas.*;
 
 public class MainWorld extends World {
     public MainWorld() {
@@ -40,6 +37,12 @@ public class MainWorld extends World {
         new Tree(2386, 2493, TreePreset.mapleTree);
 
         // Rocks
+        new MiningRock(3496, 4520, RockType.stone);
+        new MiningRock(3668, 4473, RockType.stone);
+        new MiningRock(3797, 4602, RockType.stone);
+//        new MiningRock(3656, 4692);
+//        new MiningRock(3444, 4811);
+//        new MiningRock(3759, 4832);
 
         // Chickens
         new Chicken(4394, 2874);
