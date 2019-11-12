@@ -52,6 +52,9 @@ public class InventoryManager {
         if (RightClick.coolDown > 0)
             RightClick.coolDown -= Main.dTime();
 
+        if (RightClick.render)
+            useIndex = -1;
+
         InventoryDrag.update();
     }
 

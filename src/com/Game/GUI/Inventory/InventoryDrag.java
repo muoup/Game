@@ -31,6 +31,7 @@ public class InventoryDrag {
 
         if (itemDrag.getID() != 0 && drag && !click) {
             // When the player attempts to drag the item, draw the image.
+            InventoryManager.useIndex = -1;
             Vector2 rectPos = Input.mousePosition.subtractClone(itemDragImage.getWidth() / 2, itemDragImage.getWidth() / 2);
 
             Render.drawImage(itemDragImage, rectPos);

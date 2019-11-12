@@ -11,6 +11,7 @@ public class Skills {
     public static int WOODCUTTING = 2;
     public static int FLETCHING = 3;
     public static int MINING = 4;
+    public static int SMITHING = 5;
 
     public static int skillAmt;
 
@@ -21,7 +22,8 @@ public class Skills {
             "Fishing",
             "Woodcutting",
             "Fletching",
-            "Mining"
+            "Mining",
+            "Smithing"
     };
     private static boolean[] levelUp;
 

@@ -2,6 +2,7 @@ package com.Game.Main;
 
 import com.Game.Entity.Player.Player;
 import com.Game.GUI.GUI;
+import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.Networking.Client;
 import com.Game.Networking.Login;
 import com.Game.listener.Input;
@@ -69,6 +70,7 @@ public class Main extends Canvas {
 
     public static void logout() {
         isConnected = false;
+        InventoryManager.useIndex = -1;
         Login.resetLogin();
     }
 

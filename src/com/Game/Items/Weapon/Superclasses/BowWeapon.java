@@ -38,8 +38,8 @@ public class BowWeapon extends Weapon {
 
     public void OnClick(int index) {
         if (getData(index) == 0) {
-            combine(index, ItemList.bowString, 1, 1);
-            Skills.addExperience(Skills.FLETCHING, 30 * (1 + requirement.getLevel() / 5));
+            if (combine(index, ItemList.bowString, 1, 1))
+                Skills.addExperience(Skills.FLETCHING, 30 * (1 + requirement.getLevel() / 5));
         }
     }
 

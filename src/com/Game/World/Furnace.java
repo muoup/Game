@@ -1,6 +1,7 @@
 package com.Game.World;
 
 import com.Game.GUI.Inventory.InventoryManager;
+import com.Game.GUI.Skills.Skills;
 import com.Game.Items.ItemList;
 import com.Game.Object.UsableGameObject;
 
@@ -15,7 +16,7 @@ public class Furnace extends UsableGameObject {
     public void onRightClick() {
         options.clear();
 
-        if (InventoryManager.getAmount(ItemList.stone, 0) > 1) {
+        if (InventoryManager.getAmount(ItemList.stone, 0) >= 1) {
             options.add("Smelt Stone");
         }
     }
@@ -24,7 +25,9 @@ public class Furnace extends UsableGameObject {
         String action = options.get(option);
         
         if (action.equals("Smelt Stone")) {
-            InventoryManager.findStack(ItemList.stone, 0).setData(1);
+            int slot = InventoryManager.getIndex(ItemList.stone.singleStack());
+            InventoryManager.setData(slot, 1);
+            Skills.addExperience(Skills.SMITHING, 10);
         }
     }
 }

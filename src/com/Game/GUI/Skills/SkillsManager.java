@@ -19,7 +19,8 @@ public class SkillsManager {
             "fishing.png",
             "woodcutting.png",
             "fletching.png",
-            "mining.png"
+            "mining.png",
+            "smithing.png"
     };
 
     public static void init() {

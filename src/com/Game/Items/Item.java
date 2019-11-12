@@ -53,6 +53,7 @@ public class Item {
         if (InventoryManager.getStack(index).equipStatus != -1) {
             equipItem(index);
         } else {
+            InventoryManager.useIndex = -1;
             OnClick(index);
         }
     }
