@@ -1,5 +1,6 @@
 package com.Game.Entity.Player;
 
+import com.Game.Entity.Enemy.Enemy;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.GUI;
 import com.Game.GUI.GUIWindow.GUILibrary;
@@ -7,6 +8,7 @@ import com.Game.GUI.GUIWindow.GUIWindow;
 import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.Items.ItemStack;
 import com.Game.Main.Main;
+import com.Game.Main.MethodHandler;
 import com.Game.Object.GameObject;
 import com.Game.Projectile.Fist;
 import com.Game.Projectile.Projectile;
@@ -281,7 +283,14 @@ public class Player {
             health = maxHealth;
             position = Settings.playerSpawn.clone();
             subWorld = 0;
+            resetAggro();
             sendMovementPacket();
+        }
+    }
+
+    public void resetAggro() {
+        for (Enemy enemy : MethodHandler.enemies) {
+            enemy.loseTarget();
         }
     }
 

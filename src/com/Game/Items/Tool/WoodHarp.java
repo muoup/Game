@@ -18,6 +18,9 @@ public class WoodHarp extends Usable {
         if (worth <= 0) {
             ChatBox.sendMessage("You cannot cash that item.");
             return;
+        } else if (worth * 0.35 < 1) {
+            ChatBox.sendMessage("That item would grant you less than a coin. It was not harmonised.");
+            return;
         }
         InventoryManager.setItem(index, Item.emptyStack());
         InventoryManager.addItem(ItemList.gold, (int) (worth * 0.35));

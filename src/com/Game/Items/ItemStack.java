@@ -110,4 +110,8 @@ public class ItemStack {
         this.equipStatus = item.equipStatus;
         this.requirement = item.requirement;
     }
+
+    public boolean meetsRequirement() {
+        return item.requirement.meetsRequirement();
+    }
 }

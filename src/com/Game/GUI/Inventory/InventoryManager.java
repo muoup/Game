@@ -71,6 +71,16 @@ public class InventoryManager {
         return amount;
     }
 
+    public static int indexOf(ItemList item) {
+        for (int i = 0; i < inventory.length; i++) {
+            ItemStack stack = inventory[i];
+            if (stack.getID() == item.getID())
+                return i;
+        }
+
+        return -1;
+    }
+
     public static ItemStack findStack(ItemList item) {
         for (ItemStack stack : inventory) {
             if (stack.getID() == item.getID())

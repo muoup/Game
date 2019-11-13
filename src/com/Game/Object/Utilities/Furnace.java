@@ -1,4 +1,4 @@
-package com.Game.World;
+package com.Game.Object.Utilities;
 
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.Skills.Skills;
@@ -16,9 +16,11 @@ public class Furnace extends UsableGameObject {
     public void onRightClick() {
         options.clear();
 
-        if (InventoryManager.getAmount(ItemList.stone, 0) >= 1) {
+        if (InventoryManager.getAmount(ItemList.stone, 0) >= 1)
             options.add("Smelt Stone");
-        }
+
+        if (options.size() == 0)
+            options.add("You need raw ores to smelt.");
     }
 
     public void onOption(int option) {

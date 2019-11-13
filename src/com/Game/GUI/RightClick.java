@@ -41,7 +41,6 @@ public class RightClick {
         Render.setFont(new Font("Arial", Font.BOLD, 14));
 
         for (int y = 0; y < options.size(); y++) {
-            float dy = percentBox * y;
             Vector2 newPos = deltaDraw.addClone(0, percentBox * y);
 
             Render.setColor(Color.LIGHT_GRAY);

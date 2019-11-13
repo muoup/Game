@@ -19,6 +19,7 @@ public class Chicken extends Enemy {
         this.id = 3;
         this.image = getImage("chicken.png");
         this.respawnTimer = 5.0f;
+        this.targetTimer = 2.5f;
         this.name = "Chicken";
         setMaxHealth(10);
         setMoveTo();

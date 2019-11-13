@@ -4,6 +4,8 @@ import com.Game.Entity.Enemy.Chicken;
 import com.Game.Object.AreaTeleporter.CaveEntrance;
 import com.Game.Object.AreaTeleporter.InvisibleTeleporter;
 import com.Game.Object.SkillingAreas.*;
+import com.Game.Object.Utilities.Anvil;
+import com.Game.Object.Utilities.Furnace;
 
 public class MainWorld extends World {
     public MainWorld() {
@@ -45,6 +47,7 @@ public class MainWorld extends World {
 //        new MiningRock(3759, 4832);
 
         new Furnace(4421, 4716);
+        new Anvil(4452, 4595);
 
         // Chickens
         new Chicken(4394, 2874);

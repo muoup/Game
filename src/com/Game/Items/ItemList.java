@@ -25,7 +25,7 @@ public enum ItemList {
     bluefish(new BlueFishFood(6, "bluefish.png", "Bluefish", "This looks very tasty.",1, 250)),
     mapleLog(new MapleLog(7, "maple_wood.png", "Maple Log", "A sticky log, sounds useful to me.",1, 350)),
     gold(new Coins(8, "gold_coin.png", "Coins", "Shiny coins, good for trading..?",100000000, -1)),
-    woodHarp(new WoodHarp(9, "wood_harp.png", "Wooden Harp", "I can get some coins from this. (50% effective)", 1, -1)),
+    woodHarp(new WoodHarp(9, "wood_harp.png", "Wooden Harp", "I can get some coins from this. (35% effective)", 1, -1)),
     rockHelmet(new RockHelmet(10, "rock_helmet.png", "Rock Helmet", "Someone went under a dock.", 1, 1000)),
     rockChestplate(new RockChestplate(11, "rock_chestplate.png", "Rock Chestplate", "And there they saw a rock.", 1, 5000)),
     rockLeggings(new RockLeggings(12, "rock_leggings.png", "Rock Leggings", "It wasn't a rock.", 1, 4000)),
@@ -34,7 +34,7 @@ public enum ItemList {
     feather(new Feather(15, "feather.png", "Feather", "Because steel is heavier than feathers.", 100000, 20)),
     arrowShaft(new ArrowShaft(16, "arrow_shaft.png", "Arrow Shaft", "Not quite the orange kind.", 100000, 10)),
     stringItem(new StringItem(17, "string.png", "String", "Where does the string come from?", 100000, 5)),
-    bowString(new StringItem(18, "bow_string.png", "Bow String", "I can combine this with a bow stock.", 1, 20)),
+    bowString(new BowString(18, "bow_string.png", "Bow String", "I can combine this with a bow stock.", 1, 20)),
     ashBow(new AshBow(19, "ash_bow.png", "Ash Bow", "Tier 10", 1, 1)),
     pineBow(new PineBow(20, "pine_bow.png", "Pine Bow", "Tier 20", 1, 1)),
     oakBow(new OakBow(21, "oak_bow.png", "Oak Bow", "Tier 30", 1, 1)),
@@ -62,6 +62,19 @@ public enum ItemList {
 
     public int getID() {
         return item.id;
+    }
+
+    public static ItemList getByName(String name) {
+        for (ItemList item : values()) {
+            if (item.name().equals(name))
+                return item;
+        }
+
+        return null;
+    }
+
+    public ItemStack stackData(int data) {
+        return new ItemStack(this, 1, data);
     }
 
     public ItemStack singleStack() {
