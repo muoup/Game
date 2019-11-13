@@ -16,4 +16,8 @@ public class StringItem extends Item {
     public void setData(ItemStack stack) {
         stack.options.add("Craft Bow String");
     }
+
+    public String getOptionText(int i, int data, ItemStack stack) {
+        return "Craft Bow String";
+    }
 }

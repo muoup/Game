@@ -62,7 +62,7 @@ public class InventoryDrag {
             resetVariables();
         } else if (itemDrag.getID() != 0 && !drag && click) {
             // When the player clicks on an item
-            if (InventoryManager.useIndex > 0) {
+            if (InventoryManager.useIndex >= 0) {
                 InventoryManager.getItem(InventoryManager.useIndex).use(inventoryIndex);
                 InventoryManager.useIndex = -1;
             } else {

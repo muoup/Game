@@ -48,9 +48,15 @@ public class BowWeapon extends Weapon {
             stack.options.add("Craft Bow");
             stack.setImage("unstrung_" + imageName);
             stack.setEquipStatus(-1);
+            stack.name = "Unstrung " + name;
         } else {
             stack.setImage(imageName);
             stack.setEquipStatus(equipStatus);
+            stack.name = name;
         }
+    }
+
+    public String getOptionText(int i, int data, ItemStack stack) {
+        return "String " + stack.name.replace("Unstrung ", "");
     }
 }

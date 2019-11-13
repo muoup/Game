@@ -59,7 +59,7 @@ public class Item {
     }
 
     public void OnClick(int index) {
-
+        ChatBox.sendMessage(examineText);
     }
 
     public void RightClickIdentities(int index, int option) {
@@ -203,5 +203,13 @@ public class Item {
 
     public ArrayList<String> createOptions(String... optionList) {
         return (ArrayList<String>) Arrays.asList(optionList);
+    }
+
+    public String getOptionText(int i, int data, ItemStack stack) {
+        if (stack.options.size() == 0) {
+            return "Examine " + stack.name;
+        }
+
+        return stack.options.get(i) + " " + name;
     }
 }

@@ -29,6 +29,7 @@ public class Anvil extends UsableGameObject {
         int index = -1;
 
         ItemStack[] inventory = InventoryManager.inventory;
+        ItemStack opt = ItemList.empty.singleStack();
         for (int i = 0; i < inventory.length; i++) {
             ItemStack stack = inventory[i];
             if (stack.getData() != 1)
@@ -40,26 +41,26 @@ public class Anvil extends UsableGameObject {
                     chestplate = ItemList.rockChestplate;
                     leggings = ItemList.rockLeggings;
                     boots = ItemList.rockBoots;
+                    opt = createOption(option);
                     break;
             }
             if (!stack.meetsRequirement() && id != "") {
                 ChatBox.sendMessage(stack.item.requirement.toString());
                 id = "";
                 continue;
-            } else if (stack.meetsRequirement() && id != "") {
+            } else if (stack.meetsRequirement() && id != "" &&
+                        InventoryManager.getAmount(opt.item.getItemList()) >= opt.amount) {
                 index = i;
                 break;
             }
         }
-
-        System.out.println(id + " " + index);
 
         if (id == "" || index == -1) {
             ChatBox.sendMessage("You need a smelted resource for this.");
             return;
         }
 
-        InventoryManager.setItem(index, createOption(option));
+        InventoryManager.setItem(index, opt.singleStack());
 
         index = -1;
         id = "";
@@ -68,13 +69,13 @@ public class Anvil extends UsableGameObject {
     private ItemStack createOption(int option) {
         switch (option) {
             case 0:
-                return helmet.singleStack();
+                return new ItemStack(helmet, 3);
             case 1:
-                return chestplate.singleStack();
+                return new ItemStack(chestplate, 6);
             case 2:
-                return leggings.singleStack();
+                return new ItemStack(leggings, 4);
             case 3:
-                return boots.singleStack();
+                return new ItemStack(boots, 2);
             default:
                 return null;
         }

@@ -49,4 +49,8 @@ public class Log extends Item {
         stack.options.add("Craft Bow");
         stack.options.add("Craft Arrow Shafts");
     }
+
+    public String getOptionText(int i, int data, ItemStack stack) {
+        return "Craft " + stack.name + " Bow";
+    }
 }

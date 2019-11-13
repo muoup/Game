@@ -11,6 +11,7 @@ public class ItemStack {
     public int amount;
     public int maxAmount;
     public int data;
+    public String name;
     public ArrayList<String> options = new ArrayList<String>();
     public ItemRequirement requirement = ItemRequirement.none();
     public BufferedImage image;
@@ -21,6 +22,7 @@ public class ItemStack {
         this.item = item;
         this.amount = amount;
         this.maxAmount = item.maxStack;
+        name = item.name;
 
         setData(data);
     }
@@ -113,5 +115,13 @@ public class ItemStack {
 
     public boolean meetsRequirement() {
         return item.requirement.meetsRequirement();
+    }
+
+    public String getOptionText(int index) {
+        return item.getOptionText(index, data, this);
+    }
+
+    public ItemStack singleStack() {
+        return item.getItemList().singleStack();
     }
 }
