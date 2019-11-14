@@ -27,6 +27,7 @@ public class RightClick {
     public static ArrayList<String> options;
     public static float percentBox;
     private static float maxWidth = 0;
+    public static float maxMultiplier = 1.1f;
     public static float coolDown = 0;
 
     public static void init() {
@@ -44,11 +45,11 @@ public class RightClick {
             Vector2 newPos = deltaDraw.addClone(0, percentBox * y);
 
             Render.setColor(Color.LIGHT_GRAY);
-            Render.drawRectangle(newPos, new Vector2(maxWidth * 1.1f, percentBox));
+            Render.drawRectangle(newPos, new Vector2(maxWidth, percentBox));
 
             Render.setColor(Color.BLACK);
-            Render.drawRectOutline(newPos, new Vector2(maxWidth * 1.1f, percentBox));
-            Render.drawText(options.get(y), newPos.addClone(maxWidth * 0.05f, percentBox * 0.65f));
+            Render.drawRectOutline(newPos, new Vector2(maxWidth, percentBox));
+            Render.drawText(options.get(y), newPos.addClone(maxWidth * (maxMultiplier - 1), percentBox * 0.65f));
         }
     }
 
@@ -180,14 +181,13 @@ public class RightClick {
                 maxWidth = Render.getStringWidth(s);
         }
 
-        if (deltaDraw.x + maxWidth * 1.1f > Settings.curResolution().x * 0.9f)
-            deltaDraw.x -= maxWidth;
+        maxWidth = Math.max(Settings.sWidth("Examine"), maxWidth) * maxMultiplier;
 
+        if (deltaDraw.x + maxWidth > Settings.curResolution().x * 0.9f)
+            deltaDraw.x -= maxWidth;
 
         options.add("Drop");
         options.add("Examine");
-
-        maxWidth = Math.max(Settings.sWidth("Examine"), maxWidth);
     }
 
     private static void groundRightClick() {

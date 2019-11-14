@@ -150,6 +150,10 @@ public class InventoryManager {
         return removeItem(item, amount, 0);
     }
 
+    public static boolean removeItem(ItemStack stack) {
+        return removeItem(stack.getItemList(), stack.amount, stack.data);
+    }
+
     public static void render() {
         Render.setColor(new Color(255, 138, 4));
 
@@ -209,6 +213,10 @@ public class InventoryManager {
 
     public static void setItem(int slot, ItemStack item) {
         inventory[slot] = item;
+
+        if (inventory[slot].amount <= 0) {
+            inventory[slot] = new ItemStack(ItemList.empty, 0);
+        }
 
         Main.sendPacket("08" + slot + ":" + item.getID() + ":" + item.getAmount() + ":" + item.getData() + ":" + Main.player.name);
     }

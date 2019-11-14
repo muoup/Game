@@ -2,9 +2,12 @@ package com.Game.Object.Utilities;
 
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.Inventory.InventoryManager;
+import com.Game.GUI.Skills.Skills;
 import com.Game.Items.ItemList;
 import com.Game.Items.ItemStack;
 import com.Game.Object.UsableGameObject;
+
+import java.util.HashSet;
 
 public class Anvil extends UsableGameObject {
 
@@ -12,7 +15,7 @@ public class Anvil extends UsableGameObject {
     ItemList chestplate = ItemList.empty;
     ItemList leggings = ItemList.empty;
     ItemList boots = ItemList.empty;
-    int id[] = new int[4];
+    float experience = 0;
 
     public Anvil(int x, int y) {
         super(x, y);
@@ -25,45 +28,43 @@ public class Anvil extends UsableGameObject {
     }
 
     public void onOption(int option) {
-        String id = "";
-        int index = -1;
+        ItemStack opt;
+        HashSet<String> messages = new HashSet();
+        for (ItemStack stack : InventoryManager.inventory) {
+            ItemList itemList = stack.getItemList();
 
-        ItemStack[] inventory = InventoryManager.inventory;
-        ItemStack opt = ItemList.empty.singleStack();
-        for (int i = 0; i < inventory.length; i++) {
-            ItemStack stack = inventory[i];
-            if (stack.getData() != 1)
-                continue;
-            switch (stack.item.getItemList()) {
+            switch (itemList) {
                 case stone:
-                    id = "Rock";
                     helmet = ItemList.rockHelmet;
                     chestplate = ItemList.rockChestplate;
                     leggings = ItemList.rockLeggings;
                     boots = ItemList.rockBoots;
+                    experience = 25f;
                     opt = createOption(option);
                     break;
+                default:
+                    continue;
             }
-            if (!stack.meetsRequirement() && id != "") {
-                ChatBox.sendMessage(stack.item.requirement.toString());
-                id = "";
-                continue;
-            } else if (stack.meetsRequirement() && id != "" &&
-                        InventoryManager.getAmount(opt.item.getItemList()) >= opt.amount) {
-                index = i;
-                break;
+
+            if (InventoryManager.getAmount(itemList, 1) >= opt.amount) {
+                if (stack.meetsRequirement()) {
+                    craftItem(opt, itemList);
+                    return;
+                } else {
+                    messages.add("You need level " + stack.requirement.getLevel() + " Smithing to smith with " + stack.name);
+                }
+            } else {
+                messages.add("You need " + opt.getAmount() + " " + stack.name + " to make this piece.");
             }
         }
 
-        if (id == "" || index == -1) {
-            ChatBox.sendMessage("You need a smelted resource for this.");
-            return;
-        }
+        messages.forEach(ChatBox::sendMessage);
+    }
 
-        InventoryManager.setItem(index, opt.singleStack());
-
-        index = -1;
-        id = "";
+    private void craftItem(ItemStack option, ItemList remove) {
+        InventoryManager.removeItem(new ItemStack(remove, option.getAmount(), 1));
+        InventoryManager.addItem(option.singleStack());
+        Skills.addExperience(Skills.SMITHING, option.getAmount() * experience);
     }
 
     private ItemStack createOption(int option) {

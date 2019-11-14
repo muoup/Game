@@ -39,6 +39,10 @@ public class ItemStack {
         this(item.item, amount, data);
     }
 
+    public static ItemStack empty() {
+        return new ItemStack(ItemList.empty, 0);
+    }
+
     public void setImage(String imageName) {
         this.image = Main.getImage("Items/" + imageName);
     }
@@ -123,5 +127,9 @@ public class ItemStack {
 
     public ItemStack singleStack() {
         return item.getItemList().singleStack();
+    }
+
+    public ItemList getItemList() {
+        return item.getItemList();
     }
 }

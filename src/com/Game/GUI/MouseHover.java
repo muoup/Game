@@ -1,6 +1,7 @@
 package com.Game.GUI;
 
 import com.Game.Entity.Enemy.Enemy;
+import com.Game.GUI.Inventory.InventoryDrag;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.Skills.Skills;
 import com.Game.Items.ItemStack;
@@ -51,7 +52,7 @@ public class MouseHover {
         if (hover <= -1)
             return;
 
-        if (index == 0) { // Handle Item Inventory Hovering
+        if (index == 0 && !RightClick.render && InventoryDrag.itemDrag.getID() == 0) { // Handle Item Inventory Hovering
             ItemStack item = InventoryManager.getStack(hover);
             String text;
 
@@ -72,10 +73,10 @@ public class MouseHover {
             }
             Render.setFont(new Font("Arial", Font.BOLD, 14));
 
-            float width = Settings.sWidth(text);
+            float width = Settings.sWidth(text) * RightClick.maxMultiplier;
             float x = (Input.mousePosition.x + width * 1.25f > Settings.curResolution().x) ?
                     Input.mousePosition.x - width * 1.1f : Input.mousePosition.x;
-            Vector2 dPos = new Vector2(x, Input.mousePosition.y);
+            Vector2 dPos = new Vector2(x + width * (1 - RightClick.maxMultiplier) / 2, Input.mousePosition.y);
 
             Render.setColor(Color.BLACK);
             Render.drawRectangle(dPos, new Vector2(width * 1.15f, Render.getStringHeight() * 1.55f));
@@ -123,7 +124,7 @@ public class MouseHover {
                 if (!Render.onScreen(e.position, e.image) || !e.enabled)
                     continue;
                 if (Vector2.distance(Input.mousePosition, e.position.subtractClone(World.curWorld.offset)) <= e.image.getHeight()) {
-                    draw = Input.mousePosition;
+                    draw = Input.mousePosition.clone();
                     hoverEntity = e;
                     return;
                 }
