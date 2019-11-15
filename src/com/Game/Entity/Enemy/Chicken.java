@@ -4,16 +4,10 @@ import com.Game.Items.ItemList;
 import com.Game.Items.ItemStack;
 import com.Game.World.GroundItem;
 import com.Util.Math.DeltaMath;
-import com.Util.Math.Vector2;
 
 import java.util.ArrayList;
 
 public class Chicken extends Enemy {
-    private Vector2 moveTo;
-    private Vector2 movement;
-    private float maxRadius = 140;
-    private float speed = 1f;
-
     public Chicken(int x, int y) {
         super(x, y);
         this.id = 3;
@@ -21,24 +15,15 @@ public class Chicken extends Enemy {
         this.respawnTimer = 5.0f;
         this.targetTimer = 2.5f;
         this.name = "Chicken";
+        this.speed = 2.25f;
+        this.maxRadius = 200f;
         setMaxHealth(10);
-        setMoveTo();
+        setBounds(4133, 2641,
+                    4650, 3100);
     }
 
     public void passiveAI() {
-        if (moveTo == null)
-            return;
-
-        if (Vector2.distance(position, moveTo) < 32) {
-            setMoveTo();
-        } else {
-            position.add(movement.scaleClone(speed));
-        }
-    }
-
-    public void setMoveTo() {
-        moveTo = spawnPosition.addClone(DeltaMath.range(-maxRadius, maxRadius), DeltaMath.range(-maxRadius, maxRadius));
-        movement = Vector2.magnitudeDirection(position, moveTo);
+        moveToAI();
     }
 
     public void onRespawn() {

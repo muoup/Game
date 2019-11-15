@@ -3,6 +3,7 @@ package com.Game.Entity.Enemy;
 import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
 import com.Game.World.World;
+import com.Util.Math.DeltaMath;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 
@@ -14,6 +15,8 @@ public class Enemy {
     public int id = 0;
     public Vector2 position;
     public Vector2 spawnPosition;
+    private Vector2 moveTo;
+    private Vector2 movement;
 
     public boolean enabled = true;
     public boolean target = false;
@@ -29,6 +32,13 @@ public class Enemy {
 
     public float maxHealth = 0;
     public float health = 25000f;
+
+    public float maxRadius = 0;
+    protected float speed = 0;
+
+    private boolean useBounds = false;
+    private Vector2 b1;
+    private Vector2 b2;
 
     public BufferedImage image;
 
@@ -139,6 +149,33 @@ public class Enemy {
             enabled = false;
             handleDrops();
         }
+    }
+
+    public void setBounds(float x, float y, float x2, float y2) {
+        b1 = new Vector2(x, y);
+        b2 = new Vector2(x2, y2);
+        useBounds = true;
+    }
+
+    public void moveToAI() {
+        if (moveTo == null)
+            setMoveTo();
+
+        if (Vector2.distance(position, moveTo) < 32) {
+            setMoveTo();
+        } else {
+            position.add(movement.scaleClone(speed));
+        }
+    }
+
+    public void setMoveTo() {
+        if (!useBounds)
+            moveTo = spawnPosition.addClone(DeltaMath.range(-maxRadius, maxRadius), DeltaMath.range(-maxRadius, maxRadius));
+        else
+            moveTo = new Vector2(DeltaMath.range(b1.x, b2.x),
+                                 DeltaMath.range(b1.y, b2.y));
+        movement = Vector2.magnitudeDirection(position, moveTo);
+
     }
 
     public void target() {

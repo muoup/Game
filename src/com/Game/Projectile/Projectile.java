@@ -134,4 +134,13 @@ public class Projectile {
     protected void destroy() {
         Player.removeProj.add(this);
     }
+
+    public static void multiProjectile(Vector2 position, Vector2 target, int amount, float degree) {
+        if (amount % 2 == 1) {
+            float distance = Vector2.distance(position, target);
+            
+        } else {
+
+        }
+    }
 }
