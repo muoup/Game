@@ -28,6 +28,8 @@ public class Furnace extends UsableGameObject {
         
         if (action.equals("Smelt Stone")) {
             int slot = InventoryManager.getIndex(ItemList.stone.singleStack());
+            if (slot == -1)
+                return;
             InventoryManager.setData(slot, 1);
             Skills.addExperience(Skills.SMITHING, 10);
         }

@@ -85,10 +85,10 @@ public class Enemy {
         if (target)
             AI();
 
-        if (!target || target && passive) {
-            if (health < maxHealth)
+        if (!target || (target && passive)) {
+            if (health < maxHealth && !target)
                 health += maxHealth / 10 * Main.dTime();
-            if (health >= maxHealth)
+            if (health >= maxHealth && !target)
                 health = maxHealth;
             passiveAI();
         }
