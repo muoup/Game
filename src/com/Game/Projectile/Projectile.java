@@ -13,6 +13,8 @@ import com.Util.Other.Settings;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 
 public class Projectile {
     protected Vector2 position;
@@ -28,6 +30,7 @@ public class Projectile {
     protected float damage;
     public BufferedImage image;
     protected boolean friendly;
+
     public int attackStyle;
 
     public Projectile(Vector2 position, Vector2 aim, float damage, float speed, float expMultiplier, boolean friendly) {
@@ -45,6 +48,29 @@ public class Projectile {
 
         Player.projectiles.add(this);
         setCooldown(0.35f);
+    }
+
+    private Projectile(Projectile projectile) {
+        this.position = projectile.position.clone();
+        this.aim = projectile.aim.clone();
+        this.damage = projectile.damage;
+        this.friendly = projectile.friendly;
+        this.expMultiplier = projectile.expMultiplier;
+        this.speed = projectile.speed;
+        this.rotate = projectile.rotate;
+
+        initPos = position.clone();
+
+        direction = Vector2.magnitudeDirection(position, aim).scale(speed);
+
+        Player.projectiles.add(this);
+
+        setCooldown(0);
+    }
+
+    protected Object clone() {
+
+        return null;
     }
 
     public void setCooldown(float timer) {
@@ -135,10 +161,33 @@ public class Projectile {
         Player.removeProj.add(this);
     }
 
-    public static void multiProjectile(Vector2 position, Vector2 target, int amount, float degree) {
+    public void multiProjectile(int amount, float degree) {
         if (amount % 2 == 1) {
-            float distance = Vector2.distance(position, target);
-            
+            // If the amount if odd, one bullet will move towards the player
+            // and the others will be evenly split between the player.
+            float distance = Vector2.distance(position, aim);
+            float degrees = (float) Math.acos((aim.x - position.x) / distance);
+            ArrayList<Projectile> pArray = Player.projectiles;
+
+            for (int i = -amount / 2; i < amount / 2; i++) {
+                if (i == 0)
+                    continue;
+                float deltaDegrees = degrees - degree * i;
+                float x = position.x + (float) (distance * Math.cos(deltaDegrees));
+                float y = position.y + (float) (distance * Math.sin(deltaDegrees));
+
+                Projectile newProj = null;
+
+                try {
+                    newProj = this.getClass().getDeclaredConstructor(new Class[]{Vector2.class}).newInstance(position);
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                    e.printStackTrace();
+                    return;
+                }
+
+                newProj.aim = new Vector2(x, y);
+                newProj.direction = Vector2.magnitudeDirection(position, newProj.aim);
+            }
         } else {
 
         }
