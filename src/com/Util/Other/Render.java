@@ -164,6 +164,9 @@ public class Render {
     }
 
     public static BufferedImage rotateImage(BufferedImage image, double rads) {
+        if (image == null)
+            return null;
+
         double sin = Math.abs(Math.sin(rads)), cos = Math.abs(Math.cos(rads));
         int w = image.getWidth();
         int h = image.getHeight();
@@ -188,5 +191,9 @@ public class Render {
 
     public static Vector2 getImageSize(Image image) {
         return new Vector2(image.getWidth(null), image.getHeight(null));
+    }
+
+    public static void drawLine(Vector2 v1, Vector2 v2) {
+        Main.graphics.drawLine((int) v1.x, (int) v1.y, (int) v2.x, (int) v2.y);
     }
 }

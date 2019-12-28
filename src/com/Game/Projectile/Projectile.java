@@ -13,8 +13,6 @@ import com.Util.Other.Settings;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 
 public class Projectile {
     protected Vector2 position;
@@ -75,6 +73,11 @@ public class Projectile {
 
     public void setCooldown(float timer) {
         Main.player.shootTimer = timer;
+    }
+
+    public void setAim(Vector2 aim) {
+        this.aim = aim;
+        direction = Vector2.magnitudeDirection(position, aim).scale(speed);
     }
 
     public void setImage(String root) {
@@ -161,35 +164,46 @@ public class Projectile {
         Player.removeProj.add(this);
     }
 
-    public void multiProjectile(int amount, float degree) {
-        if (amount % 2 == 1) {
-            // If the amount if odd, one bullet will move towards the player
-            // and the others will be evenly split between the player.
-            float distance = Vector2.distance(position, aim);
-            float degrees = (float) Math.acos((aim.x - position.x) / distance);
-            ArrayList<Projectile> pArray = Player.projectiles;
-
-            for (int i = -amount / 2; i < amount / 2; i++) {
-                if (i == 0)
-                    continue;
-                float deltaDegrees = degrees - degree * i;
-                float x = position.x + (float) (distance * Math.cos(deltaDegrees));
-                float y = position.y + (float) (distance * Math.sin(deltaDegrees));
-
-                Projectile newProj = null;
-
-                try {
-                    newProj = this.getClass().getDeclaredConstructor(new Class[]{Vector2.class}).newInstance(position);
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                    e.printStackTrace();
-                    return;
-                }
-
-                newProj.aim = new Vector2(x, y);
-                newProj.direction = Vector2.magnitudeDirection(position, newProj.aim);
-            }
-        } else {
-
-        }
+    public void multiShot(double degrees, float radius, int amount) {
+//        degrees = Math.toRadians(degrees);
+//
+//        if (amount % 2 == 1) {
+//            // If the amount is odd, the initial bullet will be
+//            // in the middle, so that can be ignored.
+//
+//            // For the bullet, this will be the adjusted aim so that it other
+//            // bullets can have their aims based upon a correctly position aim
+//            setAim(Vector2.dynamicNormalization(position, aim).scale(radius).addClone(position));
+//            System.out.println(aim);
+//
+//            float dx = aim.x - position.x;
+//            float dy = aim.y - position.y;
+//
+//            Constructor projectileConstructor;
+//
+//            try {
+//                projectileConstructor = getClass().getConstructor(new Class[] {Vector2.class, Vector2.class} );
+//            } catch (NoSuchMethodException e) {
+//                System.err.println(getClass() + " does not contain a correct constructor!");
+//                return;
+//            }
+//
+//            for (int i = -amount / 2; i < amount / 2; i++) {
+//                /*
+//                    Point on Circle from Center = (r*sinθ,r*cosθ)
+//                    Where r = radius of circle and θ = degrees
+//                    NOTE: 0 degrees is located at (0, r)
+//                 */
+//
+//                try {
+//                    Projectile newProj = (Projectile) projectileConstructor.newInstance(position, aim);
+//                    float degreeX = radius * (float) Math.sin(initialDegrees + i * degrees);
+//                    float degreeY = radius * (float) Math.cos(initialDegrees + i * degrees);
+//                    newProj.aim = new Vector2(degreeX, degreeY).addClone(position);
+//                } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
     }
 }

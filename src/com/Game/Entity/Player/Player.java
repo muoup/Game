@@ -174,6 +174,8 @@ public class Player {
             position.add(movement);
             sendMovementPacket();
         }
+
+        testMultiShot();
     }
 
     public void tpToPos(int x, int y, int subWorld) {
@@ -292,6 +294,14 @@ public class Player {
         for (Enemy enemy : MethodHandler.enemies) {
             enemy.loseTarget();
         }
+    }
+
+    public void testMultiShot() {
+        int radius = 128;
+
+        Vector2 adjusted = Input.mousePosition.subtractClone(position);
+        adjusted.normalize();
+        adjusted.scaleClone(radius);
     }
 
     public Vector2 getCenter() {

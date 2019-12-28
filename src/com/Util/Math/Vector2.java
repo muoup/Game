@@ -26,10 +26,6 @@ public class Vector2 {
     }
 
     public String toString() {
-        return (int) x + ", " + (int) y;
-    }
-
-    public String statistics() {
         return x + ", " + y;
     }
 
@@ -186,6 +182,43 @@ public class Vector2 {
         result.y = Math.abs(yy) * Math.signum(dy);
 
         return result;
+    }
+
+    /**
+     * Changes the parent vector to the intersection of a line
+     * from (0,0) to (x,y) and a circle radius 1 centered at
+     * the origin.
+     *
+     * This is an alternative to magnitude direction and possibly
+     * more accurate, so perhaps this may be used in the future.
+     */
+    public void normalize() {
+        // The way this is going to work is that the end goal
+        // is to have a line with length one.
+
+        // The initial distance of the line, this will be
+        // one by the end of the procedure.
+        double distance = Math.sqrt(x * x + y * y);
+
+        // This was much easier than I actually thought,
+        // apparently linear algebra is quite simple.
+        x /= distance;
+        y /= distance;
+    }
+
+    public static Vector2 dynamicNormalization(Vector2 origin, Vector2 vector) {
+        Vector2 v = vector.subtractClone(origin);
+        v.normalize();
+        v.addClone(origin);
+
+        return v;
+    }
+
+    public static Vector2 normalize(Vector2 vector) {
+        Vector2 v = vector.clone();
+        v.normalize();
+
+        return v;
     }
 
     public static float distance(Vector2 v1, Vector2 v2) {

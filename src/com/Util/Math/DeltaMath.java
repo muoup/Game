@@ -1,6 +1,8 @@
 package com.Util.Math;
 
 public class DeltaMath {
+    public static final float pi = 3.1415926538f;
+
     public static int[] fillArray(int content, int length) {
         int[] array = new int[length];
 
@@ -31,5 +33,9 @@ public class DeltaMath {
 
     public static float range(float low, float high) {
         return (float) Math.random() * (high - low) + low;
+    }
+
+    public static double trueArcSine(float amt) {
+        return Math.asin(amt) + Math.ceil((2 * amt - pi) / pi);
     }
 }

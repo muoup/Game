@@ -15,8 +15,8 @@ public class Enemy {
     public int id = 0;
     public Vector2 position;
     public Vector2 spawnPosition;
-    private Vector2 moveTo;
-    private Vector2 movement;
+    protected Vector2 moveTo;
+    protected Vector2 movement;
 
     public boolean enabled = true;
     public boolean target = false;
@@ -174,6 +174,7 @@ public class Enemy {
         else
             moveTo = new Vector2(DeltaMath.range(b1.x, b2.x),
                                  DeltaMath.range(b1.y, b2.y));
+
         movement = Vector2.magnitudeDirection(position, moveTo);
 
     }
