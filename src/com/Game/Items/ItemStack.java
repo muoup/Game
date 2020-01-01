@@ -47,6 +47,10 @@ public class ItemStack {
         this.image = Main.getImage("Items/" + imageName);
     }
 
+    public void setImage(BufferedImage image) {
+        this.image = image;
+    }
+
     public void setEquipStatus(int equipStatus) {
         this.equipStatus = equipStatus;
     }
@@ -131,5 +135,9 @@ public class ItemStack {
 
     public ItemList getItemList() {
         return item.getItemList();
+    }
+
+    public boolean compareTo(ItemStack stack) {
+        return stack.getID() == getID() && stack.getData() == stack.getData();
     }
 }

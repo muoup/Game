@@ -1,11 +1,10 @@
 package com.Game.GUI.Chatbox;
 
-import com.Game.GUI.Banking.BankingGUI;
+import com.Game.GUI.Banking.BankingHandler;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.SkillPopup.SkillPopup;
-import com.Game.Items.ItemList;
 import com.Game.GUI.Skills.Skills;
-import com.Game.Items.ItemStack;
+import com.Game.Items.ItemList;
 import com.Game.Main.Main;
 import com.Game.Object.SkillingAreas.Tree;
 import com.Game.Object.SkillingAreas.TreePreset;
@@ -45,7 +44,20 @@ public class Commands {
 
         switch(command.toLowerCase()) {
             case "pos":
-                ChatBox.sendMessage(Main.player.position.toString());
+                ChatBox.sendMessage(Main.player.position.ints());
+                break;
+            case "health":
+                ChatBox.sendMessage(Float.toString(Main.player.health));
+                break;
+            case "bankpoke":
+                BankingHandler.printBankSpace();
+                break;
+            case "bankadd":
+                if (parameters.length != 1) {
+                    ChatBox.sendMessage("bankAdd [index]");
+                    break;
+                }
+                BankingHandler.addInvItem(Integer.parseInt(parameters[0]));
                 break;
             case "tp":
                 if (parameters.length == 2 || parameters.length == 3) {
@@ -53,7 +65,7 @@ public class Commands {
                     ChatBox.sendMessage("Teleported to: " + tp.toString());
                     if (parameters.length == 3) {
                         World.changeWorld(Integer.parseInt(parameters[2].trim()));
-                        ChatBox.sendMessage("Change Subworld");
+                        ChatBox.sendMessage("Changed Subworld");
                     }
                     Main.player.position = tp.clone();
                 } else {
@@ -107,9 +119,6 @@ public class Commands {
                 break;
             case "testpopup":
                 new SkillPopup(1, 1);
-                break;
-            case "bankitem":
-                BankingGUI.addItem(new ItemStack(ItemList.log, 1));
                 break;
             default:
                 ChatBox.sendMessage("That is not a valid command, please check your spelling and try again.");

@@ -4,7 +4,7 @@ import com.Util.Math.Vector2;
 
 public class BeetleSpikeAvoidable extends Projectile {
     public BeetleSpikeAvoidable(Vector2 position, Vector2 aim) {
-        super(position, aim, 2.5f, 2.5f, -1, false);
+        super(position, aim, 35f, 2.5f, -1, false);
         this.rotate = false;
         this.duration = 5.5f;
         setScale(16);

@@ -3,7 +3,7 @@ package com.Game.Object.AreaTeleporter;
 public class CaveEntrance extends Teleporter {
     public enum TeleType {
         caveEntrance(784, 230, 1),
-        caveExit(5244, 3628, 0);
+        caveExit(5150, 3534, 0);
 
         public final int x, y, subWorld;
 

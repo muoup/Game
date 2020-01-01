@@ -8,5 +8,6 @@ public class OakBow extends BowWeapon {
         super(id, imageName, name, examineText, maxStack, worth);
 
         setWeaponTier(30);
+        setImage(3);
     }
 }

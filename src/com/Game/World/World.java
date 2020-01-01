@@ -17,8 +17,8 @@ public class World {
 
     private static World[] worlds = {
             new MainWorld(), // Normal Overworld
-            new Underground(), // Custom Underground Zone
-            new ChessDungeon()
+            new Underground(), // Underground Zone
+            new ChessDungeon() // Probably not permanent
     };
 
     public static World curWorld = worlds[0];
@@ -59,19 +59,13 @@ public class World {
         Main.player.sendMovementPacket();
     }
 
-    public static void changeWorld(World world) {
-        curWorld = world;
-        curWorld.resetWorld();
-        Main.player.sendMovementPacket();
-    }
-
     // Set the offset of world, possibly for teleportation.
     public void setOffset(Vector2 set) {
         offset = set;
     }
 
     /**
-     * Is called everytime the player attempts to interact with the GameObject
+     * Is called every time the player attempts to interact with the GameObject
      */
     protected void initWorld() {
 

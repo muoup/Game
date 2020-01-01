@@ -2,7 +2,6 @@ package com.Game.Object.AreaTeleporter;
 
 import com.Game.Main.Main;
 import com.Game.Object.GameObject;
-import com.Game.World.World;
 
 public class Teleporter extends GameObject {
     private int tx, ty, sub;
@@ -16,6 +15,5 @@ public class Teleporter extends GameObject {
 
     public void onInteraction() {
         Main.player.tpToPos(tx, ty, sub);
-        World.changeWorld(sub);
     }
 }

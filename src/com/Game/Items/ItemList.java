@@ -48,7 +48,8 @@ public enum ItemList {
     copperOre(new Ore(29, "copper_ore.png", "Copper Ore", "Tier 10", 1, 1)),
     tinOre(new Ore(30, "tin_ore.png", "Tin Ore", "Tier 10", 1, 1)),
     ironOre(new Ore(31, "iron_ore.png", "Iron Ore", "Tier 20", 1, 1)),
-    goldOre(new Ore(32, "gold_ore.png", "Gold Ore", "Tier 30", 1, 1));
+    goldOre(new Ore(32, "gold_ore.png", "Gold Ore", "Tier 30", 1, 1)),
+    crystalBow(new CrystalBow(33, "gold_ore.png", "Crystal Bow", "It's shines when I hold it sometimes.", 1, 1));
 
     public Item item;
 

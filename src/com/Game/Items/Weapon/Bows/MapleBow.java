@@ -8,5 +8,6 @@ public class MapleBow extends BowWeapon {
         super(id, imageName, name, examineText, maxStack, worth);
 
         setWeaponTier(50);
+        setImage(5);
     }
 }

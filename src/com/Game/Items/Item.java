@@ -21,7 +21,7 @@ public class Item {
     public final int maxStack; // Maximum amount allowed in one stack in the state
     public final int worth; // How much the item is worth when sold
     public final String imageName; // Name of the image (use as basic image, other data values may have different images
-    public final BufferedImage image; // Default image (use as basic image, other data values may have different images)
+    public BufferedImage image; // Default image (use as basic image, other data values may have different images)
     public int equipStatus = -1; // Equipment status of an item, default if nothing is set in setData(ItemStack stack)
     public float armor = 0; // Armor amount, default if nothing is set in setData(ItemStack stack)
     public ItemRequirement requirement = ItemRequirement.none(); // Requirements to use an item.

@@ -65,6 +65,13 @@ public class Vector2 {
         return new Vector2(xx, yy);
     }
 
+    public Vector2 addClone(double dx, double dy) {
+        float xx = x + (float) dx;
+        float yy = y + (float) dy;
+
+        return new Vector2(xx, yy);
+    }
+
     public Vector2 subtractClone(Vector2 other) {
         float xx = x - other.x;
         float yy = y - other.y;
@@ -89,7 +96,7 @@ public class Vector2 {
 
         /*
           Values:
-          Equality => 0 points
+          Mix => 0 points
           Greater Than => 1 points
           Less Than => -1 points
         */
@@ -141,24 +148,9 @@ public class Vector2 {
     }
 
     public static Vector2 magnitudeDirection(Vector2 v1, Vector2 v2) {
-        float dx = v2.x - v1.x;
-        float dy = v2.y - v1.y;
-
-        Vector2 result = new Vector2(dx, dy);
-
-        boolean xy = (Math.abs(dx) > Math.abs(dy));
-
-        float slope = xy ? 1 / dx : 1 / dy;
-
-        result.scale(slope);
-
-        float xx = result.x;
-        float yy = result.y;
-
-        result.x = Math.abs(xx) * Math.signum(dx);
-        result.y = Math.abs(yy) * Math.signum(dy);
-
-        return result;
+        Vector2 difference = v2.subtractClone(v1);
+        difference.normalize();
+        return difference;
     }
 
     public static Vector2 reverseMag(Vector2 v1, Vector2 v2) {
@@ -187,23 +179,18 @@ public class Vector2 {
     /**
      * Changes the parent vector to the intersection of a line
      * from (0,0) to (x,y) and a circle radius 1 centered at
-     * the origin.
-     *
-     * This is an alternative to magnitude direction and possibly
-     * more accurate, so perhaps this may be used in the future.
+     * the origin, so that the line has a length of 1. This
+     * makes sure that when something moves, no matter what
+     * direction they are going, they will be moving at a
+     * static speed.
      */
-    public void normalize() {
-        // The way this is going to work is that the end goal
-        // is to have a line with length one.
-
-        // The initial distance of the line, this will be
-        // one by the end of the procedure.
+    public Vector2 normalize() {
         double distance = Math.sqrt(x * x + y * y);
 
-        // This was much easier than I actually thought,
-        // apparently linear algebra is quite simple.
         x /= distance;
         y /= distance;
+
+        return this;
     }
 
     public static Vector2 dynamicNormalization(Vector2 origin, Vector2 vector) {
@@ -235,11 +222,23 @@ public class Vector2 {
         return (float) dist;
     }
 
+    public boolean greaterThan(Vector2 v1) {
+        return compareTo(v1) == 1;
+    }
+
     public static Vector2 identity(float scale) {
         return new Vector2(scale, scale);
     }
 
+    public boolean isEqual(Vector2 other) {
+        return x == other.x && y == other.y;
+    }
+
     public boolean isZero() {
         return x == 0 && y == 0;
+    }
+
+    public String ints() {
+        return x + ", " + y;
     }
 }

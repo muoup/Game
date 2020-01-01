@@ -110,6 +110,19 @@ public class Enemy {
         return Main.player.position;
     }
 
+    public boolean withinBounds() {
+        if (b1 == null || b2 == null) {
+            System.err.println(getClass() + " does not contain a definition for its boundaries!");
+            return false;
+        }
+
+        return position.compareTo(b1) != -1 && position.compareTo(b2) != 1;
+    }
+
+    public void moveToPlayer() {
+        position.add(Vector2.magnitudeDirection(position, getPlayer()).scale(speed));
+    }
+
     public void renderEnemy() {
         Vector2 deltaPosition = position.subtractClone(World.curWorld.offset);
 
@@ -182,6 +195,10 @@ public class Enemy {
     public void target() {
         target = true;
         targetTimer = maxTarget;
+    }
+
+    public float range() {
+        return Vector2.distance(position, Main.player.position);
     }
 
     public static BufferedImage getImage(String name) {

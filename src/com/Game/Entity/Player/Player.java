@@ -11,7 +11,6 @@ import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
 import com.Game.Object.GameObject;
 import com.Game.Projectile.Fist;
-import com.Game.Projectile.Projectile;
 import com.Game.World.World;
 import com.Game.listener.Input;
 import com.Util.Math.DeltaMath;
@@ -22,7 +21,6 @@ import com.Util.Other.Settings;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 public class Player {
     public Vector2 position;
@@ -45,9 +43,6 @@ public class Player {
 
     public float healthRegen = 1f;
 
-    public static ArrayList<Projectile> projectiles;
-    public static ArrayList<Projectile> removeProj;
-
     public Player(Vector2 position, float speed, Color playerColor, float dash) {
         this.position = position;
         this.speed = speed;
@@ -60,9 +55,6 @@ public class Player {
     }
 
     public void init() {
-        projectiles = new ArrayList();
-
-        removeProj = new ArrayList();
     }
 
     public Vector2[] getPoints(Vector2 offset) {
@@ -85,17 +77,6 @@ public class Player {
 
         movement();
         handleOffset();
-    }
-
-    private void updatePlayerArrays() {
-        for (Projectile p : projectiles)
-            p.projectileUpdate();
-
-        if (!removeProj.isEmpty()) {
-            projectiles.removeAll(removeProj);
-            removeProj.clear();
-        }
-
     }
 
     public void damage(float amount) {
@@ -149,9 +130,9 @@ public class Player {
             if (Input.GetKey(KeyEvent.VK_SPACE) && shootTimer <= 0) {
                 ItemStack accessory = AccessoriesManager.getSlot(AccessoriesManager.WEAPON_SLOT);
                 if (accessory.getID() == 0)
-                    new Fist(getCenter(), Input.mousePosition.addClone(World.curWorld.offset));
+                    new Fist(position, Input.mousePosition.addClone(World.curWorld.offset));
                 else
-                    accessory.getItem().useWeapon(getCenter(), Input.mousePosition.addClone(World.curWorld.offset));
+                    accessory.getItem().useWeapon(position, Input.mousePosition.addClone(World.curWorld.offset));
             }
 
             if (Input.GetKeyDown(KeyEvent.VK_TAB)) {
@@ -174,14 +155,31 @@ public class Player {
             position.add(movement);
             sendMovementPacket();
         }
+    }
 
-        testMultiShot();
+    public void test() {
+//        Vector2 aim = Input.mousePosition.addClone(World.curWorld.offset);
+//
+//        double radius = 128;
+//        double theta = Math.atan((aim.x - position.x) / (aim.y - position.y));
+//
+//        if (aim.y - position.y <= 0) {
+//            theta += DeltaMath.pi;
+//        }
+//
+//        Vector2 newAim = position.addClone(radius * Math.sin(theta),radius * Math.cos(theta));
+//        Vector2 newAim2 = position.addClone(radius * Math.sin(theta + DeltaMath.pi / 8),radius * Math.cos(theta + DeltaMath.pi / 8));
+//        Vector2 newAim3 = position.addClone(radius * Math.sin(theta - DeltaMath.pi / 8),radius * Math.cos(theta - DeltaMath.pi / 8));
+//
+//        Render.drawLine(position.subtractClone(World.curWorld.offset), newAim.subtractClone(World.curWorld.offset));
+//        Render.drawLine(position.subtractClone(World.curWorld.offset), newAim2.subtractClone(World.curWorld.offset));
+//        Render.drawLine(position.subtractClone(World.curWorld.offset), newAim3.subtractClone(World.curWorld.offset));
     }
 
     public void tpToPos(int x, int y, int subWorld) {
+        World.changeWorld(subWorld);
         position.x = x;
         position.y = y;
-        this.subWorld = subWorld;
         sendMovementPacket();
     }
 
@@ -284,7 +282,7 @@ public class Player {
 
             health = maxHealth;
             position = Settings.playerSpawn.clone();
-            subWorld = 0;
+            World.changeWorld(0);
             resetAggro();
             sendMovementPacket();
         }
@@ -294,14 +292,6 @@ public class Player {
         for (Enemy enemy : MethodHandler.enemies) {
             enemy.loseTarget();
         }
-    }
-
-    public void testMultiShot() {
-        int radius = 128;
-
-        Vector2 adjusted = Input.mousePosition.subtractClone(position);
-        adjusted.normalize();
-        adjusted.scaleClone(radius);
     }
 
     public Vector2 getCenter() {
@@ -314,6 +304,6 @@ public class Player {
 
         renderStats();
 
-        updatePlayerArrays();
+        test();
     }
 }

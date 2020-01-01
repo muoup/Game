@@ -49,7 +49,7 @@ public class RightClick {
 
             Render.setColor(Color.BLACK);
             Render.drawRectOutline(newPos, new Vector2(maxWidth, percentBox));
-            Render.drawText(options.get(y), newPos.addClone(maxWidth * (maxMultiplier - 1), percentBox * 0.65f));
+            Render.drawText(options.get(y), newPos.addClone(maxWidth * (maxMultiplier - 1) / 2, percentBox * 0.65f));
         }
     }
 

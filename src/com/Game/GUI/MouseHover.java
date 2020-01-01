@@ -17,6 +17,7 @@ import java.awt.*;
 public class MouseHover {
     private static int hover = -1;
     private static Vector2 draw = Vector2.zero();
+    private static final int offset = 16;
     private static Enemy hoverEntity;
 
     public static void init() {
@@ -75,7 +76,7 @@ public class MouseHover {
 
             float width = Settings.sWidth(text) * RightClick.maxMultiplier;
             float x = (Input.mousePosition.x + width * 1.25f > Settings.curResolution().x) ?
-                    Input.mousePosition.x - width * 1.1f : Input.mousePosition.x;
+                    Input.mousePosition.x - width * 1.1f : Input.mousePosition.x + offset;
             Vector2 dPos = new Vector2(x + width * (1 - RightClick.maxMultiplier) / 2, Input.mousePosition.y);
 
             Render.setColor(Color.BLACK);

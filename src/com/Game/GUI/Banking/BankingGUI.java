@@ -1,10 +1,8 @@
 package com.Game.GUI.Banking;
 
 import com.Game.GUI.GUIWindow.GUIItemSlot;
-import com.Game.GUI.GUIWindow.GUILibrary;
 import com.Game.GUI.GUIWindow.GUIWindow;
 import com.Game.Items.ItemStack;
-import com.Util.Math.Vector2;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -16,7 +14,9 @@ public class BankingGUI extends GUIWindow {
     /**
      * GUIItemSlots currently being rendered within the bank.
      */
-    private ArrayList<GUIItemSlot> itemStacks;
+    public static ArrayList<GUIItemSlot> itemStacks;
+
+    static int xMax;
 
     public BankingGUI() {
         itemStacks = new ArrayList<GUIItemSlot>();
@@ -24,36 +24,23 @@ public class BankingGUI extends GUIWindow {
         setColor(new Color(166, 134, 76));
         setPosition(5, 5);
         setSize(65, 40);
+
+        xMax = (int) (getSize().x - padding) / 64;
     }
 
-    private void addItemSlot(ItemStack stack) {
-        itemStacks.add(new GUIItemSlot(stack, Vector2.zero()));
-    }
+    public void addItemSlot(ItemStack stack) {
+        int length = itemStacks.size();
+        int x = length % xMax + 1;
+        int y = length / xMax;
 
-    /**
-     * When the player attempts to deposit an item into their bank, call this method
-     * @param stack The ItemStack that they are attempting to insert.
-     */
-    public static void addItem(ItemStack stack) {
-        GUILibrary.bankingGUI.inputItem(stack);
-    }
-
-    public void inputItem(ItemStack stack) {
-        for (GUIItemSlot slot : itemStacks) {
-            if (slot.getID() == stack.getID()) {
-                slot.addAmount(stack.getAmount());
-                return;
-            }
+        if (x == xMax) {
+            x = 0;
+            y++;
         }
 
-        addItemSlot(stack);
-    }
+        GUIItemSlot slot = new GUIItemSlot(stack, x * 60, y * 60);
 
-    public void update() {
-
-    }
-
-    public void render() {
-        drawItems(itemStacks, new Vector2(25), getSize().subtractClone(25, 25), 5);
+        itemStacks.add(slot);
+        addElement(slot);
     }
 }

@@ -1,9 +1,11 @@
 package com.Game.GUI.GUIWindow;
 
+import com.Game.GUI.GUI;
 import com.Game.Items.Item;
 import com.Game.Items.ItemStack;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
+import com.Util.Other.Settings;
 
 import java.awt.image.BufferedImage;
 
@@ -15,7 +17,7 @@ public class GUIItemSlot extends GUIElement {
     private ItemStack stack;
     private Vector2 position;
     private Vector2 renderSize;
-    private boolean bordered = false;
+    private boolean bordered = true;
     private boolean renderItem = true;
     private boolean draggable = false;
 
@@ -35,6 +37,12 @@ public class GUIItemSlot extends GUIElement {
         this.stack = item;
         this.position = position;
         this.renderSize = Render.getImageSize(stack.getImage());
+    }
+
+    public GUIItemSlot(ItemStack item, float x, float y) {
+        this.stack = item;
+        this.position = new Vector2(x, y);
+        this.renderSize = GUI.invSize;
     }
 
     public void setBordered(boolean bordered) {
@@ -77,16 +85,24 @@ public class GUIItemSlot extends GUIElement {
         setAmount(amount + getAmount());
     }
 
-    public void render() {
+    public void render(GUIWindow window) {
+        Vector2 pos = window.offset(position);
+
         if (bordered) {
-            Render.drawBorderedRect(position, renderSize);
+            Render.drawBorderedRect(pos, renderSize);
         }
 
         if (renderItem)
-            Render.drawImage(Render.getScaledImage(stack.getImage(), renderSize), position);
+            Render.drawImage(Render.getScaledImage(stack.getImage(), renderSize), pos);
+
+        if (renderItem && stack.getAmount() > 1) {
+            String text = "" + stack.getAmount();
+            Render.drawText(text,
+                    pos.addClone(new Vector2(GUI.IntBoxSize - Settings.sWidth(text) - 4, GUI.IntBoxSize - 4)));
+        }
     }
 
-    public void update() {
+    public void update(GUIWindow window) {
 
     }
 }

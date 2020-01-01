@@ -7,5 +7,6 @@ public class SpruceBow extends BowWeapon {
         super(id, imageName, name, examineText, maxStack, worth);
 
         setWeaponTier(40);
+        setImage(4);
     }
 }

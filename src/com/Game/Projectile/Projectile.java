@@ -1,11 +1,11 @@
 package com.Game.Projectile;
 
 import com.Game.Entity.Enemy.Enemy;
-import com.Game.Entity.Player.Player;
 import com.Game.GUI.Skills.Skills;
 import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
 import com.Game.World.World;
+import com.Util.Math.DeltaMath;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 import com.Util.Other.Settings;
@@ -13,6 +13,8 @@ import com.Util.Other.Settings;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 public class Projectile {
     protected Vector2 position;
@@ -44,26 +46,11 @@ public class Projectile {
 
         direction = Vector2.magnitudeDirection(position, aim).scale(speed);
 
-        Player.projectiles.add(this);
-        setCooldown(0.35f);
-    }
-
-    private Projectile(Projectile projectile) {
-        this.position = projectile.position.clone();
-        this.aim = projectile.aim.clone();
-        this.damage = projectile.damage;
-        this.friendly = projectile.friendly;
-        this.expMultiplier = projectile.expMultiplier;
-        this.speed = projectile.speed;
-        this.rotate = projectile.rotate;
-
-        initPos = position.clone();
-
-        direction = Vector2.magnitudeDirection(position, aim).scale(speed);
-
-        Player.projectiles.add(this);
-
-        setCooldown(0);
+        // If the bullet is not going to move, there is no point in spawning it in.
+        if (!position.equalTo(aim)) {
+            MethodHandler.projectiles.add(this);
+            setCooldown(0.35f);
+        }
     }
 
     protected Object clone() {
@@ -96,16 +83,20 @@ public class Projectile {
             scale = Vector2.identity(8);
         }
 
-        position.offset(-(image.getWidth() - Main.player.image.getWidth()) / 2);
         image = Render.getScaledImage(image, scale.x, scale.y);
+        aim.add(image.getWidth() / 2, image.getHeight() / 2);
     }
 
     public void setScale(int scale) {
         this.scale = new Vector2(scale);
     }
 
+    public Vector2 adjustedPosition() {
+        return position.subtractClone((float) image.getWidth() / 2, (float) image.getHeight() / 2);
+    }
+
     public Vector2 getCenter() {
-        return position.addClone(Render.getImageSize(image).scale(0.5f));
+        return adjustedPosition().addClone(Render.getImageSize(image).scale(0.5f));
     }
 
     public void projectileUpdate() {
@@ -123,7 +114,7 @@ public class Projectile {
             bullet = Render.rotateImage(bullet, radians);
         }
 
-        Render.drawImage(bullet, position.subtractClone(World.curWorld.offset));
+        Render.drawImage(bullet, adjustedPosition().subtractClone(World.curWorld.offset));
 
         duration -= Main.dTime();
 
@@ -161,49 +152,96 @@ public class Projectile {
     public void update() {}
 
     protected void destroy() {
-        Player.removeProj.add(this);
+        MethodHandler.projectiles.remove(this);
     }
 
     public void multiShot(double degrees, float radius, int amount) {
-//        degrees = Math.toRadians(degrees);
-//
-//        if (amount % 2 == 1) {
-//            // If the amount is odd, the initial bullet will be
-//            // in the middle, so that can be ignored.
-//
-//            // For the bullet, this will be the adjusted aim so that it other
-//            // bullets can have their aims based upon a correctly position aim
-//            setAim(Vector2.dynamicNormalization(position, aim).scale(radius).addClone(position));
-//            System.out.println(aim);
-//
-//            float dx = aim.x - position.x;
-//            float dy = aim.y - position.y;
-//
-//            Constructor projectileConstructor;
-//
-//            try {
-//                projectileConstructor = getClass().getConstructor(new Class[] {Vector2.class, Vector2.class} );
-//            } catch (NoSuchMethodException e) {
-//                System.err.println(getClass() + " does not contain a correct constructor!");
-//                return;
-//            }
-//
-//            for (int i = -amount / 2; i < amount / 2; i++) {
-//                /*
-//                    Point on Circle from Center = (r*sinθ,r*cosθ)
-//                    Where r = radius of circle and θ = degrees
-//                    NOTE: 0 degrees is located at (0, r)
-//                 */
-//
-//                try {
-//                    Projectile newProj = (Projectile) projectileConstructor.newInstance(position, aim);
-//                    float degreeX = radius * (float) Math.sin(initialDegrees + i * degrees);
-//                    float degreeY = radius * (float) Math.cos(initialDegrees + i * degrees);
-//                    newProj.aim = new Vector2(degreeX, degreeY).addClone(position);
-//                } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
+        degrees = Math.toRadians(degrees);
+
+        if (amount % 2 == 1) {
+            Vector2 aim = Main.player.position;
+
+            double theta = Math.atan((aim.x - position.x) / (aim.y - position.y));
+
+            if (aim.y - position.y <= 0) {
+                theta += DeltaMath.pi;
+            }
+
+            Vector2 adjust = position.addClone(radius * Math.sin(theta),radius * Math.cos(theta));
+
+            setAim(adjust);
+
+            Constructor projectileConstructor;
+
+            try {
+                projectileConstructor = getClass().getConstructor(new Class[] {Vector2.class, Vector2.class} );
+            } catch (NoSuchMethodException e) {
+                System.err.println(getClass() + " does not contain a correct constructor!");
+                return;
+            }
+
+            for (int i = - amount / 2; i < amount / 2 + 1; i++) {
+                if (i == 0)
+                    continue;
+
+                /*
+                    Point on Circle from Center = (r * sin(θ), r * cos(θ))
+                    Where r = radius of circle and θ = degrees
+                    NOTE: 0 degrees is located at (0, r)
+                 */
+
+                try {
+                    Vector2 newAim = position.addClone(radius * Math.sin(theta + i * degrees),radius * Math.cos(theta + i * degrees));
+                    projectileConstructor.newInstance(position, newAim);
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void multiShotEnemy(double degrees, float radius, int amount) {
+        degrees = Math.toRadians(degrees);
+
+        if (amount % 2 == 1) {
+            Vector2 aim = Main.player.position;
+
+            double theta = Math.atan((aim.x - position.x) / (aim.y - position.y));
+
+            if (aim.y - position.y <= 0) {
+                theta += DeltaMath.pi;
+            }
+
+            Vector2 adjust = position.addClone(radius * Math.sin(theta),radius * Math.cos(theta));
+
+            setAim(adjust);
+
+            Constructor projectileConstructor;
+
+            try {
+                projectileConstructor = getClass().getConstructor(new Class[] {Vector2.class, Vector2.class} );
+            } catch (NoSuchMethodException e) {
+                System.err.println(getClass() + " does not contain a correct constructor!");
+                return;
+            }
+
+            for (int i = - amount / 2; i < amount / 2 + 1; i++) {
+                if (i == 0)
+                    continue;
+
+                /*
+                    Point on Circle from Center = (r * sin(θ), r * cos(θ))
+                    Where r = radius of circle and θ = degrees
+                    NOTE: 0 degrees is located at (0, r)
+                 */
+
+                try {
+                    Vector2 newAim = position.addClone(radius * Math.sin(theta + i * degrees),radius * Math.cos(theta + i * degrees));
+                    projectileConstructor.newInstance(position, newAim);
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

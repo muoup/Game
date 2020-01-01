@@ -7,5 +7,6 @@ public class Bow extends BowWeapon {
         super(id, imageName, name, examineText, maxStack, worth);
 
         setWeaponTier(1);
+        setImage(0);
     }
 }

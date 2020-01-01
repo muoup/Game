@@ -21,6 +21,7 @@ public class GUIWindow {
     private Vector2 size;
     private Color color;
     private ArrayList<GUIElement> elements;
+    protected final int padding = 16;
 
     public GUIWindow() {
         startOffset = Vector2.zero();
@@ -39,7 +40,7 @@ public class GUIWindow {
     }
 
     public boolean isEmpty() {
-        return (size.compareTo(Vector2.zero()) == 0);
+        return (size.equalTo(Vector2.zero()));
     }
 
     public void setSize(Vector2 size) {
@@ -66,6 +67,10 @@ public class GUIWindow {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public Vector2 offset(Vector2 position) {
+        return position.addClone(startOffset).offsetClone(padding);
     }
 
     public Vector2 getPosition() {
@@ -111,32 +116,5 @@ public class GUIWindow {
         }
 
         return null;
-    }
-
-    /**
-     * Draws an array of ItemSlots. Mostly used for banking interface.
-     * @param itemSlots List of items
-     * @param startPosition Start position on GUIScreen (Relative to window)
-     * @param maxSize Maximum size of the GUIItemSlots, if they are not in this size, they are not drawn
-     * @param padding Padding between ItemSlots sop they are not bunched together
-     */
-    public void drawItems(ArrayList<GUIItemSlot> itemSlots,
-                          Vector2 startPosition,
-                          Vector2 maxSize,
-                          float padding) {
-
-        int maxRowAmount = (int) (maxSize.x / (padding + 48));
-
-        if (maxRowAmount == 0) {
-            System.out.println("MaxRowAmount is zero!");
-            System.out.println(maxSize);
-            return;
-        }
-
-        for (int i = 0; i < itemSlots.size(); i++) {
-            GUIItemSlot stack = itemSlots.get(i);
-            int x = i % maxRowAmount;
-            int y = i / maxRowAmount;
-        }
     }
 }

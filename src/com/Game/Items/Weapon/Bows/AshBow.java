@@ -8,5 +8,6 @@ public class AshBow extends BowWeapon {
         super(id, imageName, name, examineText, maxStack, worth);
 
         setWeaponTier(10);
+        setImage(1);
     }
 }

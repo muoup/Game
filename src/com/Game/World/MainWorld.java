@@ -66,7 +66,7 @@ public class MainWorld extends World {
         new FishingArea(5306, 1678, FishingPreset.seaWeed);
         new FishingArea(5103, 1604, FishingPreset.seaWeed);
 
-        new CaveEntrance(5188, 3568, CaveEntrance.TeleType.caveEntrance); // Teleporter to underground area.
+        new CaveEntrance(5150, 3534, CaveEntrance.TeleType.caveEntrance); // Teleporter to underground area.
 
         // Teleporter to Chess Dungeon
         new InvisibleTeleporter(5507, 1643, 135, 125, 2);

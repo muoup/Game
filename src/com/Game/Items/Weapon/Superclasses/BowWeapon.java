@@ -7,16 +7,29 @@ import com.Game.Items.ItemRequirement;
 import com.Game.Items.ItemSets;
 import com.Game.Items.ItemStack;
 import com.Game.Items.Weapon.Weapon;
+import com.Util.Other.SpriteSheet;
+
+import java.awt.image.BufferedImage;
 
 /**
  * The superclass for bow weapons. Extend if creating a new bow item.
  */
 public class BowWeapon extends Weapon {
+    BufferedImage unstrung;
+    BufferedImage strung;
+
     public BowWeapon(int id, String imageName, String name, String examineText, int maxStack, int worth) {
         super(id, imageName, name, examineText, maxStack, worth);
 
         this.itemSet = ItemSets.arrows;
         this.equipStatus = AccessoriesManager.WEAPON_SLOT;
+    }
+
+    public void setImage(int cell) {
+        unstrung = SpriteSheet.bowSheet.getCell(cell, 0);
+        strung = SpriteSheet.bowSheet.getCell(cell, 1);
+
+        this.image = unstrung;
     }
 
     // TODO: Find an algorithm to make a damage and accuracy from weapon tier.
@@ -46,11 +59,11 @@ public class BowWeapon extends Weapon {
     public void setData(ItemStack stack) {
         if (stack.getData() == 0) {
             stack.options.add("Craft Bow");
-            stack.setImage("unstrung_" + imageName);
+            stack.setImage(unstrung);
             stack.setEquipStatus(-1);
             stack.name = "Unstrung " + name;
         } else {
-            stack.setImage(imageName);
+            stack.setImage(strung);
             stack.setEquipStatus(equipStatus);
             stack.name = name;
         }
