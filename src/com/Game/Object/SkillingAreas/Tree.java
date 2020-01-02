@@ -44,7 +44,7 @@ public class Tree extends GameObject {
         }
 
         if (InventoryManager.isFull()) {
-            ChatBox.sendMessage("You do not have any state space!");
+            ChatBox.sendMessage("You do not have any inventory space!");
             return false;
         }
 

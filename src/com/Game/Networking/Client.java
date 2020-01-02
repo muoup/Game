@@ -74,7 +74,6 @@ public class Client {
     private void process(DatagramPacket packet) {
         byte[] data = packet.getData();
         String content = new String(data);
-//        System.out.println("PACKET RECEIVED: " + content);
         String start = content.substring(0, 2);
         String message = content.substring(2).trim();
         String[] index;

@@ -15,6 +15,7 @@ public class Anvil extends UsableGameObject {
     ItemList chestplate = ItemList.empty;
     ItemList leggings = ItemList.empty;
     ItemList boots = ItemList.empty;
+    ItemList dagger = ItemList.empty;
     float experience = 0;
 
     public Anvil(int x, int y) {
@@ -25,6 +26,7 @@ public class Anvil extends UsableGameObject {
         options.add("Craft Chestplate");
         options.add("Craft Leggings");
         options.add("Craft Boots");
+        options.add("Craft Dagger");
     }
 
     public void onOption(int option) {
@@ -39,6 +41,7 @@ public class Anvil extends UsableGameObject {
                     chestplate = ItemList.rockChestplate;
                     leggings = ItemList.rockLeggings;
                     boots = ItemList.rockBoots;
+                    dagger = ItemList.stoneDagger;
                     experience = 25f;
                     opt = createOption(option);
                     break;
@@ -77,6 +80,8 @@ public class Anvil extends UsableGameObject {
                 return new ItemStack(leggings, 4);
             case 3:
                 return new ItemStack(boots, 2);
+            case 4:
+                return new ItemStack(dagger, 3);
             default:
                 return null;
         }

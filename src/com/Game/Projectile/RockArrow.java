@@ -12,4 +12,14 @@ public class RockArrow extends Projectile {
         setImage("rock_arrow.png");
         setCooldown(0.4f);
     }
+
+    public RockArrow(Vector2 position, Vector2 aim, Projectile projectile) {
+        super(position, aim, projectile.damage, projectile.speed, projectile.expMultiplier, projectile.friendly);
+        this.rotate = true;
+        this.duration = 1.25f;
+        this.attackStyle = 1;
+        setScale(16);
+        setImage("rock_arrow.png");
+        setCooldown(0.4f);
+    }
 }

@@ -30,7 +30,7 @@ public class Main extends Canvas {
     public static final String messageCode = "13";
     public static boolean isConnected = false;
 
-    public static final String ipAddress = "localhost";//"hacksugar.asuscomm.com";
+    public static final String ipAddress = "192.168.1.115";//"hacksugar.asuscomm.com";
     public static Player player;
     public static Menu settings;
     public static Client client;
@@ -54,6 +54,7 @@ public class Main extends Canvas {
         main.running = true;
 
         Input.init();
+
         main.init();
         main.updateFrame();
         main.addKeyListener(input);

@@ -15,18 +15,26 @@ public class GroundItem {
     private Image topImage;
     private static final float maxDistance = 256f;
 
-    public GroundItem(int x, int y, ArrayList<ItemStack> stack) {
+    public GroundItem(int x, int y, ArrayList<ItemStack> items) {
         this.position = new Vector2(x, y);
-        this.stack = stack;
+        this.stack = new ArrayList<ItemStack>();
+        handleStack(items);
 
         MethodHandler.groundItems.add(this);
     }
 
-    public GroundItem(Vector2 position, ArrayList<ItemStack> stack) {
+    public GroundItem(Vector2 position, ArrayList<ItemStack> items) {
         this.position = position.clone();
-        this.stack = stack;
+        this.stack = new ArrayList<ItemStack>();
+        handleStack(items);
 
         MethodHandler.groundItems.add(this);
+    }
+
+    public void handleStack(ArrayList<ItemStack> stack) {
+        for (ItemStack item : stack) {
+            this.stack.add(item);
+        }
     }
 
     public void updateStack() {

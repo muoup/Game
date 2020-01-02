@@ -13,7 +13,7 @@ public class Chicken extends Enemy {
         this.id = 3;
         this.image = getImage("chicken.png");
         this.respawnTimer = 5.0f;
-        this.targetTimer = 2.5f;
+        this.targetTimer = 2f;
         this.name = "Chicken";
         this.speed = 2.25f;
         this.maxRadius = 200f;

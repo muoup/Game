@@ -15,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 
 public class Projectile {
     protected Vector2 position;
@@ -84,7 +85,17 @@ public class Projectile {
         }
 
         image = Render.getScaledImage(image, scale.x, scale.y);
+
         aim.add(image.getWidth() / 2, image.getHeight() / 2);
+
+        if (rotate) {
+            double radians = Math.atan(-(aim.x - position.x)/(aim.y - position.y));
+
+            if (aim.y > position.y)
+                radians += Math.PI;
+
+            image = Render.rotateImage(image, radians);
+        }
     }
 
     public void setScale(int scale) {
@@ -101,20 +112,8 @@ public class Projectile {
 
     public void projectileUpdate() {
         position.add(direction.scaleClone(speed));
-        BufferedImage bullet = image;
 
-        if (rotate) {
-            Vector2 p = initPos;
-            Vector2 m = aim;
-            double radians = Math.atan(-(m.x - p.x)/(m.y - p.y));
-
-            if (m.y > p.y)
-                radians += Math.PI;
-
-            bullet = Render.rotateImage(bullet, radians);
-        }
-
-        Render.drawImage(bullet, adjustedPosition().subtractClone(World.curWorld.offset));
+        Render.drawImage(image, adjustedPosition().subtractClone(World.curWorld.offset));
 
         duration -= Main.dTime();
 
@@ -122,7 +121,9 @@ public class Projectile {
             destroy();
 
         if (friendly) {
-            for (Enemy e : MethodHandler.enemies) {
+            ArrayList<Enemy> enemies = MethodHandler.enemies;
+            for (int i = 0; i < enemies.size(); i++) {
+                Enemy e = enemies.get(i);
                 if (!e.enabled)
                     continue;
 
@@ -144,7 +145,14 @@ public class Projectile {
     }
 
     protected void onHit(Enemy enemy, float damage) {
-        Skills.addExperience(Skills.RANGED, (int) (damage * expMultiplier * Settings.rangedXPMultiplier));
+        switch (attackStyle) {
+            case 1:
+                Skills.addExperience(Skills.RANGED, (int) (damage * expMultiplier * Settings.rangedXPMultiplier));
+                break;
+            case 2:
+                Skills.addExperience(Skills.MELEE, (int) (damage * expMultiplier * Settings.meleeXPMultiplier));
+                break;
+        }
     }
 
     public void render() {}
@@ -159,22 +167,20 @@ public class Projectile {
         degrees = Math.toRadians(degrees);
 
         if (amount % 2 == 1) {
-            Vector2 aim = Main.player.position;
-
             double theta = Math.atan((aim.x - position.x) / (aim.y - position.y));
 
             if (aim.y - position.y <= 0) {
                 theta += DeltaMath.pi;
             }
 
+            Constructor projectileConstructor;
+
             Vector2 adjust = position.addClone(radius * Math.sin(theta),radius * Math.cos(theta));
 
             setAim(adjust);
 
-            Constructor projectileConstructor;
-
             try {
-                projectileConstructor = getClass().getConstructor(new Class[] {Vector2.class, Vector2.class} );
+                projectileConstructor = getClass().getConstructor(new Class[] {Vector2.class, Vector2.class, Projectile.class} );
             } catch (NoSuchMethodException e) {
                 System.err.println(getClass() + " does not contain a correct constructor!");
                 return;
@@ -192,7 +198,7 @@ public class Projectile {
 
                 try {
                     Vector2 newAim = position.addClone(radius * Math.sin(theta + i * degrees),radius * Math.cos(theta + i * degrees));
-                    projectileConstructor.newInstance(position, newAim);
+                    projectileConstructor.newInstance(position, newAim, this);
                 } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
                 }

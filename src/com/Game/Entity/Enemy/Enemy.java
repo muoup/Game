@@ -42,13 +42,18 @@ public class Enemy {
 
     public BufferedImage image;
 
-    public String name = "NAME NEEDS TO BE CHANGED";
+    public String name = getClass() + "NAME NEEDS TO BE CHANGED";
+    public boolean temp = false;
 
     public Enemy(int x, int y) {
         position = new Vector2(x, y);
         spawnPosition = new Vector2(x, y);
 
         MethodHandler.enemies.add(this);
+    }
+
+    public static void createTemporary(Enemy enemy) {
+        enemy.temp = true;
     }
 
     public void setMaxHealth(float amount) {
@@ -73,6 +78,7 @@ public class Enemy {
                 health = maxHealth;
                 position = spawnPosition.clone();
                 timer = 0;
+                setMoveTo();
                 onRespawn();
             }
 
@@ -161,6 +167,8 @@ public class Enemy {
         if (health <= 0) {
             enabled = false;
             handleDrops();
+            if (temp)
+                MethodHandler.enemies.remove(this);
         }
     }
 
@@ -172,6 +180,9 @@ public class Enemy {
 
     public void moveToAI() {
         if (moveTo == null)
+            setMoveTo();
+
+        if (b1.greaterThan(moveTo) || moveTo.greaterThan(b2))
             setMoveTo();
 
         if (Vector2.distance(position, moveTo) < 32) {

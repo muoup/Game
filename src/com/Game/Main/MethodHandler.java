@@ -82,10 +82,6 @@ public class MethodHandler {
                 GroundItem groundItem = groundItems.get(i);
                 groundItem.updateStack();
             }
-            for (int i = 0; i < projectiles.size(); i++) {
-                Projectile p = projectiles.get(i);
-                p.projectileUpdate();
-            }
             for (int i = 0; i < objects.size(); i++) {
                 GameObject object = objects.get(i);
                 object.updateObject();
@@ -93,6 +89,10 @@ public class MethodHandler {
             for (int i = 0; i < playerConnections.size(); i++) {
                 PlayerObject playerObject = playerConnections.get(i);
                 playerObject.tick();
+            }
+            for (int i = 0; i < projectiles.size(); i++) {
+                Projectile p = projectiles.get(i);
+                p.projectileUpdate();
             }
             for (int i = 0; i < enemies.size(); i++) {
                 Enemy enemy = enemies.get(i);

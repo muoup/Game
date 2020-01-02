@@ -26,6 +26,7 @@ public class Settings {
 
     // Change these to make xp faster.
     public static final float rangedXPMultiplier = 1.5f;
+    public static final float meleeXPMultiplier = 1.65f;
 
     public static Font npcFont = null;
     public static Font skillPopupFont = null;

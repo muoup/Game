@@ -8,6 +8,8 @@ import com.Game.Projectile.Projectile;
 import com.Util.Math.DeltaMath;
 import com.Util.Math.Vector2;
 
+import java.awt.image.BufferedImage;
+
 public class Weapon extends Item {
     protected Projectile projectile;
     protected ItemSets itemSet;
@@ -15,6 +17,13 @@ public class Weapon extends Item {
 
     public Weapon(int id, String imageName, String name, String examineText, int maxStack, int worth) {
         super(id, imageName, name, examineText, maxStack, worth);
+
+        this.itemSet = ItemSets.none;
+        this.equipStatus = AccessoriesManager.WEAPON_SLOT;
+    }
+
+    public Weapon(int id, BufferedImage image, String name, String examineText, int maxStack, int worth) {
+        super(id, image, name, examineText, maxStack, worth);
 
         this.itemSet = ItemSets.none;
         this.equipStatus = AccessoriesManager.WEAPON_SLOT;
@@ -34,13 +43,25 @@ public class Weapon extends Item {
         if (stack.getAmount() <= 0 || stack.getID() == 0)
             return;
 
+        if (acceptable.items.length == 0) {
+            Projectile projectile = stack.getItem().createProjectile(position, direction, dmgMultiplier(damage) * getMultiplier(), expMultiplier);
+            AccessoriesManager.addAmount(AccessoriesManager.AMMO_SLOT, -1);
+            adaptShot(projectile);
+            return;
+        }
+
         for (int i : acceptable.items) {
             if (stack.getID() == i) {
-                stack.getItem().createProjectile(position, direction, dmgMultiplier(damage) * getMultiplier(), expMultiplier);
-                stack.amount--;
+                Projectile projectile = stack.getItem().createProjectile(position, direction, dmgMultiplier(damage) * getMultiplier(), expMultiplier);
+                AccessoriesManager.addAmount(AccessoriesManager.AMMO_SLOT, -1);
+                adaptShot(projectile);
                 break;
             }
         }
+    }
+
+    public void adaptShot(Projectile projectile) {
+
     }
 
     // TODO: Implement Weapon Accuracy

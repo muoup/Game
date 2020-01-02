@@ -1,8 +1,11 @@
 package com.Game.Entity.Enemy.ChessDungeon;
 
 import com.Game.Entity.Enemy.Enemy;
+import com.Game.Items.EntityDropTable;
+import com.Game.Items.ItemList;
 import com.Game.Main.Main;
 import com.Game.Projectile.PawnProjectile;
+import com.Game.World.GroundItem;
 
 public class Pawn extends Enemy {
     public Pawn(int x, int y, boolean white) {
@@ -40,5 +43,13 @@ public class Pawn extends Enemy {
 
     public void update() {
         position = spawnPosition.addClone(0, 48f + (float) Math.sin((timer - 3.14f / 2f) * 5) * 48f);
+    }
+
+    public void handleDrops() {
+        EntityDropTable table = new EntityDropTable();
+        table.add(ItemList.gold, 500, 0.75);
+        table.add(ItemList.goldDagger, 1, 0.5);
+        table.add(ItemList.stone, 5, 0.5);
+        GroundItem.createGroundItem(position, table.determineOutput());
     }
 }

@@ -5,6 +5,7 @@ import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.RightClick;
 import com.Game.Main.Main;
+import com.Game.Projectile.Projectile;
 import com.Util.Math.DeltaMath;
 import com.Util.Math.Vector2;
 
@@ -20,7 +21,7 @@ public class Item {
     public final String examineText; // Text printed in ChatBox when examined
     public final int maxStack; // Maximum amount allowed in one stack in the state
     public final int worth; // How much the item is worth when sold
-    public final String imageName; // Name of the image (use as basic image, other data values may have different images
+    public String imageName; // Name of the image (use as basic image, other data values may have different images
     public BufferedImage image; // Default image (use as basic image, other data values may have different images)
     public int equipStatus = -1; // Equipment status of an item, default if nothing is set in setData(ItemStack stack)
     public float armor = 0; // Armor amount, default if nothing is set in setData(ItemStack stack)
@@ -35,6 +36,15 @@ public class Item {
         this.worth = worth;
         this.imageName = imageName;
         this.image = (!imageName.equals("/")) ? Main.getImage("Items/" + imageName) : null;
+    }
+
+    public Item(int id, BufferedImage image, String name, String examineText, int maxStack, int worth) {
+        this.id = id;
+        this.examineText = examineText;
+        this.maxStack = maxStack;
+        this.name = name;
+        this.worth = worth;
+        this.image = image;
     }
 
     public BufferedImage getImage() {
@@ -59,7 +69,15 @@ public class Item {
     }
 
     public void OnClick(int index) {
-        ChatBox.sendMessage(examineText);
+        examineItem(index);
+    }
+
+    public void examineItem(int index) {
+        String text = examineText;
+        System.out.println(text);
+        text = text.replace("[amt]", Integer.toString(InventoryManager.inventory[index].amount));
+        System.out.println(text);
+        ChatBox.sendMessage(text);
     }
 
     public void RightClickIdentities(int index, int option) {
@@ -68,7 +86,7 @@ public class Item {
         }
 
         if (option == RightClick.options.size() - 1)
-            ChatBox.sendMessage(examineText);
+            examineItem(index);
 
         if (option == RightClick.options.size() - 2)
             InventoryManager.setItem(index, emptyStack());
@@ -88,8 +106,8 @@ public class Item {
 
     }
 
-    public void createProjectile(Vector2 position, Vector2 direction, float damageMultiplier, float expMultiplier) {
-
+    public Projectile createProjectile(Vector2 position, Vector2 direction, float damageMultiplier, float expMultiplier) {
+        return null;
     }
 
     public void equipItem(int index) {

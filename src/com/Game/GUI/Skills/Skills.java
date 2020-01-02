@@ -7,11 +7,12 @@ import com.Util.Other.Settings;
 
 public class Skills {
     public static int RANGED = 0;
-    public static int FISHING = 1;
-    public static int WOODCUTTING = 2;
-    public static int FLETCHING = 3;
-    public static int MINING = 4;
-    public static int SMITHING = 5;
+    public static int MELEE = 1;
+    public static int FISHING = 2;
+    public static int WOODCUTTING = 3;
+    public static int FLETCHING = 4;
+    public static int MINING = 5;
+    public static int SMITHING = 6;
 
     public static int skillAmt;
 
@@ -19,6 +20,7 @@ public class Skills {
     private static int[] lvl;
     public static String[] skillNames = {
             "Archery",
+            "Attack",
             "Fishing",
             "Woodcutting",
             "Fletching",

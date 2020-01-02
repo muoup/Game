@@ -12,7 +12,7 @@ public class ArrowShaft extends Item {
 
     public void OnClick(int index) {
         int c_amt = combine(index, ItemList.feather, ItemList.arrow, 15);
-        Skills.addExperience(Skills.WOODCUTTING, 1.5f * c_amt);
+        Skills.addExperience(Skills.FLETCHING, 1.5f * c_amt);
     }
 
     public void setData(ItemStack stack) {

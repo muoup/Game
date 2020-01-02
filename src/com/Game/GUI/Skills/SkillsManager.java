@@ -16,6 +16,7 @@ public class SkillsManager {
     public static BufferedImage[] skillImages;
     public static String[] skillImageNames = {
             "ranged.png",
+            "melee.png",
             "fishing.png",
             "woodcutting.png",
             "fletching.png",

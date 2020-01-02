@@ -18,11 +18,12 @@ public class BowWeapon extends Weapon {
     BufferedImage unstrung;
     BufferedImage strung;
 
-    public BowWeapon(int id, String imageName, String name, String examineText, int maxStack, int worth) {
-        super(id, imageName, name, examineText, maxStack, worth);
-
+    public BowWeapon(int id, int cell, int tier, String name, String examineText, int maxStack, int worth) { super(id, new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB), name, examineText, maxStack, worth);
         this.itemSet = ItemSets.arrows;
         this.equipStatus = AccessoriesManager.WEAPON_SLOT;
+
+        setImage(cell);
+        setWeaponTier(tier);
     }
 
     public void setImage(int cell) {

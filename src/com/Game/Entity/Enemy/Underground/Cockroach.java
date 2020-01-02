@@ -1,9 +1,12 @@
 package com.Game.Entity.Enemy.Underground;
 
 import com.Game.Entity.Enemy.Enemy;
+import com.Game.Items.EntityDropTable;
+import com.Game.Items.ItemList;
 import com.Game.Main.Main;
 import com.Game.Projectile.BeetleSpike;
 import com.Game.Projectile.BeetleSpikeAvoidable;
+import com.Game.World.GroundItem;
 
 public class Cockroach extends Enemy {
     public float timer2 = 0;
@@ -19,12 +22,12 @@ public class Cockroach extends Enemy {
 
         setMaxHealth(25);
         setScale(64, 64);
-        setBounds(683, 1762, 1508, 2894);
+        setBounds(3577, 2793, 4159, 3355);
     }
 
     public void update() {
         if (!withinBounds())
-            loseTarget();
+            targetTimer = 0;
     }
 
     public void AI() {
@@ -47,5 +50,17 @@ public class Cockroach extends Enemy {
 
     public void passiveAI() {
         moveToAI();
+    }
+
+    public void handleDrops() {
+        EntityDropTable table = new EntityDropTable();
+
+        table.add(ItemList.arrow, 5, 1);
+        table.add(ItemList.arrow, 5, 0.25);
+        table.add(ItemList.bronzeDagger, 1, 0.50);
+        table.add(ItemList.stoneDagger, 1, 0.25);
+        table.add(ItemList.ironDagger, 1, 0.075);
+
+        GroundItem.createGroundItem(position, table.determineOutput());
     }
 }

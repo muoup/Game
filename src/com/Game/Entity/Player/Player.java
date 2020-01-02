@@ -294,10 +294,6 @@ public class Player {
         }
     }
 
-    public Vector2 getCenter() {
-        return position.offsetClone(-scale / 2);
-    }
-
     public void render() {
         Render.drawImage(image, position.x - scale / 2 - World.curWorld.offset.x,
                 position.y - scale / 2 - World.curWorld.offset.y);
