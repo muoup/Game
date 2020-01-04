@@ -1,5 +1,6 @@
 package com.Game.GUI.GUIWindow;
 
+import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 
 /*
@@ -16,5 +17,10 @@ public class GUIElement {
 
     public void update(GUIWindow window) {
 
+    }
+
+    protected boolean isHover(GUIWindow window) {
+        return Input.mousePosition.greaterThan(window.offset(position)) &&
+                window.offset(position.addClone(size)).greaterThan(Input.mousePosition);
     }
 }

@@ -117,4 +117,8 @@ public class GUIWindow {
 
         return null;
     }
+
+    public void removeElement(GUIElement element) {
+        elements.remove(element);
+    }
 }

@@ -42,86 +42,97 @@ public class Commands {
             nullParam = true;
         }
 
-        switch(command.toLowerCase()) {
-            case "pos":
-                ChatBox.sendMessage(Main.player.position.ints());
-                break;
-            case "health":
-                ChatBox.sendMessage(Float.toString(Main.player.health));
-                break;
-            case "bankpoke":
-                BankingHandler.printBankSpace();
-                break;
-            case "bankadd":
-                if (parameters.length != 1) {
-                    ChatBox.sendMessage("bankAdd [index]");
+        try {
+            switch (command.toLowerCase()) {
+                case "pos":
+                    ChatBox.sendMessage(Main.player.position.ints());
                     break;
-                }
-                BankingHandler.addInvItem(Integer.parseInt(parameters[0]));
-                break;
-            case "tp":
-                if (parameters.length == 2 || parameters.length == 3) {
-                    Vector2 tp = new Vector2(Integer.parseInt(parameters[0]), Integer.parseInt(parameters[1]));
-                    ChatBox.sendMessage("Teleported to: " + tp.toString());
-                    if (parameters.length == 3) {
-                        World.changeWorld(Integer.parseInt(parameters[2].trim()));
-                        ChatBox.sendMessage("Changed Subworld");
+                case "health":
+                    ChatBox.sendMessage(Float.toString(Main.player.health));
+                    break;
+                case "bankpoke":
+                    BankingHandler.printBankSpace();
+                    break;
+                case "bankadd":
+                    if (parameters.length != 1) {
+                        ChatBox.sendMessage("bankAdd [index]");
+                        break;
                     }
-                    Main.player.position = tp.clone();
-                } else {
-                    ChatBox.sendMessage("Correct parameters are (x, y) or (x, y, subWorld)");
-                }
-                break;
-            case "tpmouse":
-                ChatBox.sendMessage("Teleported.");
-                Vector2 tp = Input.mousePosition.add(World.curWorld.offset);
-                break;
-            case "resetworld":
-                World.curWorld.resetWorld();
-                break;
-            case "newtree":
-                if (!nullParam) {
-                    int x = (int) Main.player.position.x;
-                    int y = (int) Main.player.position.y;
-                    String type = parameters[0];
-
-                    switch(type) {
-                        case "log":
-                            new Tree(x, y, TreePreset.tree);
-                            System.out.println("new Tree(" + x + ", " + y + ", Tree.log);");
-                            break;
-                        case "maple":
-                            new Tree(x, y, TreePreset.mapleTree);
-                            System.out.println("new Tree(" + x + ", " + y + ", Tree.maple);");
-                            break;
-                        default:
-                            ChatBox.sendMessage("That is not a valid tree type!");
+                    BankingHandler.addInvItem(Integer.parseInt(parameters[0]));
+                    break;
+                case "bankremove":
+                    if (parameters.length != 2) {
+                        ChatBox.sendMessage("bankremove [index] [amount]");
+                        return;
                     }
-                }
-                break;
-            case "setskill":
-                if (parameters.length >= 2) {
-                    int skill = Integer.parseInt(parameters[0]);
-                    int level = Integer.parseInt(parameters[1]);
-                    Skills.setLevel(skill, level);
-                }
-                break;
-            case "disconnect":
-                Main.client.disconnect();
-                break;
-            case "item":
-                if (parameters.length >= 2) {
-                    int item = Integer.parseInt(parameters[0]);
-                    int amount = Integer.parseInt(parameters[1]);
+                    BankingHandler.removeItem(Integer.parseInt(parameters[0]), Integer.parseInt(parameters[1]));
+                    break;
+                case "tp":
+                    if (parameters.length == 2 || parameters.length == 3) {
+                        Vector2 tp = new Vector2(Integer.parseInt(parameters[0]), Integer.parseInt(parameters[1]));
+                        ChatBox.sendMessage("Teleported to: " + tp.toString());
+                        if (parameters.length == 3) {
+                            World.changeWorld(Integer.parseInt(parameters[2].trim()));
+                            ChatBox.sendMessage("Changed Subworld");
+                        }
+                        Main.player.position = tp.clone();
+                    } else {
+                        ChatBox.sendMessage("Correct parameters are (x, y) or (x, y, subWorld)");
+                    }
+                    break;
+                case "tpmouse":
+                    ChatBox.sendMessage("Teleported.");
+                    Vector2 tp = Input.mousePosition.add(World.curWorld.offset);
+                    break;
+                case "resetworld":
+                    World.curWorld.resetWorld();
+                    break;
+                case "newtree":
+                    if (!nullParam) {
+                        int x = (int) Main.player.position.x;
+                        int y = (int) Main.player.position.y;
+                        String type = parameters[0];
 
-                    InventoryManager.addItem(ItemList.values()[item], amount);
-                }
-                break;
-            case "testpopup":
-                new SkillPopup(1, 1);
-                break;
-            default:
-                ChatBox.sendMessage("That is not a valid command, please check your spelling and try again.");
+                        switch (type) {
+                            case "log":
+                                new Tree(x, y, TreePreset.tree);
+                                System.out.println("new Tree(" + x + ", " + y + ", Tree.log);");
+                                break;
+                            case "maple":
+                                new Tree(x, y, TreePreset.mapleTree);
+                                System.out.println("new Tree(" + x + ", " + y + ", Tree.maple);");
+                                break;
+                            default:
+                                ChatBox.sendMessage("That is not a valid tree type!");
+                        }
+                    }
+                    break;
+                case "setskill":
+                    if (parameters.length >= 2) {
+                        int skill = Integer.parseInt(parameters[0]);
+                        int level = Integer.parseInt(parameters[1]);
+                        Skills.setLevel(skill, level);
+                    }
+                    break;
+                case "disconnect":
+                    Main.client.disconnect();
+                    break;
+                case "item":
+                    if (parameters.length >= 2) {
+                        int item = Integer.parseInt(parameters[0]);
+                        int amount = Integer.parseInt(parameters[1]);
+
+                        InventoryManager.addItem(ItemList.values()[item], amount);
+                    }
+                    break;
+                case "testpopup":
+                    new SkillPopup(1, 1);
+                    break;
+                default:
+                    ChatBox.sendMessage("That is not a valid command, please check your spelling and try again.");
+            }
+        } catch (NumberFormatException e) {
+            ChatBox.sendMessage("One of the parameters in that needed to be a number. It would have thrown an error, so it has been voided.");
         }
     }
 

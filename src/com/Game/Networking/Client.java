@@ -211,8 +211,8 @@ public class Client {
 
     public void disconnect() {
         send("55" + Main.player.name);
-        MethodHandler.playerConnections.clear();
         Settings.pause = false;
+        World.curWorld.resetWorld();
         Main.settings.state = Menu.MenuState.SimplePause;
         InventoryManager.reset();
         AccessoriesManager.init();

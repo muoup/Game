@@ -37,8 +37,8 @@ public class Enemy {
     protected float speed = 0;
 
     private boolean useBounds = false;
-    private Vector2 b1;
-    private Vector2 b2;
+    protected Vector2 b1;
+    protected Vector2 b2;
 
     public BufferedImage image;
 

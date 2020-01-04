@@ -74,9 +74,7 @@ public class Item {
 
     public void examineItem(int index) {
         String text = examineText;
-        System.out.println(text);
         text = text.replace("[amt]", Integer.toString(InventoryManager.inventory[index].amount));
-        System.out.println(text);
         ChatBox.sendMessage(text);
     }
 

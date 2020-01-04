@@ -14,12 +14,12 @@ import java.awt.image.BufferedImage;
  * to render an ItemStack;
  */
 public class GUIItemSlot extends GUIElement {
-    private ItemStack stack;
-    private Vector2 position;
-    private Vector2 renderSize;
-    private boolean bordered = true;
-    private boolean renderItem = true;
-    private boolean draggable = false;
+    protected ItemStack stack;
+    protected Vector2 position;
+    protected Vector2 renderSize;
+    protected boolean bordered = true;
+    protected boolean renderItem = true;
+    protected boolean draggable = false;
 
     public GUIItemSlot(ItemStack stack, Vector2 position, Vector2 renderSize) {
         this.stack = stack;
