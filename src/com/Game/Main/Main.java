@@ -20,6 +20,7 @@ import java.io.InputStream;
 public class Main extends Canvas {
 
     private boolean running = false;
+    private boolean startup = false;
 
     public static double fps = 0;
     public static Main main;
@@ -90,6 +91,8 @@ public class Main extends Canvas {
     }
 
     public static double dTime() {
+        if (fps > Settings.fpsCap * 2 || fps < 5)
+            return 0;
         return 1 / fps;
     }
 
@@ -140,7 +143,7 @@ public class Main extends Canvas {
 
             if (lastFpsTime >= 1000000000) {
                 lastFpsTime = 0;
-                Main.fps = lfps;
+                fps = lfps;
                 lfps = 0;
             }
 
@@ -158,7 +161,7 @@ public class Main extends Canvas {
 
             Input.update();
 
-            if (isConnected) {
+            if (isConnected && Main.dTime() != 0) {
                 update();
                 render();
             } else {

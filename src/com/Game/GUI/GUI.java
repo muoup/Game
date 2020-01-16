@@ -5,6 +5,7 @@ import com.Game.GUI.GUIWindow.GUIWindow;
 import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.Inventory.InventoryDrag;
 import com.Game.GUI.Inventory.InventoryManager;
+import com.Game.GUI.Questing.QuestManager;
 import com.Game.GUI.Skills.Skills;
 import com.Game.GUI.Skills.SkillsManager;
 import com.Game.Main.Main;
@@ -25,7 +26,8 @@ public class GUI {
     private static final String[] invImgNames = {
             "backpack.png",
             "accessories.png",
-            "levels.png"
+            "levels.png",
+            "questing.png"
     };
 
     public static Vector2 GUIEnd() {
@@ -134,8 +136,12 @@ public class GUI {
                 SkillsManager.render();
                 SkillsManager.update();
                 break;
+            case 3:
+                QuestManager.render();
+                break;
             default:
                 System.err.println("There is something wrong.");
+                System.out.println(curMain);
                 break;
         }
     }

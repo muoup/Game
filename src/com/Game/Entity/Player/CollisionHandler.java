@@ -2,16 +2,18 @@ package com.Game.Entity.Player;
 
 import com.Game.World.World;
 import com.Util.Math.Vector2;
+import com.Util.Other.Render;
 import com.Util.Other.Settings;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class CollisionHandler {
 
     private static Color colColor = new Color(0, 0, 0);
 
     public static boolean isFree(Vector2 position) {
+        Render.drawRectangle(position, new Vector2(8));
+
         World col = World.curWorld;
 
         if (position.x > col.getWidth() || position.y > col.getHeight())
@@ -20,7 +22,7 @@ public class CollisionHandler {
         if (position.x < 0 || position.y < 0)
             return false;
 
-        int rgb = col.colWorld.getRGB((int) position.x, (int) position.y);
+        int rgb = col.colWorld.getRGB((int) position.x / Settings.worldScale, (int) position.y / Settings.worldScale);
 
         return colColor.getRGB() != rgb;
     }

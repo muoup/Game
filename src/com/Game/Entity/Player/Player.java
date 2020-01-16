@@ -15,12 +15,10 @@ import com.Game.World.World;
 import com.Game.listener.Input;
 import com.Util.Math.DeltaMath;
 import com.Util.Math.Vector2;
-import com.Util.Other.Render;
-import com.Util.Other.Settings;
+import com.Util.Other.*;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 
 public class Player {
     public Vector2 position;
@@ -31,8 +29,8 @@ public class Player {
     public float speedMod = 0f;
     public float dashMultiplier = 0f;
     public float dashTimer = 0f;
-    public int scale = 0;
-    public BufferedImage image;
+    public Vector2 scale;
+    private AnimatedSprite image;
     private Vector2 curSpeed = Vector2.zero();
     public float dx = 0, dy = 0, dMod = 0, shootTimer = 0;
     public String name = null;
@@ -48,24 +46,13 @@ public class Player {
         this.speed = speed;
         this.playerColor = playerColor;
         this.dashMultiplier = dash;
-        this.image = Main.main.getImageFromRoot("player.png");
-        this.scale = image.getWidth();
+        this.scale = new Vector2(28, 76);
+        this.image = new AnimatedSprite(SpriteSheet.playerSheet, 12, 0);
 
         init();
     }
 
     public void init() {
-    }
-
-    public Vector2[] getPoints(Vector2 offset) {
-        Vector2 pos = position.addClone(offset);
-        Vector2[] points = new Vector2[4];
-        points[0] = pos.addClone(scale / 2, scale / 2);
-        points[1] = pos.addClone(-scale / 2, -scale / 2);
-        points[2] = pos.addClone(-scale / 2, scale / 2);
-        points[3] = pos.addClone(scale / 2, -scale / 2);
-
-        return points;
     }
 
     public void update() {
@@ -133,6 +120,8 @@ public class Player {
                     new Fist(position, Input.mousePosition.addClone(World.curWorld.offset));
                 else
                     accessory.getItem().useWeapon(position, Input.mousePosition.addClone(World.curWorld.offset));
+
+                SoundHandler.playSound("default_shoot.wav");
             }
 
             if (Input.GetKeyDown(KeyEvent.VK_TAB)) {
@@ -140,6 +129,12 @@ public class Player {
                         GUILibrary.bankingGUI :
                         GUIWindow.emptyGUI;
             }
+
+            if (dx < 0)
+                image.row = 0;
+
+            if (dx > 0)
+                image.row = 1;
 
             dMod = speedMod;
 
@@ -157,25 +152,6 @@ public class Player {
         }
     }
 
-    public void test() {
-//        Vector2 aim = Input.mousePosition.addClone(World.curWorld.offset);
-//
-//        double radius = 128;
-//        double theta = Math.atan((aim.x - position.x) / (aim.y - position.y));
-//
-//        if (aim.y - position.y <= 0) {
-//            theta += DeltaMath.pi;
-//        }
-//
-//        Vector2 newAim = position.addClone(radius * Math.sin(theta),radius * Math.cos(theta));
-//        Vector2 newAim2 = position.addClone(radius * Math.sin(theta + DeltaMath.pi / 8),radius * Math.cos(theta + DeltaMath.pi / 8));
-//        Vector2 newAim3 = position.addClone(radius * Math.sin(theta - DeltaMath.pi / 8),radius * Math.cos(theta - DeltaMath.pi / 8));
-//
-//        Render.drawLine(position.subtractClone(World.curWorld.offset), newAim.subtractClone(World.curWorld.offset));
-//        Render.drawLine(position.subtractClone(World.curWorld.offset), newAim2.subtractClone(World.curWorld.offset));
-//        Render.drawLine(position.subtractClone(World.curWorld.offset), newAim3.subtractClone(World.curWorld.offset));
-    }
-
     public void tpToPos(int x, int y, int subWorld) {
         World.changeWorld(subWorld);
         position.x = x;
@@ -187,33 +163,30 @@ public class Player {
         Main.sendPacket("15" + Main.player.name + ":" + (int) position.x + ":" + (int) position.y + ":" + subWorld);
     }
 
+    public Vector2[] getPoints(Vector2 offset) {
+        Vector2 pos = position.addClone(offset);
+
+        return new Vector2[]{
+                pos.addClone(new Vector2(scale.x, scale.y).scale(0.5f)),
+                pos.addClone(new Vector2(-scale.x, -scale.y).scale(0.5f)),
+                pos.addClone(new Vector2(-scale.x, scale.y).scale(0.5f)),
+                pos.addClone(new Vector2(scale.x, -scale.y).scale(0.5f))
+        };
+    }
+
     public Vector2 handleCollision(Vector2 curSpeed) {
-        Vector2 speed = curSpeed.clone();
-        Vector2[] xPoints = getPoints(new Vector2(curSpeed.x, 0));
-        Vector2[] x1Points = {
-            xPoints[1],
-            xPoints[2]
-        };
-        Vector2[] x2Points = {
-            xPoints[0],
-            xPoints[3]
-        };
-        Vector2[] yPoints = getPoints(new Vector2(0, curSpeed.y));
-        Vector2[] y1Points = {
-            yPoints[1],
-            yPoints[3]
-        };
-        Vector2[] y2Points = {
-                yPoints[0],
-                yPoints[2]
-        };
+        Vector2 speed = curSpeed;
+        Vector2 points[] = getPoints(curSpeed);
 
-        if ((speed.x < 0 && !CollisionHandler.isFree(x1Points)) || (speed.x > 0 && !CollisionHandler.isFree(x2Points))) {
-            speed.x = 0;
-        }
+        if (!CollisionHandler.isFree(points)) {
+            Vector2 xPoints[] = getPoints(new Vector2(speed.x, 0));
+            Vector2 yPoints[] = getPoints(new Vector2(0, speed.y));
 
-        if ((speed.y > 0 && !CollisionHandler.isFree(y2Points)) || (speed.y < 0 && !CollisionHandler.isFree(y1Points))) {
-            speed.y = 0;
+            if (curSpeed.x != 0 && !CollisionHandler.isFree(xPoints))
+                speed.x = 0;
+
+            if (curSpeed.y != 0 && !CollisionHandler.isFree(yPoints))
+                speed.y = 0;
         }
 
         return speed;
@@ -295,11 +268,13 @@ public class Player {
     }
 
     public void render() {
-        Render.drawImage(image, position.x - scale / 2 - World.curWorld.offset.x,
-                position.y - scale / 2 - World.curWorld.offset.y);
+        Render.drawImage(image.getImage(scale), position.x - scale.x / 2 - World.curWorld.offset.x,
+                position.y - scale.y / 2 - World.curWorld.offset.y);
 
         renderStats();
+    }
 
-        test();
+    public Image getImage() {
+        return image.getImage();
     }
 }

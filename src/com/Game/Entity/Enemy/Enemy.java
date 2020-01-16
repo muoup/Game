@@ -6,6 +6,7 @@ import com.Game.World.World;
 import com.Util.Math.DeltaMath;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
+import com.Util.Other.SoundHandler;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -163,9 +164,11 @@ public class Enemy {
     public void damage(float amount) {
         target();
         health -= amount;
+        SoundHandler.playSound("enemy_hit.wav");
 
         if (health <= 0) {
             enabled = false;
+            SoundHandler.playSound("default_death.wav");
             handleDrops();
             if (temp)
                 MethodHandler.enemies.remove(this);
@@ -179,8 +182,10 @@ public class Enemy {
     }
 
     public void moveToAI() {
-        if (moveTo == null)
+        if (moveTo == null) {
             setMoveTo();
+            return;
+        }
 
         if (b1.greaterThan(moveTo) || moveTo.greaterThan(b2))
             setMoveTo();

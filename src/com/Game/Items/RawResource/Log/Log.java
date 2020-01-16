@@ -6,14 +6,16 @@ import com.Game.Items.Item;
 import com.Game.Items.ItemList;
 import com.Game.Items.ItemRequirement;
 import com.Game.Items.ItemStack;
+import com.Util.Other.SpriteSheet;
 
 public class Log extends Item {
     protected ItemList bow;
     protected int arrowShaft = 15;
 
-    public Log(int id, String imageName, String name, String examineText, int maxStack, int worth) {
-        super(id, imageName, name, examineText, maxStack, worth);
-        setTier(1);
+    public Log(int id, int tier, ItemList bow, String name, String examineText, int maxStack, int worth) {
+        super(id, SpriteSheet.woodSheet.getCell((int) (tier / 10.0), 0), name, examineText, maxStack, worth);
+        setTier(tier);
+        this.bow = bow;
     }
 
     public void setTier(int tier) {

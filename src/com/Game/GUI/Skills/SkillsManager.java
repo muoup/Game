@@ -2,13 +2,11 @@ package com.Game.GUI.Skills;
 
 import com.Game.GUI.GUI;
 import com.Game.Main.Main;
-import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 import com.Util.Other.Settings;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
 public class SkillsManager {
@@ -61,8 +59,6 @@ public class SkillsManager {
     }
 
     public static void update() {
-        if (Input.GetKey(KeyEvent.VK_T)) {
-            Skills.addExperience(Skills.RANGED, 50);
-        }
+
     }
 }

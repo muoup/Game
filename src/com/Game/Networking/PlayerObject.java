@@ -36,11 +36,11 @@ public class PlayerObject {
     }
 
     public void tick() {
-        if (Render.onScreen(getPos(), Main.player.image) && Main.player.subWorld == subWorld) {
+        if (Render.onScreen(getPos(), Main.player.getImage()) && Main.player.subWorld == subWorld) {
             Render.setFont(Settings.npcFont);
             Vector2 drawPos = new Vector2(getPos().x - World.curWorld.offset.x,
                     getPos().y - World.curWorld.offset.y);
-            Render.drawImage(Main.player.image, drawPos.offsetClone(-Main.player.scale / 2));
+            Render.drawImage(Main.player.getImage(), drawPos.offsetClone(-Main.player.scale.x / 2));
             Render.setColor(Color.BLACK);
             Render.drawText(username, drawPos.subtractClone(nameOffset, 48));
         }

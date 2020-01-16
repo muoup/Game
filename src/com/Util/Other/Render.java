@@ -196,4 +196,8 @@ public class Render {
     public static void drawLine(Vector2 v1, Vector2 v2) {
         Main.graphics.drawLine((int) v1.x, (int) v1.y, (int) v2.x, (int) v2.y);
     }
+
+    public static BufferedImage scaleFactorImage(BufferedImage image, float scaleFactor) {
+        return getScaledImage(image, getImageSize(image).scale(scaleFactor));
+    }
 }

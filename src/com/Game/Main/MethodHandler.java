@@ -4,7 +4,7 @@ import com.Game.Entity.Enemy.Enemy;
 import com.Game.Entity.NPC.NPC;
 import com.Game.Entity.Player.Player;
 import com.Game.GUI.GUI;
-import com.Game.GUI.SkillPopup.*;
+import com.Game.GUI.SkillPopup.SkillPopup;
 import com.Game.GUI.TextBox;
 import com.Game.Networking.PlayerObject;
 import com.Game.Object.GameObject;
@@ -12,6 +12,7 @@ import com.Game.Projectile.Projectile;
 import com.Game.World.GroundItem;
 import com.Game.World.World;
 import com.Game.listener.Input;
+import com.Util.Other.AnimatedSprite;
 import com.Util.Other.Render;
 import com.Util.Other.Settings;
 
@@ -64,6 +65,7 @@ public class MethodHandler {
             return;
 
         player.update();
+        AnimatedSprite.timer += Main.dTime();
 
         GUI.update();
     }
