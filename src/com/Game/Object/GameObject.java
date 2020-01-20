@@ -41,20 +41,19 @@ public class GameObject {
     }
 
     public void updateObject() {
-        if (image == null)
+        if (image == null || !Render.onScreen(position, image))
             return;
+
+        Render.drawImage(image,
+                position.subtractClone(World.curWorld.offset));
+
+        update();
 
         float distance = Vector2.distance(position.addClone(Render.getImageSize(image).scale(0.5f)), Main.player.position);
 
-        if (Render.onScreen(position, image)) {
-            Render.drawImage(image,
-                    position.subtractClone(World.curWorld.offset));
-            update();
-        } else return;
-
-        if (Input.GetKey(KeyEvent.VK_E) && distance <= maxDistance && !ChatBox.typing && canInteract) {
+        if (distance <= maxDistance && Input.GetKey(KeyEvent.VK_E) && !ChatBox.typing && canInteract) {
             canInteract = onInteract();
-        } else if (!Input.GetKey(KeyEvent.VK_E) || distance > maxDistance) {
+        } else if (canInteract && !ChatBox.typing) {
             timer = 0;
             canInteract = true;
         }
@@ -111,8 +110,6 @@ public class GameObject {
 
         Render.setColor(Color.BLUE);
         Render.drawRectangle(sPos, rect);
-
-
     }
 
     public void setScale(int x, int y) {

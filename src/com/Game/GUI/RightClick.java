@@ -264,10 +264,7 @@ public class RightClick {
         Vector2 top = deltaDraw.subtractClone(15f, 15f);
         Vector2 bottom = deltaDraw.addClone(maxWidth + 15f, percentBox * options.size() + 15f);
 
-        if (Input.mousePosition.compareTo(top) == 1 && Input.mousePosition.compareTo(bottom) == -1)
-            return true;
-
-        return false;
+        return Input.mousePosition.compareTo(top) == 1 && Input.mousePosition.compareTo(bottom) == -1;
     }
 }
 

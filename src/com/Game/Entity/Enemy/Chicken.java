@@ -13,14 +13,15 @@ public class Chicken extends Enemy {
         this.id = 3;
         this.image = getImage("chicken.png");
         this.respawnTimer = 5.0f;
-        this.targetTimer = 2f;
+        this.maxTarget = 2f;
         this.name = "Chicken";
         this.speed = 2.25f;
         this.maxRadius = 200f;
+        this.passive = true;
+
         setMaxHealth(10);
         setBounds(4133, 2641,
                     4650, 3100);
-        System.out.println(b1 + " " + b2);
     }
 
     public void passiveAI() {

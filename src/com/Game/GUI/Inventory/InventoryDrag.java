@@ -38,7 +38,7 @@ public class InventoryDrag {
 
             if (itemDrag.getAmount() > 1) {
 
-                String text = InventoryManager.formatAmount(itemDrag.getAmount());
+                String text = GUI.formatAmount(itemDrag.getAmount());
 
                 Render.setFont(Settings.itemFont);
 
@@ -78,7 +78,7 @@ public class InventoryDrag {
         if (RightClick.render)
             return;
 
-        drag = (!drag) ? Input.GetMouseDown(1) : true;
+        drag = (drag) || Input.GetMouseDown(1);
 
         if (!Input.GetMouse(1))
             drag = false;

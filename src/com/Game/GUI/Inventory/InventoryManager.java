@@ -172,22 +172,7 @@ public class InventoryManager {
                 }
 
                 ItemStack stack = getStack(x + y * 4);
-
-                if (stack.getID() != 0 && stack.getAmount() > 0) {
-                    Render.drawImage(Render.getScaledImage(stack.getImage(), GUI.invSize), rectPos);
-
-                    if (stack.getAmount() > 1) {
-                        Render.setFont(Settings.itemFont);
-                        Render.setColor(Color.BLACK);
-
-                        String text = formatAmount(stack.getAmount());
-
-
-                        Render.drawText(text,
-                                rectPos.addClone(new Vector2(GUI.IntBoxSize - Settings.sWidth(text) - 4, GUI.IntBoxSize - 4)));
-                    }
-                }
-                Render.drawRectOutline(rectPos, GUI.invSize);
+                GUI.drawItem(x, y, stack);
             }
         }
 
@@ -288,18 +273,6 @@ public class InventoryManager {
 
     public static int addItem(ItemStack stack) {
         return addItem(stack.getItem(), stack.getAmount());
-    }
-
-    public static String formatAmount(int amount) {
-        if (amount >= 1000000000) {
-            return amount / 1000000000 + "b";
-        } else if (amount >= 1000000) {
-            return amount / 1000000 + "m";
-        } else if (amount >= 1000) {
-            return amount / 1000 + "k";
-        } else {
-            return amount + "";
-        }
     }
 
     public static ItemStack getStack(int inventoryIndex) {

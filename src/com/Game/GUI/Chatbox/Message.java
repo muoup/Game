@@ -3,7 +3,6 @@ package com.Game.GUI.Chatbox;
 import com.Util.Other.Render;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 public class Message {
     // I had a ton of comments for this file but my laptop died so it was lost.
@@ -55,7 +54,6 @@ public class Message {
             }
         }
 
-        //System.out.println("fMSG: " + fMsg);
         return fMsg;
     }
 

@@ -104,6 +104,10 @@ public class Render {
         drawBorderedBounds(pos, pos.addClone(size));
     }
 
+    public static void drawBorderedRect(float px, float py, float sx, float sy) {
+        drawBorderedRect(new Vector2(px, py), new Vector2(sx, sy));
+    }
+
     public static BufferedImage getScaledImage(BufferedImage image, Vector2 scale) {
         return getScaledImage(image, scale.x, scale.y);
     }
@@ -125,7 +129,7 @@ public class Render {
 
         graphics.dispose();
 
-        BufferedImage croppedString = string.getSubimage((int) pos.x, (int) pos.y, string.getWidth() - (int) pos.x, string.getHeight() - (int) pos.y);;
+        BufferedImage croppedString = string.getSubimage((int) pos.x, (int) pos.y, string.getWidth() - (int) pos.x, string.getHeight() - (int) pos.y);
         drawImage(croppedString, position.addClone(pos.x, pos.y));
     }
 
@@ -199,5 +203,9 @@ public class Render {
 
     public static BufferedImage scaleFactorImage(BufferedImage image, float scaleFactor) {
         return getScaledImage(image, getImageSize(image).scale(scaleFactor));
+    }
+
+    public static Vector2 stringDimensions(String text) {
+        return new Vector2(getStringWidth(text), getStringHeight() - getStringAscent() / 2);
     }
 }

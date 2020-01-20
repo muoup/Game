@@ -5,45 +5,48 @@ import com.Game.Networking.Login;
 import com.Util.Math.Vector2;
 
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 
 public class Input implements KeyListener, MouseListener, MouseMotionListener {
 
-    private static boolean[] keysPressed = new boolean[65535];
-    public static KeyState[] keys = new KeyState[65535];
-    public static boolean[] mouse = new boolean[5];
+    public static ArrayList<KeyInstance> keyArray = new ArrayList();
+    public static HashSet<Integer> keyPressedArray = new HashSet();
+    public static KeyState[] mouse = new KeyState[5];
     public static boolean[] mouseDown = new boolean[5];
     public static Vector2 mousePosition = Vector2.zero();
 
     public static void init() {
-        for (int i = 0; i < keys.length; i++) {
-            keys[i] = KeyState.released;
-        }
+
     }
 
     public static boolean GetKey(int code) {
-        return keys[code].pressed();
+        for (KeyInstance instance : keyArray) {
+            if (instance.code == code) {
+                return instance.state != KeyState.released;
+            }
+        }
+
+        return false;
     }
 
     public static boolean GetKeyDown(int code) {
-//        KeyState ret = keys[code];
-//
-//        if (keys[code] == KeyState.pressed)
-//            keys[code] = KeyState.inPress;
-//
-//        return ret == KeyState.pressed;
-        return keys[code] == KeyState.pressed;
+        for (KeyInstance instance : keyArray) {
+            if (instance.code == code) {
+                return instance.state == KeyState.pressed;
+            }
+        }
+
+        return false;
     }
 
     public static boolean GetMouse(int button) {
-        return mouse[button];
+        return mouse[button].pressed();
     }
 
     public static boolean GetMouseDown(int button) {
-        boolean ret = mouseDown[button];
-
-        mouseDown[button] = false;
-
-        return ret;
+        return mouse[button] == KeyState.pressed;
     }
 
     @Override
@@ -52,7 +55,7 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        keysPressed[e.getKeyCode()] = true;
+        keyPressedArray.add(e.getKeyCode());
 
         String input = Character.toString(e.getKeyChar());
         int code = e.getKeyCode();
@@ -78,25 +81,57 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
     }
 
     public static void update() {
-        for (int i = 0; i < keysPressed.length; i++) {
-            boolean key = keysPressed[i];
+        for (Iterator<Integer> iterator = keyPressedArray.iterator(); iterator.hasNext(); ) {
+            int i = iterator.next();
+            int id = -1;
 
-            if (!key) {
-                keys[i] = KeyState.released;
+            for (KeyInstance instance : keyArray) {
+                if (instance.code == i) {
+                    id = i;
+                    break;
+                }
+            }
+
+            // The key has already been pressed the previous frame.
+            if (id != -1) {
+                find(id).state = KeyState.inPress;
+            }
+            // The key was not pressed before this frame.
+            else {
+                keyArray.add(new KeyInstance(i, KeyState.pressed));
+            }
+        }
+
+        for (int i = 0; i < mouseDown.length; i++) {
+            boolean mouse = mouseDown[i];
+
+            if (!mouse) {
+                Input.mouse[i] = KeyState.released;
                 continue;
             }
 
-            if (keys[i] == KeyState.pressed) {
-                keys[i] = KeyState.inPress;
-            } else if (keys[i] == KeyState.released) {
-                keys[i] = KeyState.pressed;
+            if (Input.mouse[i] == KeyState.pressed) {
+                Input.mouse[i] = KeyState.inPress;
+            } else if (Input.mouse[i] == KeyState.released) {
+                Input.mouse[i] = KeyState.pressed;
             }
         }
     }
 
+    private static KeyInstance find(int id) {
+        for (KeyInstance key : keyArray) {
+            if (key.code == id)
+                return key;
+        }
+
+        System.err.println("something dun guffed");
+        return null;
+    }
+
     @Override
     public void keyReleased(KeyEvent e) {
-        Input.keysPressed[e.getKeyCode()] = false;
+        keyPressedArray.remove(e.getKeyCode());
+        keyArray.removeIf(keyInstance -> keyInstance.code == e.getKeyCode());
     }
 
     @Override
@@ -108,7 +143,7 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
     public void mousePressed(MouseEvent e) {
         if (e.getButton() > 4)
             return;
-        mouse[e.getButton()] = true;
+
         mouseDown[e.getButton()] = true;
     }
 
@@ -116,7 +151,7 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
     public void mouseReleased(MouseEvent e) {
         if (e.getButton() > 4)
             return;
-        mouse[e.getButton()] = false;
+
         mouseDown[e.getButton()] = false;
     }
 
@@ -154,5 +189,15 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 
     public static boolean mouseInRect(Vector2 pos, Vector2 size) {
         return mouseInBounds(pos, pos.addClone(size));
+    }
+}
+
+class KeyInstance {
+    public final int code;
+    public KeyState state;
+
+    public KeyInstance(final int index, KeyState state) {
+        this.code = index;
+        this.state = state;
     }
 }

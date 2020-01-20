@@ -1,11 +1,13 @@
 package com.Game.Entity.NPC;
 
+import com.Game.GUI.TextBox;
 import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
 import com.Game.World.World;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
+import com.Util.Other.Settings;
 
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
@@ -28,12 +30,17 @@ public class NPC {
     }
 
     public void update() {
-        if (Input.GetKey(KeyEvent.VK_E) && Vector2.distance(Main.player.position, position) < 150) {
-            onInteract();
-        }
+        if (image == null)
+            return;
 
         if (Render.onScreen(position, image)) {
             Render.drawImage(image, position.subtractClone(World.curWorld.offset));
+            if (Input.GetKeyDown(KeyEvent.VK_E)
+                    && Vector2.distance(Main.player.position, position) < 150
+                    && !Settings.paused()
+                    && TextBox.noText()) {
+                onInteract();
+            }
         }
 
         move();

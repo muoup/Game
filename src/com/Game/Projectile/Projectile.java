@@ -180,7 +180,7 @@ public class Projectile {
             setAim(adjust);
 
             try {
-                projectileConstructor = getClass().getConstructor(new Class[] {Vector2.class, Vector2.class, Projectile.class} );
+                projectileConstructor = getClass().getConstructor(Vector2.class, Vector2.class, Projectile.class);
             } catch (NoSuchMethodException e) {
                 System.err.println(getClass() + " does not contain a correct constructor!");
                 return;
@@ -225,7 +225,7 @@ public class Projectile {
             Constructor projectileConstructor;
 
             try {
-                projectileConstructor = getClass().getConstructor(new Class[] {Vector2.class, Vector2.class} );
+                projectileConstructor = getClass().getConstructor(Vector2.class, Vector2.class);
             } catch (NoSuchMethodException e) {
                 System.err.println(getClass() + " does not contain a correct constructor!");
                 return;

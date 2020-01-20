@@ -1,19 +1,19 @@
 package com.Util.Other;
 
 import com.Game.Main.Main;
+import com.Game.Main.MenuHandler;
 import com.Util.Math.Vector2;
 
 import java.awt.*;
 
 public class Settings {
     public static float cameraZoom = 320;
-    public static int fpsCap = 60;
-    public static boolean pause = false;
+    public static int fpsCap = 30;
     public static boolean showFPS = false;
     public static int resolutionIndex = 1;
     public static final float maxDistance = 50;
-    public static Font itemFont;
     public static int worldScale = 2;
+
     // In case xp rates are too fast, I'll cap leveling
     // This'll increase over time when more content is released
     public static final int lvlMax = 50;
@@ -28,10 +28,15 @@ public class Settings {
     public static final float rangedXPMultiplier = 1.5f;
     public static final float meleeXPMultiplier = 1.65f;
 
+    public static final double scrollSpeed = 1.75f;
+
     public static Font npcFont = null;
     public static Font skillPopupFont = null;
+    public static Font itemFont = null;
+    public static Font questFont = null;
 
     public static int fontSize = 25;
+    public static int volume = 0;
     public static boolean fullScreen = false;
     public static float cameraSensitivity = 0.25f;
 
@@ -45,4 +50,11 @@ public class Settings {
         return Main.graphics.getFontMetrics().stringWidth(string);
     }
 
+    public static boolean paused() {
+        return Main.menu.state != MenuHandler.MenuState.NoPause;
+    }
+
+    public static void disablePause() {
+        MenuHandler.setState(MenuHandler.MenuState.NoPause);
+    }
 }

@@ -1,9 +1,13 @@
-package com.Game.GUI.Questing;
+package com.Game.Questing;
+
+import com.Game.GUI.Chatbox.ChatBox;
+import com.Game.Main.Main;
 
 import java.awt.*;
 
 public class Quest {
     protected final int id;
+    protected int data;
     protected int completion;
     public String name;
 
@@ -13,10 +17,14 @@ public class Quest {
     protected final int HANDIN = 2;
     protected final int COMPLETE = 3;
 
-    public Quest(int id, String name) {
+    public final int completeData;
+
+    public Quest(int id, String name, int completeData) {
         this.id = id;
         this.completion = INCOMPLETE;
         this.name = name;
+        this.data = 0;
+        this.completeData = completeData;
     }
 
     public Color getColor() {
@@ -37,9 +45,23 @@ public class Quest {
         return Color.LIGHT_GRAY;
     }
 
-    public void parseData(int data) {}
+    public boolean isComplete() {
+        return data == completeData;
+    }
+
+    protected void parseData() {}
 
     public void setStatus(int status) {
         this.completion = status;
+    }
+
+    public void setData(int data) {
+        this.data = data;
+        Main.sendPacket("57" + id + ":" + data + ":" + Main.player.name);
+        parseData();
+    }
+
+    public void printClue() {
+        ChatBox.sendMessage("No quest message has been implemented, dev is lazy lmao.");
     }
 }

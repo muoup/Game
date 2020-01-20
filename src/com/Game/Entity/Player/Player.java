@@ -62,7 +62,9 @@ public class Player {
         if (health < maxHealth)
             health += Main.dTime() * healthRegen;
 
-        movement();
+        if (!Settings.paused())
+            movement();
+
         handleOffset();
     }
 
@@ -144,7 +146,7 @@ public class Player {
             curSpeed = new Vector2((float) ((dx + Math.signum(dx) * dMod) / Main.fps), (float) ((dy + Math.signum(dy) * dMod) / Main.fps));
         }
 
-        Vector2 movement = handleCollision(curSpeed);
+        Vector2 movement = handleCollision(curSpeed).scaleClone((float) Main.dTime());
 
         if (!movement.equalTo(Vector2.zero())) {
             position.add(movement);
@@ -176,11 +178,11 @@ public class Player {
 
     public Vector2 handleCollision(Vector2 curSpeed) {
         Vector2 speed = curSpeed;
-        Vector2 points[] = getPoints(curSpeed);
+        Vector2[] points = getPoints(curSpeed);
 
         if (!CollisionHandler.isFree(points)) {
-            Vector2 xPoints[] = getPoints(new Vector2(speed.x, 0));
-            Vector2 yPoints[] = getPoints(new Vector2(0, speed.y));
+            Vector2[] xPoints = getPoints(new Vector2(speed.x, 0));
+            Vector2[] yPoints = getPoints(new Vector2(0, speed.y));
 
             if (curSpeed.x != 0 && !CollisionHandler.isFree(xPoints))
                 speed.x = 0;

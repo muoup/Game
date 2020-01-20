@@ -41,7 +41,7 @@ public class ChatBox {
 
     // These really should not be touched because they are used for a purpose.
     private static boolean onStartup = true; // Initialization after graphic initialization
-    private static boolean moveBar = false; // Is the player moving the bar?
+    private static boolean moveBar = false; // Is the player moving the scroll bar?
     public static boolean typing = false; // Is the player typing?
     private static String type = ""; // The player's current message within the message bar.
     private static boolean scrollDown = false;
@@ -223,7 +223,7 @@ public class ChatBox {
             System.err.println("The graphics component is null!");
 
         if (messages.size() > maxMessages) {
-            maxScroll -= messages.get(0).getHeight();
+            distScroll -= messages.get(0).getHeight() + getPadding();
             messages.remove(0);
         }
 

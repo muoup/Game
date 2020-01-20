@@ -33,10 +33,12 @@ public class Main extends Canvas {
 
     public static final String ipAddress = "localhost";//"hacksugar.asuscomm.com";
     public static Player player;
-    public static Menu settings;
+    public static MenuHandler menu;
     public static Client client;
 
     public static MethodHandler methods;
+
+    private static long updateLength;
 
     public static void main(String[] args) {
         main = new Main();
@@ -79,11 +81,12 @@ public class Main extends Canvas {
     public void init() {
         Main.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-        player = new Player(Settings.playerSpawn, 250f, Color.GREEN, 2.75f);
-        settings = new Menu();
+        player = new Player(Settings.playerSpawn, 2500f, Color.GREEN, 2.75f);
+        menu = new MenuHandler();
 
-        Settings.npcFont = getFont("npc-text.ttf", 20, Font.BOLD);
+        Settings.npcFont = getFont("npc-text.ttf", 24, Font.BOLD);
         Settings.skillPopupFont = getFont("skill-text.ttf", 16, Font.PLAIN);
+        Settings.questFont = getFont("quest-text.ttf", 16, Font.PLAIN);
 
         methods = new MethodHandler();
 
@@ -91,22 +94,23 @@ public class Main extends Canvas {
     }
 
     public static double dTime() {
-        if (fps > Settings.fpsCap * 2 || fps < 5)
-            return 0;
-        return 1 / fps;
+        double timeStep = 0.0000000017 * updateLength;
+        if (timeStep <= 0 || timeStep >= 0.25) {
+            timeStep = 0.045;
+        }
+        return timeStep;
     }
 
     public void initMethods() {
         methods.player = player;
-        methods.settings = settings;
+        methods.settings = menu;
 
         GUI.init();
         Login.init();
     }
 
-    // Used for the shift of the settings
+    // Used for when frame settings are changed from the settings screen and need to be refreshed.
     public void updateFrame() {
-
         if (Settings.fullScreen) {
             frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         } else {
@@ -124,7 +128,7 @@ public class Main extends Canvas {
     // Calculate fps and run other functions
     public void run() {
 
-        // NOTE: just don't touch any of this, IntBoxSize got this off of StackOverFlow
+        // NOTE: just don't touch any of this, I got this off of StackOverFlow
         double lastFpsTime = 0;
         double lfps = 0;
         long lastLoopTime = System.nanoTime();
@@ -132,7 +136,7 @@ public class Main extends Canvas {
         while (running) {
             long optimalTime = 1000000000 / Settings.fpsCap;
             long now = System.nanoTime();
-            long updateLength = now - lastLoopTime;
+            updateLength = now - lastLoopTime;
 
             lastLoopTime = now;
 
@@ -147,29 +151,31 @@ public class Main extends Canvas {
                 lfps = 0;
             }
 
-            // Creates buffer graphics to pass to methods.
-            BufferStrategy bs = getBufferStrategy();
+            if (delta < 2) {
+                // Creates buffer graphics to pass to methods.
+                BufferStrategy bs = getBufferStrategy();
 
-            if (bs == null) {
-                createBufferStrategy(3);
-                continue;
+                if (bs == null) {
+                    createBufferStrategy(3);
+                    continue;
+                }
+
+                Graphics g = bs.getDrawGraphics();
+
+                Main.graphics = g;
+
+                Input.update();
+
+                if (isConnected && Main.dTime() != 0) {
+                    update();
+                    render();
+                } else {
+                    handleMenu();
+                }
+
+                bs.show();
+                g.dispose();
             }
-
-            Graphics g = bs.getDrawGraphics();
-
-            Main.graphics = g;
-
-            Input.update();
-
-            if (isConnected && Main.dTime() != 0) {
-                update();
-                render();
-            } else {
-                handleMenu();
-            }
-
-            bs.show();
-            g.dispose();
 
             long sleepTime = (lastLoopTime - System.nanoTime() + optimalTime) / 1000000;
 

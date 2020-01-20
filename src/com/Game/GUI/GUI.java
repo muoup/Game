@@ -5,7 +5,8 @@ import com.Game.GUI.GUIWindow.GUIWindow;
 import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.Inventory.InventoryDrag;
 import com.Game.GUI.Inventory.InventoryManager;
-import com.Game.GUI.Questing.QuestManager;
+import com.Game.Items.ItemStack;
+import com.Game.Questing.QuestManager;
 import com.Game.GUI.Skills.Skills;
 import com.Game.GUI.Skills.SkillsManager;
 import com.Game.Main.Main;
@@ -138,11 +139,57 @@ public class GUI {
                 break;
             case 3:
                 QuestManager.render();
+                QuestManager.update();
                 break;
             default:
                 System.err.println("There is something wrong.");
                 System.out.println(curMain);
                 break;
+        }
+    }
+
+    public static String formatAmount(int amount) {
+        if (amount >= 1000000000) {
+            return amount / 1000000000 + "b";
+        } else if (amount >= 1000000) {
+            return amount / 1000000 + "m";
+        } else if (amount >= 1000) {
+            return amount / 1000 + "k";
+        } else {
+            return amount + "";
+        }
+    }
+
+    public static void drawItem(int x, int y, ItemStack stack) {
+        Vector2 rectPos = getGridPosition(x, y);
+
+        Render.setColor(Color.BLACK);
+        Render.drawRectOutline(rectPos, GUI.invSize);
+
+        if (stack.getID() == 0)
+            return;
+
+        Render.drawImage(Render.getScaledImage(stack.getImage(), GUI.invSize), rectPos);
+
+        // If the stack of items contains more than one item, make sure to write the amount of items at the bottom
+        // right corner of the item box.
+        if (stack.getAmount() > 1) {
+            String text = formatAmount(stack.getAmount());
+            Render.setFont(Settings.itemFont);
+
+            Vector2 textPos = rectPos.addClone(new Vector2(GUI.IntBoxSize - Settings.sWidth(text) - 4, GUI.IntBoxSize - 4));
+
+            // Draws the amount of items in the item stack along with a white rectangle on top of it so that
+            // the text is easier to read.
+//
+//            Render.setColor(new Color(255, 255, 255, 150));
+//            Render.drawRectangle(textPos.subtractClone(Render.getStringWidth(text) * 0.05f, (Render.getStringHeight() - Render.getStringAscent() / 2)), Render.stringDimensions(text).scaleClone(1.1f));
+
+            Render.setColor(Color.GRAY);
+            Render.drawText(text, textPos.addClone(1, 0));
+
+            Render.setColor(new Color(18, 34, 20));
+            Render.drawText(text, textPos);
         }
     }
 }

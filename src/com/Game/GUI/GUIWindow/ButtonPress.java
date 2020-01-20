@@ -7,5 +7,5 @@ public interface ButtonPress {
      * Use a lambda ((params) -> methodName()) to get the button to call
      * the method when pressed.
      */
-    public abstract void run();
+    void run();
 }

@@ -164,9 +164,11 @@ public class Login {
     }
 
     public static String toPassword(String password) {
-        String ret = "";
+        StringBuilder builder = new StringBuilder();
+
         for (int i = 0; i < password.length(); i++)
-            ret += "*";
-        return ret;
+            builder.append("*");
+
+        return builder.toString();
     }
 }

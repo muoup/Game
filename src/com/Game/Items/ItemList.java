@@ -7,6 +7,7 @@ import com.Game.Items.Armor.Rock.ArmorType;
 import com.Game.Items.Consumables.Food.BlueFishFood;
 import com.Game.Items.Consumables.Food.ClownFishFood;
 import com.Game.Items.Consumables.Food.Seaweed;
+import com.Game.Items.Misc.QuestItem;
 import com.Game.Items.RawResource.*;
 import com.Game.Items.RawResource.Log.Log;
 import com.Game.Items.Tool.WoodHarp;
@@ -54,7 +55,8 @@ public enum ItemList {
     bronzeDagger(new DaggerWeapon(35, 1, 10, "Bronze Dagger", "Dull, but effective.", 1, 100)),
     ironDagger(new DaggerWeapon(36, 2, 20, "Iron Dagger", "Dull, but effective.", 1, 100)),
     goldDagger(new DaggerWeapon(37, 3, 30, "Gold Dagger", "Dull, but effective.", 1, 100)),
-    skyriteDagger(new DaggerWeapon(38, 4, 40, "Skyrite Dagger", "Dull, but effective.", 1, 100));
+    skyriteDagger(new DaggerWeapon(38, 4, 40, "Skyrite Dagger", "Dull, but effective.", 1, 100)),
+    parrotBird(new QuestItem(38, 0, "Bird", "I bet the Bird Watcher would like one of these.", 1, -1));
 
     public Item item;
 

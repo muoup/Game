@@ -5,8 +5,9 @@ import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.Skills.Skills;
 import com.Game.Main.Main;
-import com.Game.Main.Menu;
+import com.Game.Main.MenuHandler;
 import com.Game.Main.MethodHandler;
+import com.Game.Questing.QuestManager;
 import com.Game.World.World;
 import com.Util.Math.Vector2;
 import com.Util.Other.Settings;
@@ -114,6 +115,9 @@ public class Client {
             case "06":
                 takeAccData(message.split(":"));
                 break;
+            case "07":
+                takeQuestData(message.split(":"));
+                break;
             case "12":
                 String[] parts = message.split(":");
                 MethodHandler.playerConnections.add(new PlayerObject(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), parts[2]));
@@ -149,6 +153,16 @@ public class Client {
         }
 
         dataBuffer = new byte[4096];
+    }
+
+    private void takeQuestData(String[] split) {
+        for (int i = 1; i < split.length; i++) {
+            String s = split[i];
+            String[] split2 = s.split(" ");
+            int id = Integer.parseInt(split2[0]);
+            int data = Integer.parseInt(split2[1]);
+            QuestManager.setData(id, data);
+        }
     }
 
     public boolean connect(String username, String password, int connectionCode) {
@@ -211,9 +225,9 @@ public class Client {
 
     public void disconnect() {
         send("55" + Main.player.name);
-        Settings.pause = false;
+        Settings.disablePause();
         World.curWorld.resetWorld();
-        Main.settings.state = Menu.MenuState.SimplePause;
+        MenuHandler.setState(MenuHandler.MenuState.TextBoxPause);
         InventoryManager.reset();
         AccessoriesManager.init();
         Main.logout();

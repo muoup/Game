@@ -1,6 +1,7 @@
 package com.Game.World;
 
 import com.Game.Entity.Enemy.Chicken;
+import com.Game.Entity.NPC.BirdWatcher;
 import com.Game.Object.AreaTeleporter.CaveEntrance;
 import com.Game.Object.AreaTeleporter.InvisibleTeleporter;
 import com.Game.Object.SkillingAreas.*;
@@ -67,6 +68,9 @@ public class MainWorld extends World {
         new FishingArea(5103, 1604, FishingPreset.seaWeed);
 
         new CaveEntrance(5150, 3534, CaveEntrance.TeleType.caveEntrance); // Teleporter to underground area.
+
+        // Quest NPC
+        new BirdWatcher(2024, 2881);
 
         // Teleporter to Chess Dungeon
         new InvisibleTeleporter(5507, 1643, 135, 125, 2);

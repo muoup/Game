@@ -2,7 +2,7 @@ package com.Game.GUI.Chatbox;
 
 import com.Game.GUI.Banking.BankingHandler;
 import com.Game.GUI.Inventory.InventoryManager;
-import com.Game.GUI.Questing.QuestManager;
+import com.Game.Questing.QuestManager;
 import com.Game.GUI.SkillPopup.SkillPopup;
 import com.Game.GUI.Skills.Skills;
 import com.Game.Items.ItemList;

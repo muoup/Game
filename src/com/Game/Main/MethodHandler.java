@@ -24,7 +24,7 @@ public class MethodHandler {
 
     public Main main;
 
-    public Menu settings;
+    public MenuHandler settings;
     public Player player;
 
     public static ArrayList<NPC> npcs;
@@ -37,6 +37,9 @@ public class MethodHandler {
 
     private static ArrayList[] lists;
 
+    private static int fpsTotal = 0;
+    private static int fpsAmount = 0;
+
     public MethodHandler() {
         main = Main.main;
         npcs = new ArrayList();
@@ -48,20 +51,23 @@ public class MethodHandler {
         skillPopups = new ArrayList();
     }
 
+    public boolean canRender() {
+        return !Settings.paused() || MenuHandler.getState() == MenuHandler.MenuState.TextBoxPause;
+    }
+
     public void update() {
         if (Input.GetKeyDown(KeyEvent.VK_ESCAPE)) {
-            if (Settings.pause && TextBox.noText())
-                Main.settings.state = Menu.MenuState.PauseMenu;
-
-            Settings.pause = !Settings.pause;
+            if (!Settings.paused() && TextBox.noText())
+                MenuHandler.setState(MenuHandler.MenuState.PauseMenu);
+            else if (Settings.paused())
+                Settings.disablePause();
         }
 
-        TextBox.handleTextbox();
 
         if (Input.GetKeyDown(KeyEvent.VK_F1))
             Settings.showFPS = !Settings.showFPS;
 
-        if (Settings.pause)
+        if (Settings.paused())
             return;
 
         player.update();
@@ -71,7 +77,7 @@ public class MethodHandler {
     }
 
     public void render() {
-        if (!Settings.pause) {
+        if (canRender()) {
             World.curWorld.renderWorld();
 
             /*
@@ -88,6 +94,9 @@ public class MethodHandler {
                 GameObject object = objects.get(i);
                 object.updateObject();
             }
+            for (int i = 0; i < npcs.size(); i++) {
+                npcs.get(i).update();
+            }
             for (int i = 0; i < playerConnections.size(); i++) {
                 PlayerObject playerObject = playerConnections.get(i);
                 playerObject.tick();
@@ -99,10 +108,6 @@ public class MethodHandler {
             for (int i = 0; i < enemies.size(); i++) {
                 Enemy enemy = enemies.get(i);
                 enemy.updateEnemy();
-            }
-            for (int i = 0; i < npcs.size(); i++) {
-                NPC npc = npcs.get(i);
-                npc.update();
             }
 
             player.render();
@@ -116,6 +121,9 @@ public class MethodHandler {
                 popup.update();
             }
 
+            TextBox.handleTextbox();
+            TextBox.handleButtonPress();
+
             settings.curSelected = 0;
         } else {
             // Enter Pause Menu
@@ -124,9 +132,12 @@ public class MethodHandler {
         }
 
         if (Settings.showFPS) {
+            fpsTotal += Main.fps;
+            fpsAmount++;
+
             Render.setFont(new Font("Arial", Font.BOLD, 16));
             Render.setColor(Color.BLACK);
-            Render.drawText("FPS: " + (int) Main.fps, 15, 25);
+            Render.drawText("FPS: " + (int) Main.fps + "     Average FPS: " + (fpsTotal / fpsAmount), 15, 25);
         }
     }
 }

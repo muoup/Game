@@ -38,6 +38,7 @@ public class SkillsManager {
         Render.setFont(Settings.itemFont);
         Render.setColor(Color.LIGHT_GRAY);
         Render.drawBounds(GUI.GuiPos, GUI.GUIEnd());
+        Render.drawBorderedBounds(GUI.GuiPos, GUI.GUIEnd());
 
         for (int i = 0; i < skillImageNames.length; i++) {
             int x = i % 4;
