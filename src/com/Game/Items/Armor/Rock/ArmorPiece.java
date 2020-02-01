@@ -5,8 +5,12 @@ import com.Game.Items.Item;
 import com.Util.Other.SpriteSheet;
 
 public class ArmorPiece extends Item {
+    private ArmorType type;
+
     public ArmorPiece(int id, ArmorType type, int tier, String name, String examineText, int maxStack, int worth) {
-        super(id, SpriteSheet.armorSheet.getCell( (int) (tier / 10.0), type.ordinal()), name, examineText, maxStack, worth);
+        super(id, SpriteSheet.armorSheet.getCell((int) (tier / 10.0), type.ordinal()), name, examineText, maxStack, worth);
+        this.type = type;
+
         setTier(tier);
 
         switch (type) {
@@ -30,7 +34,9 @@ public class ArmorPiece extends Item {
 
     // TODO: Armor tier calculation.
     public void setTier(int tier) {
+        float multiplier = type.getMultiplier();
 
+        armor = tier * 0.125f + 10f;
     }
 }
 

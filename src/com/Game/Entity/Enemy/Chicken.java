@@ -21,7 +21,7 @@ public class Chicken extends Enemy {
 
         setMaxHealth(10);
         setBounds(4133, 2641,
-                    4650, 3100);
+                4650, 3100);
     }
 
     public void passiveAI() {

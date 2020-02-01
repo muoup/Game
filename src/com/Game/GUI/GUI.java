@@ -5,17 +5,19 @@ import com.Game.GUI.GUIWindow.GUIWindow;
 import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.Inventory.InventoryDrag;
 import com.Game.GUI.Inventory.InventoryManager;
-import com.Game.Items.ItemStack;
-import com.Game.Questing.QuestManager;
+import com.Game.GUI.Shop.Shop;
 import com.Game.GUI.Skills.Skills;
 import com.Game.GUI.Skills.SkillsManager;
+import com.Game.Items.ItemStack;
 import com.Game.Main.Main;
+import com.Game.Questing.QuestManager;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 import com.Util.Other.Settings;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
 public class GUI {
 
@@ -30,6 +32,8 @@ public class GUI {
             "levels.png",
             "questing.png"
     };
+
+    public static Shop currentShop = Shop.empty;
 
     public static Vector2 GUIEnd() {
         return GuiPos.addClone(4 * IntBoxSize, 5 * IntBoxSize);
@@ -53,7 +57,7 @@ public class GUI {
         categorySize = Vector2.identity(select);
         Vector2 mainOffset = new Vector2(IntBoxSize * 0.5f, IntBoxSize * 1.5f);
         GuiPos = res.subtractClone(new Vector2(IntBoxSize * 4f, IntBoxSize * 5.5f)).subtractClone(mainOffset);
-        below = GuiPos.addClone(0,  IntBoxSize * 5);
+        below = GuiPos.addClone(0, IntBoxSize * 5);
         Settings.itemFont = new Font("Arial", Font.PLAIN, (int) Settings.curResolution().x / 75);
 
         for (int i = 0; i < invImgNames.length; i++) {
@@ -100,6 +104,9 @@ public class GUI {
 
         currentGUI.tick();
 
+        currentShop.baseRender();
+        currentShop.baseUpdate();
+
         RightClick.update();
         RightClick.render();
 
@@ -120,6 +127,11 @@ public class GUI {
             curMain = selection;
 
             coolDown = 0.2f;
+        }
+
+        if (Input.GetKeyDown(KeyEvent.VK_TAB)) {
+            currentShop = (currentShop == Shop.empty) ?
+                    Shop.weapons : Shop.empty;
         }
     }
 

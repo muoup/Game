@@ -18,7 +18,8 @@ public class World {
     private static World[] worlds = {
             new MainWorld(), // Normal Overworld
             new Underground(), // Underground Zone
-            new ChessDungeon() // Probably not permanent
+            new ChessDungeon(), // Probably not permanent
+            new Tropics() // Tribal Lands with Natives to the Island
     };
 
     public static World curWorld = worlds[0];
@@ -107,7 +108,7 @@ public class World {
         Vector2 offset = World.curWorld.offset.addClone(screenSize.scaleClone(0.5f));
 
         Vector2 pos = new Vector2(DeltaMath.maxmin(offset.x / Settings.worldScale - miniMapSize, 0, worldImage.getWidth() - miniMapSize * 2),
-                DeltaMath.maxmin(offset.y / Settings.worldScale  - miniMapSize, 0, worldImage.getHeight() - miniMapSize * 2));
+                DeltaMath.maxmin(offset.y / Settings.worldScale - miniMapSize, 0, worldImage.getHeight() - miniMapSize * 2));
 
         BufferedImage imageMap = worldImage.getSubimage((int) pos.x, (int) pos.y, Math.min(miniMapSize * 2, worldImage.getWidth()), Math.min(miniMapSize * 2, worldImage.getHeight()));
         imageMap = Render.getScaledImage(imageMap, Vector2.identity(miniMapScale));

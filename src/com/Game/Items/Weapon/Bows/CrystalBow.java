@@ -1,6 +1,8 @@
 package com.Game.Items.Weapon.Bows;
 
 import com.Game.GUI.Inventory.AccessoriesManager;
+import com.Game.GUI.Skills.Skills;
+import com.Game.Items.ItemRequirement;
 import com.Game.Items.ItemSets;
 import com.Game.Items.Weapon.Weapon;
 import com.Game.Projectile.Projectile;
@@ -18,7 +20,8 @@ public class CrystalBow extends Weapon {
         itemSet = ItemSets.arrows;
         equipStatus = AccessoriesManager.WEAPON_SLOT;
 
-        weaponDamage = 2.5f;
+        weaponDamage = 1.25f;
+        requirement = new ItemRequirement(Skills.RANGED, 45);
     }
 
     public void adaptShot(Projectile projectile) {

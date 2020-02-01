@@ -43,8 +43,8 @@ public class MainWorld extends World {
         new MiningRock(3496, 4520, RockType.stone);
         new MiningRock(3668, 4473, RockType.stone);
         new MiningRock(3797, 4602, RockType.stone);
-//        new MiningRock(3656, 4692);
-//        new MiningRock(3444, 4811);
+        new MiningRock(3656, 4692, RockType.copper);
+        new MiningRock(3444, 4811, RockType.tin);
 //        new MiningRock(3759, 4832);
 
         new Furnace(5042, 4382);
@@ -74,5 +74,8 @@ public class MainWorld extends World {
 
         // Teleporter to Chess Dungeon
         new InvisibleTeleporter(5507, 1643, 135, 125, 2);
+
+        // Teleporter to Tribal Lands
+        new InvisibleTeleporter(500, 4100,1652, 3098, 3);
     }
 }

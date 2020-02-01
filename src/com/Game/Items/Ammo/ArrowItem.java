@@ -14,6 +14,6 @@ public class ArrowItem extends Item {
     }
 
     public Projectile createProjectile(Vector2 position, Vector2 direction, float damageMultiplier, float expMultiplier) {
-        return new Arrow(position, direction, 1.25f * damageMultiplier, 2f, expMultiplier, true);
+        return new Arrow(position, direction, 1.25f * damageMultiplier, 2.5f, expMultiplier, true);
     }
 }

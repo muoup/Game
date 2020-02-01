@@ -40,8 +40,30 @@ public class Projectile {
         this.damage = damage;
         this.friendly = friendly;
         this.expMultiplier = expMultiplier;
-        this.speed = speed;
+        this.speed = speed * Settings.projLengthMultiplier;
         this.rotate = false;
+
+        initPos = position.clone();
+
+        direction = Vector2.magnitudeDirection(position, aim).scale(speed);
+
+        // If the bullet is not going to move, there is no point in spawning it in.
+        if (!position.equalTo(aim)) {
+            MethodHandler.projectiles.add(this);
+            setCooldown(0.35f);
+        }
+    }
+
+    public Projectile(Vector2 position, Vector2 aim, Projectile arrow) {
+        this.position = position.clone();
+        this.aim = aim.clone();
+        this.damage = arrow.damage;
+        this.friendly = arrow.friendly;
+        this.expMultiplier = arrow.expMultiplier;
+        this.speed = arrow.speed;
+        this.rotate = arrow.rotate;
+        this.attackStyle = arrow.attackStyle;
+        this.duration = arrow.duration;
 
         initPos = position.clone();
 
@@ -89,7 +111,7 @@ public class Projectile {
         aim.add(image.getWidth() / 2, image.getHeight() / 2);
 
         if (rotate) {
-            double radians = Math.atan(-(aim.x - position.x)/(aim.y - position.y));
+            double radians = Math.atan(-(aim.x - position.x) / (aim.y - position.y));
 
             if (aim.y > position.y)
                 radians += Math.PI;
@@ -155,9 +177,11 @@ public class Projectile {
         }
     }
 
-    public void render() {}
+    public void render() {
+    }
 
-    public void update() {}
+    public void update() {
+    }
 
     protected void destroy() {
         MethodHandler.projectiles.remove(this);
@@ -175,7 +199,7 @@ public class Projectile {
 
             Constructor projectileConstructor;
 
-            Vector2 adjust = position.addClone(radius * Math.sin(theta),radius * Math.cos(theta));
+            Vector2 adjust = position.addClone(radius * Math.sin(theta), radius * Math.cos(theta));
 
             setAim(adjust);
 
@@ -186,7 +210,7 @@ public class Projectile {
                 return;
             }
 
-            for (int i = - amount / 2; i < amount / 2 + 1; i++) {
+            for (int i = -amount / 2; i < amount / 2 + 1; i++) {
                 if (i == 0)
                     continue;
 
@@ -197,7 +221,7 @@ public class Projectile {
                  */
 
                 try {
-                    Vector2 newAim = position.addClone(radius * Math.sin(theta + i * degrees),radius * Math.cos(theta + i * degrees));
+                    Vector2 newAim = position.addClone(radius * Math.sin(theta + i * degrees), radius * Math.cos(theta + i * degrees));
                     projectileConstructor.newInstance(position, newAim, this);
                 } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
@@ -218,20 +242,20 @@ public class Projectile {
                 theta += DeltaMath.pi;
             }
 
-            Vector2 adjust = position.addClone(radius * Math.sin(theta),radius * Math.cos(theta));
+            Vector2 adjust = position.addClone(radius * Math.sin(theta), radius * Math.cos(theta));
 
             setAim(adjust);
 
             Constructor projectileConstructor;
 
             try {
-                projectileConstructor = getClass().getConstructor(Vector2.class, Vector2.class);
+                projectileConstructor = getClass().getConstructor(Vector2.class, Vector2.class, Projectile.class);
             } catch (NoSuchMethodException e) {
-                System.err.println(getClass() + " does not contain a correct constructor!");
+                System.err.println(getClass() + " does not contain a correct multi-shot constructor!");
                 return;
             }
 
-            for (int i = - amount / 2; i < amount / 2 + 1; i++) {
+            for (int i = -amount / 2; i < amount / 2 + 1; i++) {
                 if (i == 0)
                     continue;
 
@@ -242,9 +266,9 @@ public class Projectile {
                  */
 
                 try {
-                    Vector2 newAim = position.addClone(radius * Math.sin(theta + i * degrees),radius * Math.cos(theta + i * degrees));
-                    projectileConstructor.newInstance(position, newAim);
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                    Vector2 newAim = position.addClone(radius * Math.sin(theta + i * degrees), radius * Math.cos(theta + i * degrees));
+                    projectileConstructor.newInstance(position, newAim, this);
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

@@ -19,6 +19,7 @@ public class GameObject {
     protected float timer = 0;
     protected float maxDistance;
     protected boolean canInteract = true;
+    protected Vector2 scale;
 
     public GameObject(int x, int y) {
         this.position = new Vector2(x, y);
@@ -32,7 +33,7 @@ public class GameObject {
                 continue;
             if (Vector2.distance(obj.position.addClone(Render.getImageSize(obj.image).scale(0.5f)), Input.mousePosition.addClone(World.curWorld.offset))
                     < Math.max(obj.image.getWidth(), obj.image.getHeight())
-                && obj instanceof UsableGameObject) {
+                    && obj instanceof UsableGameObject) {
                 return (UsableGameObject) obj;
             }
         }
@@ -44,7 +45,10 @@ public class GameObject {
         if (image == null || !Render.onScreen(position, image))
             return;
 
-        Render.drawImage(image,
+        if (scale == null)
+            scale = Render.getImageSize(image);
+
+        Render.drawImage(Render.getScaledImage(image, scale),
                 position.subtractClone(World.curWorld.offset));
 
         update();
@@ -53,7 +57,7 @@ public class GameObject {
 
         if (distance <= maxDistance && Input.GetKey(KeyEvent.VK_E) && !ChatBox.typing && canInteract) {
             canInteract = onInteract();
-        } else if (canInteract && !ChatBox.typing) {
+        } else if (!Input.GetKey(KeyEvent.VK_E) && !ChatBox.typing) {
             timer = 0;
             canInteract = true;
         }
@@ -113,6 +117,6 @@ public class GameObject {
     }
 
     public void setScale(int x, int y) {
-        this.image = Render.getScaledImage(image, x, y);
+        this.scale = new Vector2(x, y);
     }
 }

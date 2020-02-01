@@ -49,7 +49,8 @@ public class Quest {
         return data == completeData;
     }
 
-    protected void parseData() {}
+    protected void parseData() {
+    }
 
     public void setStatus(int status) {
         this.completion = status;

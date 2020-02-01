@@ -10,7 +10,7 @@ public class ChessDungeon extends World {
 
     public void initWorld() {
         // Teleporter to the Outside
-        new InvisibleTeleporter(135, 125,5507, 1643,  0);
+        new InvisibleTeleporter(135, 125, 5507, 1643, 0);
 
         // Chessboard Pieces
         new Pawn(502, 122, true);

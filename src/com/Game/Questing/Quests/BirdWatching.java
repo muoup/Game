@@ -3,8 +3,8 @@ package com.Game.Questing.Quests;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.Questing.Quest;
 
-public class BirdWatchingQuest extends Quest {
-    public BirdWatchingQuest(int id, String name) {
+public class BirdWatching extends Quest {
+    public BirdWatching(int id, String name) {
         super(id, name, 3);
     }
 

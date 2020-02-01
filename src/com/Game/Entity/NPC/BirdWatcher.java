@@ -55,8 +55,8 @@ public class BirdWatcher extends NPC {
 
     public void questStart() {
         TextBox.setText("Fantastic! I've always come by here to look at the birds"
-                        + "and I have always wanted one for myself, would you be able"
-                        + "to get one for me?");
+                + "and I have always wanted one for myself, would you be able"
+                + "to get one for me?");
         QuestManager.setData(0, 1);
     }
 

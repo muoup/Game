@@ -18,7 +18,7 @@ public class Underground extends World {
 
         new BigSpider(878, 2133);
         new BigSpider(1215, 2448);
-        new BigSpider(934,  2448);
+        new BigSpider(934, 2448);
         new BigSpider(1281, 2174);
 
         new Cockroach(3652, 2874);

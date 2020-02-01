@@ -27,9 +27,11 @@ public class DaggerWeapon extends Weapon {
     }
 
     // TODO: Find an algorithm to make a damage and accuracy from weapon tier.
+
     /**
      * Sets the weapon's damage using its tier, if the weapon is special, this method
      * is not required.
+     *
      * @param tier The tier of the weapon
      */
     public void setWeaponTier(int tier) {

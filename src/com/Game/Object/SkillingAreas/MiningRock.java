@@ -31,6 +31,7 @@ public class MiningRock extends GameObject {
 
             if (rpTimer <= 0) {
                 image = getImage(rockType.imageName);
+                rocks = (int) DeltaMath.range(rockType.minRocks, rockType.maxRocks);
             }
         }
     }
@@ -57,7 +58,7 @@ public class MiningRock extends GameObject {
         if (timer > maxTimer) {
             timer = 0;
             rocks--;
-            rockType.drops.getDrop().forEach(InventoryManager::addItem);
+            rockType.drops.determineOutput().forEach(InventoryManager::addItem);
             Skills.addExperience(Skills.MINING, rockType.xp);
 
             if (rocks == 0) {

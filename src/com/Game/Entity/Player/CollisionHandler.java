@@ -37,7 +37,7 @@ public class CollisionHandler {
             if (p.x < 0 || p.y < 0)
                 return false;
 
-            int rgb = col.colWorld.getRGB((int) p.x / Settings.worldScale, (int) p.y / Settings.worldScale);
+            int rgb = col.colWorld.getRGB((int) (p.x / Settings.worldScale), (int) p.y / (Settings.worldScale));
 
             if (rgb == colColor.getRGB())
                 return false;

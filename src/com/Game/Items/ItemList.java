@@ -15,19 +15,21 @@ import com.Game.Items.Weapon.Bows.CrystalBow;
 import com.Game.Items.Weapon.Superclasses.BowWeapon;
 import com.Game.Items.Weapon.Superclasses.DaggerWeapon;
 
+import java.awt.image.BufferedImage;
+
 // TODO: Organize Item IDS eventually. Change player saves.
 public enum ItemList {
     empty(new Item(0, "/", "/", "/", 0, 0)),
-    bow(new BowWeapon(1, 0, 1,"Bow","Get ready for the power of my bow!", 1, 170)),
+    bow(new BowWeapon(1, 0, 1, "Bow", "Get ready for the power of my bow!", 1, 170)),
     log(new Log(2, 1, ItemList.bow, "Log", "The remnants of a tree.", 1, 150)),
     arrow(new ArrowItem(3, "arrow.png", "Arrow", "Some sharp arrows!", 100000, 10)),
-    mapleBow(new BowWeapon(4, 5, 50, "Maple Bow", "This is really gonna hurt.", 1,375)),
-    clownfish(new ClownFishFood(5, "clownfish.png", "Clownfish", "This looks quite tasty.", 1,100)),
-    bluefish(new BlueFishFood(6, "bluefish.png", "Bluefish", "This looks very tasty.",1, 250)),
-    mapleLog(new Log(7, 50, ItemList.mapleBow, "Maple Log", "A sticky log, sounds useful to me.",1, 350)),
-    gold(new Coins(8, "gold_coin.png", "Coins", "[amt] shiny coins, good for trading..?",100000000, -1)),
+    mapleBow(new BowWeapon(4, 5, 50, "Maple Bow", "This is really gonna hurt.", 1, 375)),
+    clownfish(new ClownFishFood(5, "clownfish.png", "Clownfish", "This looks quite tasty.", 1, 100)),
+    bluefish(new BlueFishFood(6, "bluefish.png", "Bluefish", "This looks very tasty.", 1, 250)),
+    mapleLog(new Log(7, 50, ItemList.mapleBow, "Maple Log", "A sticky log, sounds useful to me.", 1, 350)),
+    gold(new Coins(8, "gold_coin.png", "Coins", "[amt] shiny coins, good for trading..?", 100000000, -1)),
     woodHarp(new WoodHarp(9, "wood_harp.png", "Wooden Harp", "I can get some coins from this. (35% effective)", 1, -1)),
-    rockHelmet(new ArmorPiece(10, ArmorType.helmet, 1,"Rock Helmet", "Someone went under a dock.", 1, 1000)),
+    rockHelmet(new ArmorPiece(10, ArmorType.helmet, 1, "Rock Helmet", "Someone went under a dock.", 1, 1000)),
     rockChestplate(new ArmorPiece(11, ArmorType.chestplate, 1, "Rock Chestplate", "And there they saw a rock.", 1, 5000)),
     rockLeggings(new ArmorPiece(12, ArmorType.leggings, 1, "Rock Leggings", "It wasn't a rock.", 1, 4000)),
     rockBoots(new ArmorPiece(13, ArmorType.boots, 1, "Rock Boots", "It was a rock lobster.", 1, 2000)),
@@ -45,18 +47,24 @@ public enum ItemList {
     spruceLog(new Log(25, 40, ItemList.spruceBow, "Spruce Wood", "Tier 40", 1, 100)),
     ashLog(new Log(26, 10, ItemList.ashBow, "Ash Wood", "Tier 10", 1, 100)),
     seaWeed(new Seaweed(27, "sea_weed.png", "Sea Weed", "Tasty", 1, 100)),
-    stone(new Ore(28, "stone.png", "Stone", "Tier 1", 1, 100)),
-    copperOre(new Ore(29, "copper_ore.png", "Copper Ore", "Tier 10", 1, 100)),
-    tinOre(new Ore(30, "tin_ore.png", "Tin Ore", "Tier 10", 1, 100)),
-    ironOre(new Ore(31, "iron_ore.png", "Iron Ore", "Tier 20", 1, 100)),
-    goldOre(new Ore(32, "gold_ore.png", "Gold Ore", "Tier 30", 1, 100)),
+    stone(new Ore(28, 0, "Stone", "Tier 1", 1, 100)),
+    copperOre(new Ore(29, 2, "Copper Ore", "Tier 10", 1, 100)),
+    tinOre(new Ore(30, 1, "Tin Ore", "Tier 10", 1, 100)),
+    ironOre(new Ore(31, 3, "Iron Ore", "Tier 20", 1, 100)),
+    goldOre(new Ore(32, 4, "Gold Ore", "Tier 30", 1, 100)),
     crystalBow(new CrystalBow(33, "Crystal Bow", "It's shines when I hold it sometimes.", 1, 100)),
     stoneDagger(new DaggerWeapon(34, 0, 1, "Stone Dagger", "Dull, but effective.", 1, 100)),
     bronzeDagger(new DaggerWeapon(35, 1, 10, "Bronze Dagger", "Dull, but effective.", 1, 100)),
     ironDagger(new DaggerWeapon(36, 2, 20, "Iron Dagger", "Dull, but effective.", 1, 100)),
     goldDagger(new DaggerWeapon(37, 3, 30, "Gold Dagger", "Dull, but effective.", 1, 100)),
     skyriteDagger(new DaggerWeapon(38, 4, 40, "Skyrite Dagger", "Dull, but effective.", 1, 100)),
-    parrotBird(new QuestItem(38, 0, "Bird", "I bet the Bird Watcher would like one of these.", 1, -1));
+    parrotBird(new QuestItem(39, 0, "Bird", "I bet the Bird Watcher would like one of these.", 1, -1)),
+    bronzeHelmet(new ArmorPiece(40, ArmorType.helmet, 10, "Bronze Helmet", "Someone went under a hopper.", 1, 1000)),
+    bronzeChestplate(new ArmorPiece(41, ArmorType.chestplate, 10, "Bronze Chestplate", "And there they saw a copper.", 1, 5000)),
+    bronzeLeggings(new ArmorPiece(42, ArmorType.leggings, 10, "Bronze Leggings", "It wasn't a copper.", 1, 4000)),
+    bronzeBoots(new ArmorPiece(43, ArmorType.boots, 10, "Bronze Boots", "It was a copper lobster.", 1, 2000)),
+    birdNest(new BirdNest(44, "bird_nest.png", "Bird Nest", "It appears that the bird left some goodies.", 1, -1));
+
 
     public Item item;
 
@@ -70,6 +78,10 @@ public enum ItemList {
 
     public int getID() {
         return item.id;
+    }
+
+    public BufferedImage getImage() {
+        return item.image;
     }
 
     public static ItemList getByName(String name) {
@@ -87,5 +99,9 @@ public enum ItemList {
 
     public ItemStack singleStack() {
         return new ItemStack(this, 1);
+    }
+
+    public int getPrice() {
+        return item.worth;
     }
 }

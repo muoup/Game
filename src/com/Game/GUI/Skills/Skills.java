@@ -81,7 +81,7 @@ public class Skills {
 
         while (result - 1 < exp) {
             i++;
-            result += (int)(Math.pow(1.085, i - 1) * 150);
+            result += (int) (Math.pow(1.085, i - 1) * 150);
         }
 
         return Math.max(i, 1);
@@ -91,12 +91,12 @@ public class Skills {
         int result = 0;
 
         for (int i = 2; i <= lvl; i++) {
-            result = (int)((Math.pow(1.085, i - 2) * 150) + result);
+            result = (int) ((Math.pow(1.085, i - 2) * 150) + result);
         }
 
         return result;
     }
-    
+
     public static float getExperience(int skill) {
         return exp[skill];
     }

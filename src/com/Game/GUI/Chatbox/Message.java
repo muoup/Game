@@ -80,7 +80,7 @@ public class Message {
     public static int getMessageIndexLine(int line) {
         int c = 0;
 
-        for (int i = 0; i < ChatBox.messages.size(); i ++) {
+        for (int i = 0; i < ChatBox.messages.size(); i++) {
             c += ChatBox.messages.get(c).lines;
 
             if (c >= line)

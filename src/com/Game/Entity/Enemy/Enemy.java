@@ -202,7 +202,7 @@ public class Enemy {
             moveTo = spawnPosition.addClone(DeltaMath.range(-maxRadius, maxRadius), DeltaMath.range(-maxRadius, maxRadius));
         else
             moveTo = new Vector2(DeltaMath.range(b1.x, b2.x),
-                                 DeltaMath.range(b1.y, b2.y));
+                    DeltaMath.range(b1.y, b2.y));
 
         movement = Vector2.magnitudeDirection(position, moveTo);
 

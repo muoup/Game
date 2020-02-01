@@ -5,6 +5,7 @@ import com.Game.Main.MenuHandler;
 import com.Util.Math.Vector2;
 
 import java.awt.*;
+import java.util.TimerTask;
 
 public class Settings {
     public static float cameraZoom = 320;
@@ -41,6 +42,7 @@ public class Settings {
     public static float cameraSensitivity = 0.25f;
 
     public static Vector2 playerSpawn = new Vector2(1000, 5500);
+    public static final float projLengthMultiplier = 1.775f;
 
     public static Vector2 curResolution() {
         return Settings.resolutions[Settings.resolutionIndex].clone();
@@ -56,5 +58,15 @@ public class Settings {
 
     public static void disablePause() {
         MenuHandler.setState(MenuHandler.MenuState.NoPause);
+    }
+
+    public static TimerTask wrap(Runnable r) {
+        return new TimerTask() {
+
+            @Override
+            public void run() {
+                r.run();
+            }
+        };
     }
 }

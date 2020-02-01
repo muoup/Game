@@ -140,7 +140,7 @@ public class Main extends Canvas {
 
             lastLoopTime = now;
 
-            double delta = updateLength / ((double)optimalTime);
+            double delta = updateLength / ((double) optimalTime);
 
             lastFpsTime += updateLength;
             lfps++;

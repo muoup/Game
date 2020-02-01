@@ -1,7 +1,7 @@
 package com.Game.Entity.Enemy.Underground;
 
 import com.Game.Entity.Enemy.Enemy;
-import com.Game.Items.EntityDropTable;
+import com.Game.Items.DropTable;
 import com.Game.Items.ItemList;
 import com.Game.Main.Main;
 import com.Game.Projectile.BeetleSpike;
@@ -53,7 +53,7 @@ public class Cockroach extends Enemy {
     }
 
     public void handleDrops() {
-        EntityDropTable table = new EntityDropTable();
+        DropTable table = new DropTable();
 
         table.add(ItemList.arrow, 5, 1);
         table.add(ItemList.arrow, 5, 0.25);

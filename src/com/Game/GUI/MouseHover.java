@@ -88,7 +88,7 @@ public class MouseHover {
 
             Render.setColor(Color.BLACK);
             Render.drawText(text, dPos.addClone(width * 0.05f, Settings.curResolution().y * 0.02f));
-       } else if (index == 2) { // Handle Stat Hovering
+        } else if (index == 2) { // Handle Stat Hovering
             String xp = "Current XP: " + (int) Skills.getExperience(hover);
             String lvlUp = "XP for Next Level: " + Skills.levelToExp(Skills.getLevel(hover) + 1);
 
@@ -114,7 +114,7 @@ public class MouseHover {
     }
 
     public static void updateEntity() {
-         if (!GUI.inGUI()) {
+        if (!GUI.inGUI()) {
             hover = -1;
             draw = Vector2.zero();
             hoverEntity = null;

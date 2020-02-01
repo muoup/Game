@@ -90,7 +90,7 @@ public class InventoryDrag {
             initMousePos = Input.mousePosition.clone();
         }
 
-        if (itemDrag.getID() != 0 && (timer > 0.1f || Vector2.distance(initMousePos, Input.mousePosition) > 16)) {
+        if (itemDrag.getID() != 0 && (timer > 0.35f || Vector2.distance(initMousePos, Input.mousePosition) > 16)) {
             click = false;
             InventoryManager.draggedIndex = inventoryIndex;
         }

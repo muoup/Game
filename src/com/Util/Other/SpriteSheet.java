@@ -21,8 +21,8 @@ public class SpriteSheet {
 
     /**
      * @param path Path of Image
-     * @param sW Width of each sprite cell
-     * @param sH Height of each sprite cell
+     * @param sW   Width of each sprite cell
+     * @param sH   Height of each sprite cell
      */
     public SpriteSheet(String path, int sW, int sH) {
         this.image = Main.getImage(path);

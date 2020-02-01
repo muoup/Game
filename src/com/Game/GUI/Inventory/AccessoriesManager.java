@@ -8,7 +8,6 @@ import com.Game.Main.Main;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
-import com.Util.Other.Settings;
 
 import java.awt.*;
 
@@ -46,22 +45,28 @@ public class AccessoriesManager {
     }
 
     public static void addAmount(int slot, int amount) {
-        setSlot(new ItemStack(accessories[slot].getItem(),amount + accessories[slot].getAmount()), slot);
+        setSlot(new ItemStack(accessories[slot].getItem(), amount + accessories[slot].getAmount()), slot);
     }
 
     public static void setSlot(ItemStack item, int slot) {
-        if (accessories[slot].getID() == item.getID()
-            && accessories[slot].getData() == item.getData()) {
-            int maxAmount = accessories[slot].getMaxAmount() - accessories[slot].getAmount();
-            if (maxAmount > item.getAmount())
-                maxAmount = item.getAmount();
+//        if (accessories[slot].getID() == item.getID()
+//                && accessories[slot].getData() == item.getData()) {
+//            int maxAmount = accessories[slot].getMaxAmount() - accessories[slot].getAmount();
+//            if (maxAmount > item.getAmount())
+//                maxAmount = item.getAmount();
+//
+//            Main.sendPacket("09" + slot + ":" + item.getID() + ":" + maxAmount + ":" + item.getData() + ":" + Main.player.name);
+//            accessories[slot].amount = maxAmount;
+//        } else {
+//            accessories[slot] = item;
+//            Main.sendPacket("09" + slot + ":" + item.getID() + ":" + item.getAmount() + ":" + item.getData() + ":" + Main.player.name);
+//        }
 
-            Main.sendPacket("09" + slot + ":" + item.getID() + ":" + maxAmount + ":" + item.getData() + ":" + Main.player.name);
-            accessories[slot].amount = maxAmount;
-        } else {
-            accessories[slot] = item;
-            Main.sendPacket("09" + slot + ":" + item.getID() + ":" + item.getAmount() + ":" + item.getData() + ":" + Main.player.name);
-        }
+        int stackSet = Math.min(item.getAmount(), item.getMaxAmount());
+
+        accessories[slot] = new ItemStack(item.getItemList(), stackSet, item.getData());
+
+        Main.sendPacket("09" + slot + ":" + item.getID() + ":" + item.getAmount() + ":" + item.getData() + ":" + Main.player.name);
 
         calculateArmor();
     }
@@ -93,33 +98,15 @@ public class AccessoriesManager {
             switch (i) {
                 // Draw highlight images of each under when they are made:
                 case WEAPON_SLOT:
-                    drawBox(x, y);
-
-                    break;
                 case AMMO_SLOT:
-                    drawBox(x, y);
-
-                    break;
                 case HELMET_SLOT:
-                    drawBox(x, y);
-
-                    break;
                 case NECKLACE_SLOT:
-                    drawBox(x, y);
-
-                    break;
                 case CHESTPLATE_SLOT:
-                    drawBox(x, y);
-
-                    break;
                 case LEGGING_SLOT:
-                    drawBox(x, y);
-
-                    break;
                 case BOOT_SLOT:
-                    drawBox(x, y);
-
+                    GUI.drawItem(x, y, accessories[i]);
                     break;
+
             }
 
             Vector2 rectPos = GUI.getGridPosition(x, y);
@@ -128,27 +115,6 @@ public class AccessoriesManager {
                 Render.drawImage(Render.getScaledImage(accessories[i].getImage(), GUI.invSize), rectPos);
             }
         }
-
-    //    Render.drawRectOutline(GUI.GuiPos.addClone(2, 2), GUI.GUIEnd().subtractClone(2, 2));
-    }
-
-    public static void drawBox(int x, int y) {
-        Vector2 rectPos = GUI.getGridPosition(x, y);
-
-        Render.setColor(Color.LIGHT_GRAY);
-        Render.drawRectangle(rectPos, Vector2.identity(GUI.IntBoxSize));
-
-        Render.setColor(Color.BLACK);
-        Render.drawRectOutline(rectPos, Vector2.identity(GUI.IntBoxSize));
-
-        ItemStack cur = accessories[x + y * 4];
-
-        String amount = InventoryManager.formatAmount(cur.getAmount());
-
-        Render.setFont(Settings.itemFont);
-
-        if (cur.getMaxAmount() > 1)
-            Render.drawText(amount, rectPos.addClone(new Vector2(GUI.IntBoxSize - Settings.sWidth(amount) - 4, GUI.IntBoxSize - 4)));
     }
 
     public static void update() {

@@ -16,6 +16,7 @@ public class Anvil extends UsableGameObject {
     ItemList leggings = ItemList.empty;
     ItemList boots = ItemList.empty;
     ItemList dagger = ItemList.empty;
+
     float experience = 0;
 
     public Anvil(int x, int y) {
@@ -36,7 +37,7 @@ public class Anvil extends UsableGameObject {
             ItemList itemList = stack.getItemList();
 
             switch (itemList) {
-                case stone:
+                case stone: // Stone (Ingot?)
                     helmet = ItemList.rockHelmet;
                     chestplate = ItemList.rockChestplate;
                     leggings = ItemList.rockLeggings;
@@ -45,7 +46,24 @@ public class Anvil extends UsableGameObject {
                     experience = 25f;
                     opt = createOption(option);
                     break;
+                case copperOre: // Bronze Ingot
+                    if (stack.getData() != 1)
+                        continue;
+                    helmet = ItemList.bronzeHelmet;
+                    chestplate = ItemList.bronzeChestplate;
+                    leggings = ItemList.bronzeLeggings;
+                    boots = ItemList.bronzeBoots;
+                    dagger = ItemList.bronzeDagger;
+                    experience = 65f;
+                    opt = createOption(option);
+                    break;
                 default:
+                    helmet = ItemList.empty;
+                    chestplate = ItemList.empty;
+                    leggings = ItemList.empty;
+                    boots = ItemList.empty;
+                    dagger = ItemList.empty;
+                    experience = 0f;
                     continue;
             }
 

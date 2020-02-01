@@ -3,6 +3,7 @@ package com.Game.GUI;
 import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.Inventory.InventoryDrag;
 import com.Game.GUI.Inventory.InventoryManager;
+import com.Game.GUI.Shop.Shop;
 import com.Game.Items.ItemStack;
 import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
@@ -23,12 +24,13 @@ public class RightClick {
     public static boolean render = false;
     public static State state = State.none;
     public static int groundItem;
-    public static UsableGameObject object;
+    public static UsableGameObject object = UsableGameObject.empty;
     public static ArrayList<String> options;
     public static float percentBox;
     private static float maxWidth = 0;
     public static float maxMultiplier = 1.1f;
     public static float coolDown = 0;
+    public static RightClickRunnable run = null;
 
     public static void init() {
         options = new ArrayList<String>();
@@ -38,6 +40,11 @@ public class RightClick {
     public static void render() {
         if (!render)
             return;
+
+        if (options.size() == 0) {
+            reset();
+            return;
+        }
 
         Render.setFont(new Font("Arial", Font.BOLD, 14));
 
@@ -57,7 +64,7 @@ public class RightClick {
         if (!render)
             state = null;
 
-        if (Input.GetMouseDown(3)) {
+        if (Input.GetMouseDown(3) && state == State.none) {
             groundItem = 0;
             state = (GUI.inGUI()) ? State.inventory : State.none;
 
@@ -75,6 +82,8 @@ public class RightClick {
 
         if (render && Input.GetMouse(1)) {
             // Select Right Click Option
+
+            System.out.println(state);
             if (state == State.inventory) {
                 Vector2 deltaDraw = draw.subtractClone(GUI.GuiPos);
 
@@ -88,7 +97,7 @@ public class RightClick {
                 item.getItem().RightClickIdentities(xx + yy * 4, option);
 
                 RightClick.coolDown = 0.1f;
-                render = false;
+                reset();
             } else if (state == State.groundItem) {
                 if (MethodHandler.groundItems.size() - 1 < groundItem) {
                     render = false;
@@ -129,6 +138,8 @@ public class RightClick {
                 removed += InventoryManager.addItem(selected.getItem(), amount);
 
                 MethodHandler.groundItems.get(groundItem).stack.get(option).amount -= removed;
+
+                reset();
             } else if (state == State.object) {
                 if (Vector2.distance(Main.player.position, object.position) > 512) {
                     render = false;
@@ -141,11 +152,69 @@ public class RightClick {
                     return;
 
                 object.onOption(option);
+
+                reset();
+            } else if (state == State.misc) {
+                int option = (int) Input.mousePosition.subtract(draw).y / (int) percentBox;
+
+                if (option > options.size() - 1)
+                    return;
+
+                if (run != null)
+                    run.run(option);
+
+                reset();
             }
         }
     }
 
+    private static void reset() {
+        render = false;
+        run = null;
+        state = State.none;
+    }
+
+    public static void customRightClick(ArrayList<String> optionArray, RightClickRunnable run) {
+        render = true;
+        state = State.misc;
+        draw = Input.mousePosition.clone();
+        deltaDraw = draw.clone();
+        RightClick.run = run;
+
+        System.out.println("customRightClick");
+
+        options.clear();
+
+        Render.setFont(Settings.itemFont);
+
+        options.addAll(optionArray);
+
+        for (String s : options) {
+            if (Render.getStringWidth(s) > maxWidth)
+                maxWidth = Render.getStringWidth(s);
+        }
+
+        maxWidth *= maxMultiplier;
+
+        if (deltaDraw.x + maxWidth > Settings.curResolution().x * 0.9f)
+            deltaDraw.x -= maxWidth;
+    }
+
+    public static void customRightClick(RightClickRunnable run, String... options) {
+        ArrayList<String> optionArray = new ArrayList();
+
+        for (String o : options)
+            optionArray.add(o);
+
+        customRightClick(optionArray, run);
+    }
+
     private static void inventoryRightClick() {
+        if (GUI.currentShop != Shop.empty) {
+            customRightClick((int option) -> GUI.currentShop.sellOption(option), "Sell 1", "Sell 10", "Sell 50", "Sell 100", "Sell All");
+            return;
+        }
+
         if (InventoryDrag.itemDrag.getID() != 0)
             return;
 
@@ -230,6 +299,7 @@ public class RightClick {
     }
 
     private static void objectRightClick(UsableGameObject object) {
+        RightClick.object.loseFocus();
         RightClick.object = object;
 
         if (object == null)
@@ -269,5 +339,5 @@ public class RightClick {
 }
 
 enum State {
-    none, inventory, groundItem, object
+    none, inventory, groundItem, object, misc
 }

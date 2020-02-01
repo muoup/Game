@@ -2,13 +2,13 @@ package com.Game.GUI.Chatbox;
 
 import com.Game.GUI.Banking.BankingHandler;
 import com.Game.GUI.Inventory.InventoryManager;
-import com.Game.Questing.QuestManager;
 import com.Game.GUI.SkillPopup.SkillPopup;
 import com.Game.GUI.Skills.Skills;
 import com.Game.Items.ItemList;
 import com.Game.Main.Main;
 import com.Game.Object.SkillingAreas.Tree;
 import com.Game.Object.SkillingAreas.TreePreset;
+import com.Game.Questing.QuestManager;
 import com.Game.World.World;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
@@ -114,7 +114,7 @@ public class Commands {
                         break;
                     }
                     QuestManager.setStatus(Integer.parseInt(parameters[0]),
-                                            Integer.parseInt(parameters[1]));
+                            Integer.parseInt(parameters[1]));
                 case "setskill":
                     if (parameters.length >= 2) {
                         int skill = Integer.parseInt(parameters[0]);

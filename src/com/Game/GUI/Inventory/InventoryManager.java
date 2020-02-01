@@ -8,7 +8,6 @@ import com.Game.Items.ItemStack;
 import com.Game.Main.Main;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
-import com.Util.Other.Settings;
 
 import java.awt.*;
 
@@ -103,7 +102,7 @@ public class InventoryManager {
         for (int i = 0; i < inventory.length; i++) {
             if (stack.getID() == inventory[i].getID() &&
                     stack.getAmount() == inventory[i].getAmount() &&
-                        stack.getData() == inventory[i].getData()) {
+                    stack.getData() == inventory[i].getData()) {
                 return i;
             }
         }
@@ -290,5 +289,16 @@ public class InventoryManager {
 
     public static int getData(int index) {
         return inventory[index].getData();
+    }
+
+    public static int getIndexFirst(ItemList item1, int data1, ItemList item2, int data2) {
+        for (int i = 0; i < inventory.length; i++) {
+            ItemStack stack = inventory[i];
+            if (stack.getID() == item1.getID() && stack.getData() == data1 ||
+                stack.getID() == item2.getID() && stack.getData() == data2)
+                return i;
+        }
+
+        return -1;
     }
 }

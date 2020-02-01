@@ -42,7 +42,7 @@ public class TextBox {
         if (strings.length < 2)
             return;
 
-        choices = new Choice[] {
+        choices = new Choice[]{
                 new Choice(run, strings[0]),
                 new Choice(run2, strings[1])
         };

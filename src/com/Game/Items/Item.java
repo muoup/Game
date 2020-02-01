@@ -117,7 +117,7 @@ public class Item {
             return;
         }
 
-        if (slotStack.getID() == id) {
+        if (slotStack.getID() == stack.getID() && slotStack.getData() == stack.getData()) {
             int add = stack.getAmount();
 
             if (add > slotStack.getMaxAmount() - slotStack.getAmount())
@@ -130,7 +130,7 @@ public class Item {
             ItemStack invHolder = InventoryManager.getStack(index).clone();
             InventoryManager.setItem(index, AccessoriesManager.getSlot(stack.equipStatus));
             AccessoriesManager.setSlot(
-                    new ItemStack(this, invHolder.getAmount(), invHolder.getData()),
+                    new ItemStack(invHolder.getItemList(), invHolder.getAmount(), invHolder.getData()),
                     stack.equipStatus);
         }
     }

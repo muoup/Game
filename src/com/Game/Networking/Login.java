@@ -123,8 +123,8 @@ public class Login {
         Render.drawText("Register", center.addClone(center.x / 3 - buttonSize.x + Render.getStringWidth("-"), center.y / 3.5f + Render.getStringHeight() * 1.1f));
 
         // Render Fields
-        Render.drawText(nameField + ((selected == 1) ? "|" : "") , namePos.addClone(Render.getStringWidth("-"), Render.getStringHeight() * 0.9f));
-        Render.drawText(toPassword(passwordField) + ((selected == 2) ? "|" : "") , passPos.addClone(Render.getStringWidth("-"), Render.getStringHeight() * 0.9f));
+        Render.drawText(nameField + ((selected == 1) ? "|" : ""), namePos.addClone(Render.getStringWidth("-"), Render.getStringHeight() * 0.9f));
+        Render.drawText(toPassword(passwordField) + ((selected == 2) ? "|" : ""), passPos.addClone(Render.getStringWidth("-"), Render.getStringHeight() * 0.9f));
     }
 
     public static void onType(String type) {

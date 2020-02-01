@@ -1,7 +1,7 @@
 package com.Game.Entity.Enemy.Underground;
 
 import com.Game.Entity.Enemy.Enemy;
-import com.Game.Items.EntityDropTable;
+import com.Game.Items.DropTable;
 import com.Game.Items.ItemList;
 import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
@@ -54,7 +54,7 @@ public class BigSpider extends Enemy {
         }
 
         if (timer2 > 4f) {
-            Enemy enemy = new BabySpider((int)position.x, (int) position.y);
+            Enemy enemy = new BabySpider((int) position.x, (int) position.y);
 
             enemy.health = enemy.maxHealth;
             enemy.enabled = true;
@@ -71,7 +71,7 @@ public class BigSpider extends Enemy {
     }
 
     public void handleDrops() {
-        EntityDropTable table = new EntityDropTable();
+        DropTable table = new DropTable();
         table.add(ItemList.stringItem, 5, 1);
         table.add(ItemList.gold, 750, 0.5);
         table.add(ItemList.copperOre, 1, 0.5);

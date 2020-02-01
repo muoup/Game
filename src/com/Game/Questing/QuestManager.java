@@ -1,7 +1,7 @@
 package com.Game.Questing;
 
 import com.Game.GUI.GUI;
-import com.Game.Questing.Quests.BirdWatchingQuest;
+import com.Game.Questing.Quests.BirdWatching;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
@@ -18,7 +18,7 @@ public class QuestManager {
     public static final Color COMPLETE = Color.GREEN.darker();
 
     public static Quest[] questList = {
-        new BirdWatchingQuest(0, "Bird Watching")
+            new BirdWatching(0, "Bird Watching")
     };
 
     public static void init() {
@@ -27,7 +27,10 @@ public class QuestManager {
 
     public static void render() {
         Render.setColor(Color.LIGHT_GRAY);
-        Render.drawBorderedBounds(GUI.GuiPos, GUI.GUIEnd());
+        Render.drawBounds(GUI.GuiPos, GUI.GUIEnd());
+
+        Render.setColor(Color.BLACK);
+        Render.drawRectOutlineBounds(GUI.GuiPos, GUI.GUIEnd());
 
         Render.setColor(Color.BLACK);
         Render.setFont(Settings.questFont.deriveFont(Font.BOLD, 24));

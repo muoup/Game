@@ -31,7 +31,8 @@ public class GUIWindow {
 
     /**
      * Sets the position and size of the GUI Window
-     * @param size Size of GUI
+     *
+     * @param size        Size of GUI
      * @param startOffset Position of GUI Relative to (0, 0)
      */
     public void setRestraints(Vector2 size, Vector2 startOffset) {
@@ -84,6 +85,7 @@ public class GUIWindow {
     public void addElement(GUIElement element) {
         elements.add(element);
     }
+
     void setPosition(Vector2 startOffset) {
         this.startOffset = startOffset;
     }

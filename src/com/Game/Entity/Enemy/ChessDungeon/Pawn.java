@@ -1,7 +1,7 @@
 package com.Game.Entity.Enemy.ChessDungeon;
 
 import com.Game.Entity.Enemy.Enemy;
-import com.Game.Items.EntityDropTable;
+import com.Game.Items.DropTable;
 import com.Game.Items.ItemList;
 import com.Game.Main.Main;
 import com.Game.Projectile.PawnProjectile;
@@ -26,7 +26,7 @@ public class Pawn extends Enemy {
         timer2 += Main.dTime();
 
         if (timer2 > 0.65f) {
-            new PawnProjectile(position, Main.player.position,  25.5f);
+            new PawnProjectile(position, Main.player.position, 25.5f);
             timer2 = 0;
         }
     }
@@ -46,7 +46,7 @@ public class Pawn extends Enemy {
     }
 
     public void handleDrops() {
-        EntityDropTable table = new EntityDropTable();
+        DropTable table = new DropTable();
         table.add(ItemList.gold, 500, 0.75);
         table.add(ItemList.goldDagger, 1, 0.5);
         table.add(ItemList.stone, 5, 0.5);

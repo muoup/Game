@@ -3,9 +3,8 @@ package com.Game.Entity.Player;
 import com.Game.Entity.Enemy.Enemy;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.GUI;
-import com.Game.GUI.GUIWindow.GUILibrary;
-import com.Game.GUI.GUIWindow.GUIWindow;
 import com.Game.GUI.Inventory.AccessoriesManager;
+import com.Game.GUI.RightClick;
 import com.Game.Items.ItemStack;
 import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
@@ -126,11 +125,11 @@ public class Player {
                 SoundHandler.playSound("default_shoot.wav");
             }
 
-            if (Input.GetKeyDown(KeyEvent.VK_TAB)) {
-                GUI.currentGUI = (GUI.currentGUI.isEmpty()) ?
-                        GUILibrary.bankingGUI :
-                        GUIWindow.emptyGUI;
-            }
+//            if (Input.GetKeyDown(KeyEvent.VK_TAB)) {
+//                GUI.currentGUI = (GUI.currentGUI.isEmpty()) ?
+//                        GUILibrary.bankingGUI :
+//                        GUIWindow.emptyGUI;
+//            }
 
             if (dx < 0)
                 image.row = 0;
@@ -146,7 +145,7 @@ public class Player {
             curSpeed = new Vector2((float) ((dx + Math.signum(dx) * dMod) / Main.fps), (float) ((dy + Math.signum(dy) * dMod) / Main.fps));
         }
 
-        Vector2 movement = handleCollision(curSpeed).scaleClone((float) Main.dTime());
+        Vector2 movement = handleCollision(curSpeed.scaleClone((float) Main.dTime()));
 
         if (!movement.equalTo(Vector2.zero())) {
             position.add(movement);
@@ -162,7 +161,12 @@ public class Player {
     }
 
     public void sendMovementPacket() {
+        cancelCurrent();
         Main.sendPacket("15" + Main.player.name + ":" + (int) position.x + ":" + (int) position.y + ":" + subWorld);
+    }
+
+    private void cancelCurrent() {
+        RightClick.object.loseFocus();
     }
 
     public Vector2[] getPoints(Vector2 offset) {
@@ -177,7 +181,7 @@ public class Player {
     }
 
     public Vector2 handleCollision(Vector2 curSpeed) {
-        Vector2 speed = curSpeed;
+        Vector2 speed = curSpeed.clone();
         Vector2[] points = getPoints(curSpeed);
 
         if (!CollisionHandler.isFree(points)) {
@@ -277,6 +281,6 @@ public class Player {
     }
 
     public Image getImage() {
-        return image.getImage();
+        return image.getImage(scale);
     }
 }

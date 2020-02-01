@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class UsableGameObject extends GameObject {
+    public static UsableGameObject empty = new UsableGameObject(0, 0);
     public ArrayList<String> options;
 
     public UsableGameObject(int x, int y) {
@@ -20,6 +21,10 @@ public class UsableGameObject extends GameObject {
     }
 
     public void onRightClick() {
+
+    }
+
+    public void loseFocus() {
 
     }
 }

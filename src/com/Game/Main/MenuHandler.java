@@ -100,7 +100,7 @@ public class MenuHandler {
                 break;
 
             case VideoSettings:
-                String[] options2 =  {
+                String[] options2 = {
                         ((curSelected == 0) ? "> " : "  ") + "Screen Resolution: " + Settings.resolutions[pseudoResIndex].toString(),
                         ((curSelected == 1) ? "> " : "  ") + "Show FPS: " + Settings.showFPS,
                         ((curSelected == 2) ? "> " : "  ") + "Fullscreen: " + tempFullscreen,
@@ -148,7 +148,7 @@ public class MenuHandler {
                 break;
 
             case AudioSettings:
-                String[] options3 =  {
+                String[] options3 = {
                         ((curSelected == 0) ? "> " : "  ") + "Volume: " + Settings.volume,
                         ((curSelected == 1) ? "> " : "  ") + "Apply Changes"
                 };
@@ -171,7 +171,7 @@ public class MenuHandler {
         }
     }
 
-    public void drawOptions(String[] options, JFrame window, int[] grayedOut)  {
+    public void drawOptions(String[] options, JFrame window, int[] grayedOut) {
         for (int i = 0; i < options.length; i++) {
             Render.setColor(Color.BLACK);
 

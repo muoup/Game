@@ -6,7 +6,7 @@ public class Arrow extends Projectile {
     public Arrow(Vector2 position, Vector2 aim, float damage, float speed, float expMultiplier, boolean friendly) {
         super(position, aim, damage, speed, expMultiplier, friendly);
         this.rotate = true;
-        this.duration = 1.25f;
+        this.duration = 1.5f;
         this.attackStyle = 1;
         setScale(16);
         setImage("arrow.png");
@@ -17,10 +17,7 @@ public class Arrow extends Projectile {
         This should only be called from multiShotEnemy()
      */
     public Arrow(Vector2 position, Vector2 aim, Projectile arrow) {
-        super(position, aim, arrow.damage, arrow.speed, arrow.expMultiplier, arrow.friendly);
-        this.rotate = true;
-        this.duration = 1.25f;
-        this.attackStyle = 1;
+        super(position, aim, arrow);
         setScale(16);
         setImage("arrow.png");
         setCooldown(0.45f);

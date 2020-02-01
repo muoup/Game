@@ -73,6 +73,7 @@ public class Render {
         return position.compareTo(offset.subtractClone(Render.getDimensions(image))) == 1
                 && offset.addClone(Settings.curResolution()).compareTo(position) == 1;
     }
+
     public static int getStringHeight() {
         return Main.graphics.getFontMetrics().getHeight();
     }
@@ -207,5 +208,9 @@ public class Render {
 
     public static Vector2 stringDimensions(String text) {
         return new Vector2(getStringWidth(text), getStringHeight() - getStringAscent() / 2);
+    }
+
+    public static void drawRectOutlineBounds(Vector2 guiPos, Vector2 guiEnd) {
+        drawRectOutline(guiPos, guiEnd.subtractClone(guiPos));
     }
 }
