@@ -176,7 +176,7 @@ public class Player {
         RightClick.object.loseFocus();
     }
 
-    public Vector2[] getPoints(Vector2 offset) {
+    public Vector2[] getPoints(Vector2 offset) {//gets the four corners of the player for collision 
         Vector2 pos = position.addClone(offset);
 
         return new Vector2[]{
@@ -187,7 +187,7 @@ public class Player {
         };
     }
 
-    public Vector2 handleCollision(Vector2 curSpeed) {
+    public Vector2 handleCollision(Vector2 curSpeed) {//handles collision with solid objects
         Vector2 speed = curSpeed.clone();
         Vector2[] points = getPoints(curSpeed);
 
@@ -205,7 +205,7 @@ public class Player {
         return speed;
     }
 
-    public void handleOffset() {
+    public void handleOffset() {//determines the offset of the camera so the camera can stop following the player when they run into the border of the map
         // These variables are probably not all necessary but it looks cleaner.
         Vector2 offset = World.curWorld.offset;
         Vector2 size = World.curWorld.size;
@@ -244,7 +244,7 @@ public class Player {
         }
     }
 
-    public void drawBar(Vector2 startPos, Color color, float current, float max) {
+    public void drawBar(Vector2 startPos, Color color, float current, float max) {//draws the bar that renderStats() renders the health and dash bars into
         Render.setColor(Color.LIGHT_GRAY);
         Render.drawRectangle(startPos,
                 new Vector2(GUI.IntBoxSize * 4, 16));
@@ -258,7 +258,7 @@ public class Player {
                 new Vector2(GUI.IntBoxSize * 4, 16));
     }
 
-    public void renderStats() {
+    public void renderStats() {//Renders the health bar and dash bar onto the screen above the menu. Only does the red and the cyan bars, does not do the outline.
         drawBar(GUI.GuiPos.subtractClone(new Vector2(0, 36)), Color.RED, health, maxHealth);
         drawBar(GUI.GuiPos.subtractClone(new Vector2(0, 18)), Color.CYAN.darker(), Settings.dashTimer - Math.max(0, dashTimer), Settings.dashTimer);
 
@@ -273,20 +273,20 @@ public class Player {
         }
     }
 
-    public void resetAggro() {
+    public void resetAggro() {//resets enemy aggression at a certain range
         for (Enemy enemy : MethodHandler.enemies) {
             enemy.loseTarget();
         }
     }
 
-    public void render() {
+    public void render() { //render draws the image on the screen at the proper coordinates and scale
         Render.drawImage(getImage(), position.x - scale.x / 2 - World.curWorld.offset.x,
                 position.y - scale.y / 2 - World.curWorld.offset.y);
 
         renderStats();
     }
 
-    public Image getImage() {
+    public Image getImage() {//gets the current animation state for the player sprite
         return current.getImage(scale);
     }
 }
