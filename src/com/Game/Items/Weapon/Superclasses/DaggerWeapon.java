@@ -10,7 +10,7 @@ import com.Util.Math.Vector2;
 import com.Util.Other.SpriteSheet;
 
 /**
- * The superclass for bow weapons. Extend if creating a new bow item.
+ * The superclass for bow fishing. Extend if creating a new bow item.
  */
 public class DaggerWeapon extends Weapon {
     public DaggerWeapon(int id, int cellID, int tier, String name, String examineText, int maxStack, int worth) {

@@ -15,7 +15,7 @@ public class Chicken extends Enemy {
         this.respawnTimer = 5.0f;
         this.maxTarget = 2f;
         this.name = "Chicken";
-        this.speed = 2.25f;
+        this.speed = 1.25f;
         this.maxRadius = 200f;
         this.passive = true;
 

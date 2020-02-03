@@ -39,6 +39,7 @@ public class Main extends Canvas {
     public static MethodHandler methods;
 
     private static long updateLength;
+    private static int timer;
 
     public static void main(String[] args) {
         main = new Main();
@@ -81,7 +82,7 @@ public class Main extends Canvas {
     public void init() {
         Main.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-        player = new Player(Settings.playerSpawn, 2500f, Color.GREEN, 2.75f);
+        player = new Player(Settings.playerSpawn, 275f, Color.GREEN, 2.75f);
         menu = new MenuHandler();
 
         Settings.npcFont = getFont("npc-text.ttf", 24, Font.BOLD);
@@ -94,11 +95,7 @@ public class Main extends Canvas {
     }
 
     public static double dTime() {
-        double timeStep = 0.0000000017 * updateLength;
-        if (timeStep <= 0 || timeStep >= 0.25) {
-            timeStep = 0.045;
-        }
-        return timeStep;
+        return 1 / fps;
     }
 
     public void initMethods() {

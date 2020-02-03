@@ -17,7 +17,6 @@ import com.Util.Other.Render;
 import com.Util.Other.Settings;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 
 public class GUI {
 
@@ -127,11 +126,6 @@ public class GUI {
             curMain = selection;
 
             coolDown = 0.2f;
-        }
-
-        if (Input.GetKeyDown(KeyEvent.VK_TAB)) {
-            currentShop = (currentShop == Shop.empty) ?
-                    Shop.weapons : Shop.empty;
         }
     }
 

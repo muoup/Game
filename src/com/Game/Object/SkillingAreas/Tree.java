@@ -1,5 +1,6 @@
 package com.Game.Object.SkillingAreas;
 
+import com.Game.Entity.Player.Player;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.Skills.Skills;
@@ -38,21 +39,25 @@ public class Tree extends GameObject {
 
     public boolean onInteract() {
         if (woodAmount == 0) {
+            Main.player.changeSprite(Player.idleAnimation);
             return false;
         }
 
         if (Skills.getLevel(Skills.WOODCUTTING) < preset.lvlReq) {
+            Main.player.changeSprite(Player.idleAnimation);
             ChatBox.sendMessage("You do not have the required woodcutting level of " + preset.lvlReq);
             return false;
         }
 
         if (InventoryManager.isFull()) {
+            Main.player.changeSprite(Player.idleAnimation);
             ChatBox.sendMessage("You do not have any inventory space!");
             return false;
         }
 
         timer += Main.dTime();
 
+        Main.player.changeSprite(Player.chopAnimation);
         drawPlayerProgressBar();
 
         if (timer > maxTimer) {
@@ -83,5 +88,10 @@ public class Tree extends GameObject {
         }
 
         return true;
+    }
+
+    public void loseFocus() {
+        timer = 0;
+        maxTimer = preset.getTimer();
     }
 }

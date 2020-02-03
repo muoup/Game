@@ -12,7 +12,6 @@ import com.Game.Projectile.Projectile;
 import com.Game.World.GroundItem;
 import com.Game.World.World;
 import com.Game.listener.Input;
-import com.Util.Other.AnimatedSprite;
 import com.Util.Other.Render;
 import com.Util.Other.Settings;
 
@@ -71,7 +70,6 @@ public class MethodHandler {
             return;
 
         player.update();
-        AnimatedSprite.timer += Main.dTime();
 
         GUI.update();
     }

@@ -3,6 +3,7 @@ package com.Game.GUI;
 import com.Game.Entity.Enemy.Enemy;
 import com.Game.GUI.Inventory.InventoryDrag;
 import com.Game.GUI.Inventory.InventoryManager;
+import com.Game.GUI.Shop.Shop;
 import com.Game.GUI.Skills.Skills;
 import com.Game.Items.ItemStack;
 import com.Game.Main.MethodHandler;
@@ -50,7 +51,7 @@ public class MouseHover {
     }
 
     public static void render(int index) {
-        if (hover <= -1)
+        if (hover <= -1 || GUI.currentShop != Shop.empty)
             return;
 
         if (index == 0 && !RightClick.render && InventoryDrag.itemDrag.getID() == 0) { // Handle Item Inventory Hovering

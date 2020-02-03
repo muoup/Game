@@ -120,6 +120,13 @@ public class Vector2 {
         return new Vector2(xx, yy);
     }
 
+    public Vector2 scaleClone(float x, float y) {
+        float xx = this.x * x;
+        float yy = this.y * y;
+
+        return new Vector2(xx, yy);
+    }
+
     public Vector2 scaleClone(float scaleFactor) {
         float xx = x * scaleFactor;
         float yy = y * scaleFactor;

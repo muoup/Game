@@ -16,13 +16,20 @@ public class MiningRock extends GameObject {
     public MiningRock(int x, int y, RockType rockType) {
         super(x, y);
 
-        this.maxTimer = DeltaMath.range(rockType.minTime, rockType.maxTime);
-        this.rocks = (int) DeltaMath.range(rockType.minRocks, rockType.maxRocks);
         this.rockType = rockType;
         this.maxDistance = 48;
+        this.rocks = (int) DeltaMath.range(rockType.minRocks, rockType.maxRocks);
+        this.maxTimer = getTime();
 
         image = getImage(rockType.imageName);
         setScale(128, 128);
+    }
+
+    public float getTime() {
+        if (rockType == null) {
+            return -1;
+        }
+        return DeltaMath.range(rockType.minTime, rockType.maxTime);
     }
 
     public void update() {
@@ -58,6 +65,7 @@ public class MiningRock extends GameObject {
         if (timer > maxTimer) {
             timer = 0;
             rocks--;
+            maxTimer = getTime();
             rockType.drops.determineOutput().forEach(InventoryManager::addItem);
             Skills.addExperience(Skills.MINING, rockType.xp);
 
@@ -68,5 +76,10 @@ public class MiningRock extends GameObject {
         }
 
         return true;
+    }
+
+    public void loseFocus() {
+        timer = 0;
+        maxTimer = getTime();
     }
 }

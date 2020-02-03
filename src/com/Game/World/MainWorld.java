@@ -2,6 +2,7 @@ package com.Game.World;
 
 import com.Game.Entity.Enemy.Chicken;
 import com.Game.Entity.NPC.BirdWatcher;
+import com.Game.Entity.NPC.Fisher;
 import com.Game.Object.AreaTeleporter.CaveEntrance;
 import com.Game.Object.AreaTeleporter.InvisibleTeleporter;
 import com.Game.Object.SkillingAreas.*;
@@ -71,6 +72,9 @@ public class MainWorld extends World {
 
         // Quest NPC
         new BirdWatcher(2024, 2881);
+
+        // Fisher
+        new Fisher(1301, 5497);
 
         // Teleporter to Chess Dungeon
         new InvisibleTeleporter(5507, 1643, 135, 125, 2);

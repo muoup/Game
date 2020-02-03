@@ -85,7 +85,8 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
             int i = iterator.next();
             int id = -1;
 
-            for (KeyInstance instance : keyArray) {
+            for (int i1 = 0; i1 < keyArray.size(); i1++) {
+                KeyInstance instance = keyArray.get(i1);
                 if (instance.code == i) {
                     id = i;
                     break;

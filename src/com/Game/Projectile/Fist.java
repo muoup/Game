@@ -13,7 +13,7 @@ public class Fist extends Projectile {
         this.rotate = true;
         this.duration = 0.5f;
         this.attackStyle = 1;
-        setScale(24);
+        setScale(36);
         setImage("fist.png");
         setCooldown(0.5f);
     }

@@ -14,13 +14,12 @@ import java.awt.*;
 
 public class Shop {
     public static Shop empty = new Shop(new ItemList[0]);
-    public static Shop weapons = new Shop(new ItemList[] {
-            ItemList.arrow,
-            ItemList.bow,
-            ItemList.clownfish
+    public static Shop fishing = new Shop(new ItemList[] {
+            ItemList.clownfish,
+            ItemList.fishBait
     });
 
-    public static ItemList selected = null;
+    public static ItemList selected = ItemList.empty;
 
     private static final int amountOptions[] = {
             1,
@@ -80,9 +79,20 @@ public class Shop {
             Render.setFont(Settings.itemFont);
             Render.drawText(text, textPos.addClone(1, 0));
         }
+
+        Render.setColor(Color.RED);
+        Render.drawBorderedRect(beginPos.addClone(size.x - GUI.IntBoxSize / 2, 0), new Vector2(GUI.IntBoxSize / 2));
     }
 
     public void baseUpdate() {
+        if (Input.GetMouseDown(1)) {
+            Vector2 rectBounds = beginPos.addClone(size.x - GUI.IntBoxSize / 2, 0);
+            if (Input.mouseInBounds(rectBounds, rectBounds.offsetClone(GUI.IntBoxSize / 2))) {
+                GUI.currentShop = Shop.empty;
+                return;
+            }
+        }
+
         if (!Input.GetMouseDown(3))
             return;
 
@@ -90,8 +100,10 @@ public class Shop {
             int x = i % maxRow;
             int y = i / maxRow;
 
-            Vector2 pos = beginPos.addClone(padding + (padding + 48) * x, padding + (padding + 48) * y);
-            Vector2 pos2 = pos.addClone(Render.getImageSize(offeredItems[i].getImage()));
+            Vector2 imageScale = new Vector2(GUI.IntBoxSize);
+
+            Vector2 pos = beginPos.addClone(padding + (padding + GUI.IntBoxSize) * x, padding + (padding + GUI.IntBoxSize) * y);
+            Vector2 pos2 = pos.addClone(imageScale);
 
             if (Input.mousePosition.greaterThan(pos) && pos2.greaterThan(Input.mousePosition)) {
                 RightClick.customRightClick((int option) -> buyOption(option),
@@ -114,10 +126,12 @@ public class Shop {
             multiplier = gold / selected.getPrice();
             price = multiplier * selected.getPrice();
         }
-
         if (multiplier == 0) {
             ChatBox.sendMessage("You are out of money!");
+            return;
         }
+
+        multiplier = Math.min(multiplier, InventoryManager.emptySpace() * selected.getMaxAmount());
 
         InventoryManager.removeItem(ItemList.gold, price);
         InventoryManager.addItem(selected, multiplier);
@@ -127,7 +141,7 @@ public class Shop {
         int multiplier = amountOptions[option];
         int amt = InventoryManager.getAmount(selected);
 
-        if (amt < multiplier) {
+        if (multiplier == -1 || amt < multiplier) {
             multiplier = amt;
         }
 

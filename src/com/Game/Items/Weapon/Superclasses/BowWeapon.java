@@ -12,7 +12,7 @@ import com.Util.Other.SpriteSheet;
 import java.awt.image.BufferedImage;
 
 /**
- * The superclass for bow weapons. Extend if creating a new bow item.
+ * The superclass for bow fishing. Extend if creating a new bow item.
  */
 public class BowWeapon extends Weapon {
     BufferedImage unstrung;

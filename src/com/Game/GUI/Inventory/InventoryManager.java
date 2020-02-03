@@ -301,4 +301,15 @@ public class InventoryManager {
 
         return -1;
     }
+
+    public static int emptySpace() {
+        int amount = 0;
+
+        for (ItemStack item : inventory) {
+            if (item.getID() == 0)
+                amount++;
+        }
+
+        return amount;
+    }
 }

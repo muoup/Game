@@ -5,6 +5,7 @@ import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.GUI;
 import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.RightClick;
+import com.Game.GUI.Shop.Shop;
 import com.Game.Items.ItemStack;
 import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
@@ -29,7 +30,6 @@ public class Player {
     public float dashMultiplier = 0f;
     public float dashTimer = 0f;
     public Vector2 scale;
-    private AnimatedSprite image;
     private Vector2 curSpeed = Vector2.zero();
     public float dx = 0, dy = 0, dMod = 0, shootTimer = 0;
     public String name = null;
@@ -40,13 +40,23 @@ public class Player {
 
     public float healthRegen = 1f;
 
+    public static final SpriteSheet playerIdle = new SpriteSheet("/Player/player_idle_1.png", 32, 32);
+    public static final SpriteSheet playerRun = new SpriteSheet("/Player/player_run.png", 32, 32);
+    public static final SpriteSheet playerChop  = new SpriteSheet("/Player/player_chop.png", 32, 32);
+
+    public static final AnimatedSprite idleAnimation = new AnimatedSprite(8, playerIdle, 2);
+    public static final AnimatedSprite runAnimation = new AnimatedSprite(12, playerRun, 4);
+    public static final AnimatedSprite chopAnimation = new AnimatedSprite(16, playerChop, 8);
+
+    public AnimatedSprite current = idleAnimation;
+    private boolean leftFacing = true;
+
     public Player(Vector2 position, float speed, Color playerColor, float dash) {
         this.position = position;
         this.speed = speed;
         this.playerColor = playerColor;
         this.dashMultiplier = dash;
-        this.scale = new Vector2(28, 76);
-        this.image = new AnimatedSprite(SpriteSheet.playerSheet, 12, 0);
+        this.scale = new Vector2(80, 80);
 
         init();
     }
@@ -57,6 +67,8 @@ public class Player {
     public void update() {
         shootTimer -= Main.dTime();
         dashTimer -= Main.dTime();
+
+        current.update();
 
         if (health < maxHealth)
             health += Main.dTime() * healthRegen;
@@ -91,19 +103,19 @@ public class Player {
         if (canMove && !ChatBox.typing && Main.fps > 0) {
 
             if (Input.GetKey(KeyEvent.VK_A)) {
-                dx -= speed;
+                curSpeed.x -= 1;
             }
 
             if (Input.GetKey(KeyEvent.VK_D)) {
-                dx += speed;
+                curSpeed.x += 1;
             }
 
             if (Input.GetKey(KeyEvent.VK_W)) {
-                dy -= speed;
+                curSpeed.y -= 1;
             }
 
             if (Input.GetKey(KeyEvent.VK_S)) {
-                dy += speed;
+                curSpeed.y += 1;
             }
 
             if (Input.GetKeyDown(KeyEvent.VK_E)) {
@@ -111,7 +123,7 @@ public class Player {
             }
 
             if (Input.GetKeyDown(KeyEvent.VK_SHIFT) && dashTimer <= 0) {
-                speedMod = speed * dashMultiplier;
+                speedMod = dashMultiplier;
                 dashTimer = Settings.dashTimer;
             }
 
@@ -124,32 +136,27 @@ public class Player {
 
                 SoundHandler.playSound("default_shoot.wav");
             }
-
-//            if (Input.GetKeyDown(KeyEvent.VK_TAB)) {
-//                GUI.currentGUI = (GUI.currentGUI.isEmpty()) ?
-//                        GUILibrary.bankingGUI :
-//                        GUIWindow.emptyGUI;
-//            }
-
-            if (dx < 0)
-                image.row = 0;
-
-            if (dx > 0)
-                image.row = 1;
-
-            dMod = speedMod;
-
-            if (dx != 0 && dy != 0)
-                dMod /= Math.sqrt(2);
-
-            curSpeed = new Vector2((float) ((dx + Math.signum(dx) * dMod) / Main.fps), (float) ((dy + Math.signum(dy) * dMod) / Main.fps));
         }
 
-        Vector2 movement = handleCollision(curSpeed.scaleClone((float) Main.dTime()));
+        Vector2 move = curSpeed.normalize().scaleClone((float) Main.dTime() * speed * (1 + speedMod));
+        Vector2 movement = handleCollision(move);
 
         if (!movement.equalTo(Vector2.zero())) {
             position.add(movement);
+            GUI.currentShop = Shop.empty;
+            changeSprite(runAnimation);
             sendMovementPacket();
+
+            if (movement.x > 0) leftFacing = false; else leftFacing = true;
+        } else if (current == runAnimation){
+            changeSprite(idleAnimation);
+        }
+    }
+
+    public void changeSprite(AnimatedSprite spriteSheet) {
+        if (current != spriteSheet) {
+            current = spriteSheet;
+            current.reset();
         }
     }
 
@@ -238,7 +245,6 @@ public class Player {
     }
 
     public void drawBar(Vector2 startPos, Color color, float current, float max) {
-
         Render.setColor(Color.LIGHT_GRAY);
         Render.drawRectangle(startPos,
                 new Vector2(GUI.IntBoxSize * 4, 16));
@@ -274,13 +280,13 @@ public class Player {
     }
 
     public void render() {
-        Render.drawImage(image.getImage(scale), position.x - scale.x / 2 - World.curWorld.offset.x,
+        Render.drawImage(getImage(), position.x - scale.x / 2 - World.curWorld.offset.x,
                 position.y - scale.y / 2 - World.curWorld.offset.y);
 
         renderStats();
     }
 
     public Image getImage() {
-        return image.getImage(scale);
+        return current.getImage(scale);
     }
 }

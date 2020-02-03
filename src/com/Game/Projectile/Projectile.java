@@ -64,6 +64,8 @@ public class Projectile {
         this.rotate = arrow.rotate;
         this.attackStyle = arrow.attackStyle;
         this.duration = arrow.duration;
+        this.image = arrow.image;
+        this.scale = arrow.scale;
 
         initPos = position.clone();
 

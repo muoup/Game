@@ -10,7 +10,7 @@ public class Arrow extends Projectile {
         this.attackStyle = 1;
         setScale(16);
         setImage("arrow.png");
-        setCooldown(0.45f);
+        setCooldown(0.65f);
     }
 
     /*
@@ -18,8 +18,5 @@ public class Arrow extends Projectile {
      */
     public Arrow(Vector2 position, Vector2 aim, Projectile arrow) {
         super(position, aim, arrow);
-        setScale(16);
-        setImage("arrow.png");
-        setCooldown(0.45f);
     }
 }

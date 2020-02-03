@@ -1,5 +1,6 @@
 package com.Game.Object;
 
+import com.Game.Entity.Player.Player;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
@@ -57,13 +58,22 @@ public class GameObject {
 
         if (distance <= maxDistance && Input.GetKey(KeyEvent.VK_E) && !ChatBox.typing && canInteract) {
             canInteract = onInteract();
-        } else if (!Input.GetKey(KeyEvent.VK_E) && !ChatBox.typing) {
+        } else if (!Input.GetKey(KeyEvent.VK_E) && !ChatBox.typing && !canInteract) {
             timer = 0;
             canInteract = true;
+            Main.player.changeSprite(Player.idleAnimation);
+        }
+
+        if (!Input.GetKey(KeyEvent.VK_E) && distance <= maxDistance) {
+            loseFocus();
         }
     }
 
     public void update() {
+
+    }
+
+    public void loseFocus() {
 
     }
 

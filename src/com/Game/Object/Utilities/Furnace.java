@@ -10,11 +10,9 @@ import com.Util.Other.Settings;
 import java.util.Timer;
 
 public class Furnace extends UsableGameObject {
-    int craftAmount = -1;
-    int craftOption = -1;
-
     private Runnable command;
     private Timer repeat;
+    private boolean run = false;
 
     public Furnace(int x, int y) {
         super(x, y);
@@ -52,6 +50,7 @@ public class Furnace extends UsableGameObject {
 
     public void loseFocus() {
         command = null;
+        run = false;
         repeat.cancel();
         repeat.purge();
     }
@@ -89,8 +88,8 @@ public class Furnace extends UsableGameObject {
         int slot = InventoryManager.getIndexFirst(ItemList.copperOre, 0, ItemList.tinOre, 0);
 
         if (slot == -1) {
-            repeat.cancel();
-            repeat.purge();
+            repeat = new Timer();
+            run = false;
             return;
         }
 
@@ -102,20 +101,27 @@ public class Furnace extends UsableGameObject {
         Skills.addExperience(Skills.SMITHING, 45);
 
         repeat.schedule(Settings.wrap(command), 1250);
+        run = true;
     }
 
     public void craft(ItemList ore, int data, int experience) {
         int slot = InventoryManager.getIndex(ore.singleStack());
 
         if (slot == -1) {
-            repeat.cancel();
-            repeat.purge();
+            command = null;
+            run = false;
+            repeat = new Timer();
             return;
         }
 
         InventoryManager.setData(slot, data);
         Skills.addExperience(Skills.SMITHING, experience);
 
+        if (!run) {
+            repeat = new Timer();
+        }
+
         repeat.schedule(Settings.wrap(command), 2500);
+        run = true;
     }
 }

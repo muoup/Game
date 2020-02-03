@@ -3,6 +3,7 @@ package com.Game.Object.SkillingAreas;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.Skills.Skills;
+import com.Game.Items.ItemList;
 import com.Game.Main.Main;
 import com.Game.Object.GameObject;
 
@@ -33,15 +34,28 @@ public class FishingArea extends GameObject {
 
         timer += Main.dTime();
 
+        if (InventoryManager.itemCount(ItemList.fishBait) >= 1)
+            timer += Main.dTime();
+
         drawPlayerProgressBar();
 
         if (timer > maxTimer) {
             timer = 0;
             maxTimer = preset.getTimer();
+
             InventoryManager.addItem(preset.fish, 1);
             Skills.addExperience(Skills.FISHING, preset.getXp());
+
+            if (InventoryManager.itemCount(ItemList.fishBait) >= 1) {
+                InventoryManager.removeItem(ItemList.fishBait, 1);
+            }
         }
 
         return true;
+    }
+
+    public void loseFocus() {
+        timer = 0;
+        maxTimer = preset.getTimer();
     }
 }

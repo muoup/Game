@@ -1,12 +1,13 @@
 package com.Util.Other;
 
+import com.Game.Main.Main;
 import com.Util.Math.Vector2;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class AnimatedSprite {
-    public static float timer = 0;
+    public float timer = 0;
     private SpriteSheet spriteSheet;
     private Vector2[] cellList;
     private BufferedImage image;
@@ -19,6 +20,12 @@ public class AnimatedSprite {
         calculateCells();
     }
 
+    public AnimatedSprite(int fps, SpriteSheet sheet, int totalCells) {
+        this.spriteSheet = sheet;
+        this.fps = fps;
+        calculateCells(totalCells);
+    }
+
     public AnimatedSprite(SpriteSheet sheet, Vector2[] cellList, int fps) {
         this.fps = fps;
         this.spriteSheet = sheet;
@@ -28,6 +35,15 @@ public class AnimatedSprite {
     public AnimatedSprite(SpriteSheet sheet, int fps, int column) {
         this(sheet, fps);
         this.row = column;
+    }
+
+    public void update() {
+        timer += Main.dTime() * 0.25f;
+    }
+
+    public void reset() {
+        timer = 0;
+
     }
 
     public BufferedImage getImage() {
@@ -62,5 +78,24 @@ public class AnimatedSprite {
         }
 
         cellList = cells.toArray(new Vector2[cells.size()]);
+    }
+
+    public void calculateCells(int totalCells) {
+        ArrayList<Vector2> cells = new ArrayList<>();
+
+        loop:
+        for (int y = 0; y < spriteSheet.rows; y++) {
+            for (int x = 0; x < spriteSheet.columns; x++) {
+                if (y * spriteSheet.columns + x > totalCells - 1)
+                    break loop;
+                cells.add(new Vector2(x, y));
+            }
+        }
+
+        cellList = cells.toArray(new Vector2[cells.size()]);
+    }
+
+    public String toString() {
+        return spriteSheet.columns + " x " + spriteSheet.rows;
     }
 }

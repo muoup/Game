@@ -62,7 +62,7 @@ public class RightClick {
 
     public static void update() {
         if (!render)
-            state = null;
+            state = State.none;
 
         if (Input.GetMouseDown(3) && state == State.none) {
             groundItem = 0;
@@ -83,7 +83,6 @@ public class RightClick {
         if (render && Input.GetMouse(1)) {
             // Select Right Click Option
 
-            System.out.println(state);
             if (state == State.inventory) {
                 Vector2 deltaDraw = draw.subtractClone(GUI.GuiPos);
 
@@ -181,8 +180,6 @@ public class RightClick {
         deltaDraw = draw.clone();
         RightClick.run = run;
 
-        System.out.println("customRightClick");
-
         options.clear();
 
         Render.setFont(Settings.itemFont);
@@ -211,7 +208,10 @@ public class RightClick {
 
     private static void inventoryRightClick() {
         if (GUI.currentShop != Shop.empty) {
-            customRightClick((int option) -> GUI.currentShop.sellOption(option), "Sell 1", "Sell 10", "Sell 50", "Sell 100", "Sell All");
+            if (inventoryStack().getID() != 0) {
+                Shop.selected = inventoryStack().getItemList();
+                customRightClick((int option) -> GUI.currentShop.sellOption(option), "Sell 1", "Sell 10", "Sell 50", "Sell 100", "Sell All");
+            }
             return;
         }
 
@@ -222,12 +222,7 @@ public class RightClick {
 
         state = State.inventory;
 
-        Vector2 deltaMouse = Input.mousePosition.subtractClone(GUI.GuiPos);
-
-        int xx = (int) deltaMouse.x / GUI.IntBoxSize;
-        int yy = (int) deltaMouse.y / GUI.IntBoxSize;
-
-        ItemStack item = InventoryManager.inventory[xx + yy * 4];
+        ItemStack item = inventoryStack();
 
         if (item.getID() == 0 || item.getAmount() == 0)
             return;
@@ -257,6 +252,15 @@ public class RightClick {
 
         options.add("Drop");
         options.add("Examine");
+    }
+
+    public static ItemStack inventoryStack() {
+        Vector2 deltaMouse = Input.mousePosition.subtractClone(GUI.GuiPos);
+
+        int xx = (int) deltaMouse.x / GUI.IntBoxSize;
+        int yy = (int) deltaMouse.y / GUI.IntBoxSize;
+
+        return InventoryManager.inventory[xx + yy * 4];
     }
 
     private static void groundRightClick() {

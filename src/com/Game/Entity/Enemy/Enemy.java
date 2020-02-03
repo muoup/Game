@@ -43,7 +43,7 @@ public class Enemy {
 
     public BufferedImage image;
 
-    public String name = getClass() + "NAME NEEDS TO BE CHANGED";
+    public String name = getClass() + " NAME NEEDS TO BE CHANGED";
     public boolean temp = false;
 
     public Enemy(int x, int y) {

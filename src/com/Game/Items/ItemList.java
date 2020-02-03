@@ -63,8 +63,8 @@ public enum ItemList {
     bronzeChestplate(new ArmorPiece(41, ArmorType.chestplate, 10, "Bronze Chestplate", "And there they saw a copper.", 1, 5000)),
     bronzeLeggings(new ArmorPiece(42, ArmorType.leggings, 10, "Bronze Leggings", "It wasn't a copper.", 1, 4000)),
     bronzeBoots(new ArmorPiece(43, ArmorType.boots, 10, "Bronze Boots", "It was a copper lobster.", 1, 2000)),
-    birdNest(new BirdNest(44, "bird_nest.png", "Bird Nest", "It appears that the bird left some goodies.", 1, -1));
-
+    birdNest(new BirdNest(44, "bird_nest.png", "Bird Nest", "It appears that the bird left some goodies.", 1, -1)),
+    fishBait(new Item(45, "fish_bait.png", "Fish Bait", "This will make me fish faster.", 25000000, 55));
 
     public Item item;
 
@@ -103,5 +103,9 @@ public enum ItemList {
 
     public int getPrice() {
         return item.worth;
+    }
+
+    public int getMaxAmount() {
+        return item.maxStack;
     }
 }

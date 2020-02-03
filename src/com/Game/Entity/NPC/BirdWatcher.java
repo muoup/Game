@@ -7,16 +7,11 @@ import com.Game.GUI.TextBox;
 import com.Game.Items.ItemList;
 import com.Game.Main.Main;
 import com.Game.Questing.QuestManager;
-import com.Util.Math.Vector2;
 
 public class BirdWatcher extends NPC {
 
-    Vector2 initPosition;
-
     public BirdWatcher(int x, int y) {
         super(0, x, y);
-
-        initPosition = new Vector2(x, y);
 
         image = Main.main.getImageFromRoot("testNPC.png");
     }

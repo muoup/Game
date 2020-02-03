@@ -10,4 +10,8 @@ public class WebSkillShot extends Projectile {
         setScale(18);
         setImage("web.png");
     }
+
+    public WebSkillShot(Vector2 position, Vector2 aim, Projectile arrow) {
+        super(position, aim, arrow);
+    }
 }

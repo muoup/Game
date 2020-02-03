@@ -10,4 +10,8 @@ public class BeetleSpikeAvoidable extends Projectile {
         setScale(16);
         setImage("beetle_spike2.png");
     }
+
+    public BeetleSpikeAvoidable(Vector2 position, Vector2 aim, Projectile arrow) {
+        super(position, aim, arrow);
+    }
 }

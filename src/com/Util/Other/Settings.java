@@ -9,7 +9,7 @@ import java.util.TimerTask;
 
 public class Settings {
     public static float cameraZoom = 320;
-    public static int fpsCap = 30;
+    public static int fpsCap = 90;
     public static boolean showFPS = false;
     public static int resolutionIndex = 1;
     public static final float maxDistance = 50;
