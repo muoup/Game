@@ -1,74 +1,118 @@
 package com.Game.GUI.Banking;
 
-import com.Game.GUI.Chatbox.ChatBox;
-import com.Game.GUI.GUIWindow.GUIItemSlot;
-import com.Game.GUI.GUIWindow.GUILibrary;
+import com.Game.GUI.GUI;
 import com.Game.GUI.Inventory.InventoryManager;
+import com.Game.GUI.RightClick;
+import com.Game.GUI.Shop.Shop;
 import com.Game.Items.ItemStack;
+import com.Game.listener.Input;
+import com.Util.Math.Vector2;
+import com.Util.Other.Render;
+import com.Util.Other.Settings;
+
+import java.awt.*;
+import java.util.ArrayList;
 
 public class BankingHandler {
-    public static void printBankSpace() {
-        BankingGUI.itemStacks.forEach(System.out::println);
-    }
+    private static ArrayList<ItemStack> items = new ArrayList();
 
-    public static void removeItem(ItemStack stack) {
-        removeItem(BankingGUI.itemStacks.indexOf(stack));
-    }
+    private static int padding = 16;
 
-    public static void removeItem(int index) {
-        int amount = BankingGUI.itemStacks.get(index).getAmount();
-        removeItem(index, amount);
-    }
+    private static final Vector2 beginPos = Settings.curResolution().scale(0.25f);
+    private static final Vector2 size = Settings.curResolution().scale(0.5f);
+    private static final int maxRow = (int) ((size.x - padding) / (padding + GUI.IntBoxSize));
 
-    public static void removeItem(int index, int amount) {
-        if (index < 0 || index >= BankingGUI.itemStacks.size()) {
-            ChatBox.sendMessage(index + " is out of the range of the bank, it is not a valid item.");
-            return;
+    public static void render() {
+        // Draw basic stuff for every shop such as background and items.
+        Render.setColor(Color.LIGHT_GRAY);
+        Render.drawBorderedRect(beginPos, size);
+
+        for (int i = 0; i < items.size(); i++) {
+            int x = i % maxRow;
+            int y = i / maxRow;
+
+            String text = GUI.formatAmount(items.get(i).getAmount());
+
+            Vector2 imageScale = new Vector2(GUI.IntBoxSize);
+
+            Vector2 rectPos = beginPos.addClone(padding + (padding + GUI.IntBoxSize) * x, padding + (padding + GUI.IntBoxSize) * y);
+            Vector2 textPos = rectPos.addClone(new Vector2(GUI.IntBoxSize - Settings.sWidth(text) - 4, GUI.IntBoxSize - 4));
+
+            Render.setColor(Color.BLACK);
+            Render.drawRectOutline(rectPos, imageScale);
+            Render.drawImage(Render.getScaledImage(items.get(i).getImage(), imageScale), rectPos);
+
+            Render.setColor(Color.BLACK);
+            Render.setFont(Settings.itemFont);
+            Render.drawText(text, textPos.addClone(1, 0));
         }
 
-        if (amount > BankingGUI.itemStacks.get(index).getAmount()) {
-            ChatBox.sendMessage(amount + " is greater than the amount in the bank, please try a valid amount.");
-            return;
-        }
-
-        ItemStack stackClone = BankingGUI.itemStacks.get(index).getStack().clone();
-        stackClone.amount = amount;
-
-        InventoryManager.addItem(stackClone);
-
-        update(index);
+        Render.setColor(Color.RED);
+        Render.drawBorderedRect(beginPos.addClone(size.x - GUI.IntBoxSize / 2, 0), new Vector2(GUI.IntBoxSize / 2));
     }
 
-    private static void update(int index) {
-        if (BankingHandler.getAmount(index) == 0) {
-            BankingGUI.itemStacks.remove(index);
-        }
-    }
-
-    public static void addItem(ItemStack stack) {
-        for (GUIItemSlot iStack : BankingGUI.itemStacks) {
-            if (iStack.getStack().compareTo(stack)) {
-                iStack.addAmount(stack.getAmount());
+    public static void update() {
+        if (Input.GetMouseDown(1)) {
+            Vector2 rectBounds = beginPos.addClone(size.x - GUI.IntBoxSize / 2, 0);
+            if (Input.mouseInBounds(rectBounds, rectBounds.offsetClone(GUI.IntBoxSize / 2))) {
+                GUI.currentShop = Shop.empty;
                 return;
             }
         }
 
-        GUILibrary.bankingGUI.addItemSlot(stack);
+        if (!Input.GetMouseDown(3))
+            return;
+
+        for (int i = 0; i < items.size(); i++) {
+            int x = i % maxRow;
+            int y = i / maxRow;
+
+            Vector2 imageScale = new Vector2(GUI.IntBoxSize);
+
+            Vector2 pos = beginPos.addClone(padding + (padding + GUI.IntBoxSize) * x, padding + (padding + GUI.IntBoxSize) * y);
+            Vector2 pos2 = pos.addClone(imageScale);
+
+            if (Input.mousePosition.greaterThan(pos) && pos2.greaterThan(Input.mousePosition)) {
+                RightClick.customRightClick((int option) -> rightClickOption(option),
+                        "Withdraw 1", "Withdraw 10", "Withdraw 50", "Withdraw 100");
+
+                break;
+            }
+        }
     }
 
-    public static void addInvItem(int index) {
-        ItemStack stack = InventoryManager.getStack(index).clone();
-        InventoryManager.setItem(index, ItemStack.empty());
-        addItem(stack);
+    public static void addItem(ItemStack stack) {
+        for (ItemStack bankStack : items) {
+            if (bankStack.equivalent(stack)) {
+                bankStack.amount += stack.amount;
+                return;
+            }
+        }
+
+        items.add(stack);
     }
 
-    public static void setAmount(int index, int amount) {
-        BankingGUI.itemStacks.get(index).getStack().amount = amount;
+    public static void rightClickOption(int option) {
 
-        // TODO: Server-saving implementation
     }
 
-    public static int getAmount(int index) {
-        return BankingGUI.itemStacks.get(index).getStack().amount;
+    public static void withdrawItem(int index, int amount) {
+        ItemStack bankItem = items.get(index);
+        amount = Math.min(amount, bankItem.getAmount());
+
+        bankItem.amount -= amount; // Removes the withdrawal from the bank
+        InventoryManager.addItem(bankItem.getItemList(), amount, bankItem.getData()); // Adds it to the inventory.
+
+        if (bankItem.getAmount() == 0) {
+            items.remove(index);
+        }
+    }
+
+    public static void depositInventory(int invIndex, int amount) {
+        ItemStack inventory = InventoryManager.getStack(invIndex).clone();
+        inventory.amount = amount;
+
+        addItem(inventory);
+        InventoryManager.removeItem(inventory.getItemList(), amount, inventory.getData());
     }
 }
