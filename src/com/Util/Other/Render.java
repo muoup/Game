@@ -213,4 +213,33 @@ public class Render {
     public static void drawRectOutlineBounds(Vector2 guiPos, Vector2 guiEnd) {
         drawRectOutline(guiPos, guiEnd.subtractClone(guiPos));
     }
+
+    public static BufferedImage mirrorImageHorizontally(BufferedImage simg) {
+        // Get source image dimension
+        int width = simg.getWidth();
+        int height = simg.getHeight();
+
+        // BufferedImage for mirror image
+        BufferedImage mimg = new BufferedImage(width, height,
+                BufferedImage.TYPE_INT_ARGB);
+
+        // Create mirror image pixel by pixel
+        for (int y = 0; y < height; y++)
+        {
+            for (int lx = 0, rx = width - 1; lx < width; lx++, rx--)
+            {
+                // lx starts from the left side of the image
+                // rx starts from the right side of the image
+                // lx is used since we are getting pixel from left side
+                // rx is used to set from right side
+                // get source pixel value
+                int p = simg.getRGB(lx, y);
+
+                // set mirror image pixel value
+                mimg.setRGB(rx, y, p);
+            }
+        }
+
+        return mimg;
+    }
 }

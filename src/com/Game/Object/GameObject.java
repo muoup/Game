@@ -112,7 +112,7 @@ public class GameObject {
     }
 
     public void drawPlayerProgressBar() {
-        Vector2 sPos = Main.player.position.subtractClone(24, 50).subtract(World.curWorld.offset);
+        Vector2 sPos = Main.player.position.subtractClone(24, 35).subtract(World.curWorld.offset);
         Vector2 rect = new Vector2(48 * (timer / maxTimer), 8);
         Vector2 compRect = new Vector2(48, 8);
 

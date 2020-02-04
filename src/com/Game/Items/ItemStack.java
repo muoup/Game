@@ -140,4 +140,8 @@ public class ItemStack {
     public boolean compareTo(ItemStack stack) {
         return stack.getID() == getID() && stack.getData() == stack.getData();
     }
+
+    public boolean equivalent(ItemStack stack) {
+        return stack.getID() == getID() && stack.getData() == getData();
+    }
 }

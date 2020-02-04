@@ -38,7 +38,7 @@ public class AnimatedSprite {
     }
 
     public void update() {
-        timer += Main.dTime() * 0.25f;
+        timer += Main.dTime();
     }
 
     public void reset() {

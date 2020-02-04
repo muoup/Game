@@ -22,6 +22,7 @@ public class WoodHarp extends Usable {
             ChatBox.sendMessage("That item would grant you less than a coin. It was not harmonised.");
             return;
         }
+
         InventoryManager.setItem(index, Item.emptyStack());
         InventoryManager.addItem(ItemList.gold, (int) (worth * 0.35));
     }

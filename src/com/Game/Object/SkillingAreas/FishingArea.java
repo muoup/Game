@@ -32,10 +32,7 @@ public class FishingArea extends GameObject {
             return false;
         }
 
-        timer += Main.dTime();
-
-        if (InventoryManager.itemCount(ItemList.fishBait) >= 1)
-            timer += Main.dTime();
+        timer += Main.dTime() * ((InventoryManager.itemCount(ItemList.fishBait) >= 1) ? 2 : 1);
 
         drawPlayerProgressBar();
 

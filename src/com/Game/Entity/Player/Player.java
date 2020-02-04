@@ -19,6 +19,7 @@ import com.Util.Other.*;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 
 public class Player {
     public Vector2 position;
@@ -44,9 +45,9 @@ public class Player {
     public static final SpriteSheet playerRun = new SpriteSheet("/Player/player_run.png", 32, 32);
     public static final SpriteSheet playerChop  = new SpriteSheet("/Player/player_chop.png", 32, 32);
 
-    public static final AnimatedSprite idleAnimation = new AnimatedSprite(8, playerIdle, 2);
-    public static final AnimatedSprite runAnimation = new AnimatedSprite(12, playerRun, 4);
-    public static final AnimatedSprite chopAnimation = new AnimatedSprite(16, playerChop, 8);
+    public static final AnimatedSprite idleAnimation = new AnimatedSprite(1, playerIdle, 2);
+    public static final AnimatedSprite runAnimation = new AnimatedSprite(6, playerRun, 4);
+    public static final AnimatedSprite chopAnimation = new AnimatedSprite(8, playerChop, 8);
 
     public AnimatedSprite current = idleAnimation;
     private boolean leftFacing = true;
@@ -280,13 +281,13 @@ public class Player {
     }
 
     public void render() {
-        Render.drawImage(getImage(), position.x - scale.x / 2 - World.curWorld.offset.x,
+        Render.drawImage((!leftFacing) ? getImage() : Render.mirrorImageHorizontally(getImage()), position.x - scale.x / 2 - World.curWorld.offset.x,
                 position.y - scale.y / 2 - World.curWorld.offset.y);
 
         renderStats();
     }
 
-    public Image getImage() {
+    public BufferedImage getImage() {
         return current.getImage(scale);
     }
 }

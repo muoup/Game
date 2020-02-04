@@ -141,6 +141,8 @@ public class Shop {
         int multiplier = amountOptions[option];
         int amt = InventoryManager.getAmount(selected);
 
+        System.out.println(multiplier + " " + selected);
+
         if (multiplier == -1 || amt < multiplier) {
             multiplier = amt;
         }

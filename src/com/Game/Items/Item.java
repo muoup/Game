@@ -1,9 +1,11 @@
 package com.Game.Items;
 
 import com.Game.GUI.Chatbox.ChatBox;
+import com.Game.GUI.GUI;
 import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.RightClick;
+import com.Game.GUI.Shop.Shop;
 import com.Game.Main.Main;
 import com.Game.Projectile.Projectile;
 import com.Util.Math.DeltaMath;
@@ -60,11 +62,20 @@ public class Item {
     }
 
     public void ClickIdentities(int index) {
-        if (InventoryManager.getStack(index).equipStatus != -1) {
-            equipItem(index);
-        } else {
-            InventoryManager.useIndex = -1;
-            OnClick(index);
+        if (GUI.currentShop == Shop.empty)
+            if (InventoryManager.getStack(index).equipStatus != -1) {
+                equipItem(index);
+            } else {
+                InventoryManager.useIndex = -1;
+                    OnClick(index);
+            }
+        else {
+            ItemStack selected = InventoryManager.getStack(index);
+
+            ChatBox.sendMessage(selected.name + " will sell for " + (int) (selected.item.worth * 0.95f) + " coins each.");
+
+            if (selected.getAmount() > 1)
+                ChatBox.sendMessage("The whole stack is worth: " + (int) (selected.getWorth() * 0.95f) + " coins.");
         }
     }
 
