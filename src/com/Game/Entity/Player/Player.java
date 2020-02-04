@@ -20,36 +20,36 @@ import com.Util.Other.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-public class Player {
-    public Vector2 position;
-    public int subWorld = 0;
-    public float speed;
-    public Color playerColor;
-    public boolean canMove = true;
-    public float speedMod = 0f;
-    public float dashMultiplier = 0f;
-    public float dashTimer = 0f;
-    public Vector2 scale;
+public class Player {//constructor for the Player class
+    public Vector2 position;//creates the Vector for the player position
+    public int subWorld = 0;//indicates the subworld the player is in
+    public float speed;//creates the speed variable
+    public Color playerColor;//
+    public boolean canMove = true;//indicates the player can move
+    public float speedMod = 0f;//modifier of the player's speed (for future buffs and debuffs)
+    public float dashMultiplier = 0f;//dash speed
+    public float dashTimer = 0f;//dash timer
+    public Vector2 scale;//size of the player sprite for render
     private Vector2 curSpeed = Vector2.zero();
     public float dx = 0, dy = 0, dMod = 0, shootTimer = 0;
-    public String name = null;
+    public String name = null;//creating the player name and getting from a save file later
     private final float maxSlide = 8f;
 
-    public float maxHealth = 100f;
-    public float health = 100f;
+    public float maxHealth = 100f;//sets max health
+    public float health = 100f;//sets current health
 
-    public float healthRegen = 1f;
+    public float healthRegen = 1f;//sets how quickly health regenerates
 
-    public static final SpriteSheet playerIdle = new SpriteSheet("/Player/player_idle_1.png", 32, 32);
-    public static final SpriteSheet playerRun = new SpriteSheet("/Player/player_run.png", 32, 32);
-    public static final SpriteSheet playerChop  = new SpriteSheet("/Player/player_chop.png", 32, 32);
+    public static final SpriteSheet playerIdle = new SpriteSheet("/Player/player_idle_1.png", 32, 32);//setting the playerIdle sprite (in src/res/images)
+    public static final SpriteSheet playerRun = new SpriteSheet("/Player/player_run.png", 32, 32);//setting the playerRun sprite
+    public static final SpriteSheet playerChop  = new SpriteSheet("/Player/player_chop.png", 32, 32);//setting the playerChop sprite
 
-    public static final AnimatedSprite idleAnimation = new AnimatedSprite(8, playerIdle, 2);
-    public static final AnimatedSprite runAnimation = new AnimatedSprite(12, playerRun, 4);
-    public static final AnimatedSprite chopAnimation = new AnimatedSprite(16, playerChop, 8);
+    public static final AnimatedSprite idleAnimation = new AnimatedSprite(8, playerIdle, 2);//using the associated spritesheet to create an animation of 8 frames for 2 seconds
+    public static final AnimatedSprite runAnimation = new AnimatedSprite(12, playerRun, 4);//using the associated spritesheet to create an animation of 12 frames for 4 seconds
+    public static final AnimatedSprite chopAnimation = new AnimatedSprite(16, playerChop, 8);//using the associated spritesheet to create an animation of 16 frames for 8 seconds
 
-    public AnimatedSprite current = idleAnimation;
-    private boolean leftFacing = true;
+    public AnimatedSprite current = idleAnimation;//sets the current animation that is playing
+    private boolean leftFacing = true;//bool for checking if the player is left facing (to implement reversing the direction of the player
 
     public Player(Vector2 position, float speed, Color playerColor, float dash) {
         this.position = position;
