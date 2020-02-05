@@ -59,7 +59,7 @@ public class MenuHandler {
         Render.drawRectangle(center.scaleClone(0.33f), center.scaleClone(1.33f));
 
         Render.setColor(Color.LIGHT_GRAY);
-        Render.drawRectangle(center.scaleClone(0.33f).offsetClone(12f), center.scale(1.33f).offsetClone(-24));
+        Render.drawRectangle(center.scaleClone(0.33f).addClone(12f), center.scale(1.33f).addClone(-24));
 
         Render.setColor(Color.BLACK);
         Render.setFont(new Font("Arial", Font.BOLD, Settings.fontSize));

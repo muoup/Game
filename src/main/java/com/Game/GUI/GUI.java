@@ -1,5 +1,6 @@
 package com.Game.GUI;
 
+import com.Game.GUI.Banking.BankingHandler;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.GUIWindow.GUIWindow;
 import com.Game.GUI.Inventory.AccessoriesManager;
@@ -33,6 +34,8 @@ public class GUI {
     };
 
     public static Shop currentShop = Shop.empty;
+
+    public static boolean renderBank = false;
 
     public static Vector2 GUIEnd() {
         return GuiPos.addClone(4 * IntBoxSize, 5 * IntBoxSize);
@@ -105,6 +108,11 @@ public class GUI {
 
         currentShop.baseRender();
         currentShop.baseUpdate();
+
+        if (renderBank) {
+            BankingHandler.render();
+            BankingHandler.update();
+        }
 
         RightClick.update();
         RightClick.render();
@@ -197,5 +205,23 @@ public class GUI {
             Render.setColor(new Color(18, 34, 20));
             Render.drawText(text, textPos);
         }
+    }
+
+    public static void enableBankInterface() {
+        RightClick.render = false;
+        disableShop();
+        renderBank = true;
+    }
+
+    public static void disableBankInterface() {
+        renderBank = false;
+    }
+
+    public static void enableShop(Shop shop) {
+        currentShop = shop;
+    }
+
+    public static void disableShop() {
+        currentShop = Shop.empty;
     }
 }

@@ -98,7 +98,7 @@ public class Render {
         Render.setColor(Color.BLACK);
         drawBounds(v1, v2);
         Render.setColor(dcol);
-        drawBounds(v1.offsetClone(5f), v2.offsetClone(-5f));
+        drawBounds(v1.addClone(5f), v2.addClone(-5f));
     }
 
     public static void drawBorderedRect(Vector2 pos, Vector2 size) {

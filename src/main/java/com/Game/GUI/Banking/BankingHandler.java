@@ -3,7 +3,6 @@ package com.Game.GUI.Banking;
 import com.Game.GUI.GUI;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.RightClick;
-import com.Game.GUI.Shop.Shop;
 import com.Game.Items.ItemStack;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
@@ -24,7 +23,7 @@ public class BankingHandler {
 
     public static void render() {
         // Draw basic stuff for every shop such as background and items.
-        Render.setColor(Color.LIGHT_GRAY);
+        Render.setColor(new Color(182, 124, 45));
         Render.drawBorderedRect(beginPos, size);
 
         for (int i = 0; i < items.size(); i++) {
@@ -54,8 +53,8 @@ public class BankingHandler {
     public static void update() {
         if (Input.GetMouseDown(1)) {
             Vector2 rectBounds = beginPos.addClone(size.x - GUI.IntBoxSize / 2, 0);
-            if (Input.mouseInBounds(rectBounds, rectBounds.offsetClone(GUI.IntBoxSize / 2))) {
-                GUI.currentShop = Shop.empty;
+            if (Input.mouseInBounds(rectBounds, rectBounds.addClone(GUI.IntBoxSize / 2))) {
+                GUI.disableBankInterface();
                 return;
             }
         }

@@ -50,23 +50,6 @@ public class Commands {
                 case "health":
                     ChatBox.sendMessage(Float.toString(Main.player.health));
                     break;
-                case "bankpoke":
-                    BankingHandler.printBankSpace();
-                    break;
-                case "bankadd":
-                    if (parameters.length != 1) {
-                        ChatBox.sendMessage("bankAdd [index]");
-                        break;
-                    }
-                    BankingHandler.addInvItem(Integer.parseInt(parameters[0]));
-                    break;
-                case "bankremove":
-                    if (parameters.length != 2) {
-                        ChatBox.sendMessage("bankremove [index] [amount]");
-                        return;
-                    }
-                    BankingHandler.removeItem(Integer.parseInt(parameters[0]), Integer.parseInt(parameters[1]));
-                    break;
                 case "tp":
                     if (parameters.length == 2 || parameters.length == 3) {
                         Vector2 tp = new Vector2(Integer.parseInt(parameters[0]), Integer.parseInt(parameters[1]));

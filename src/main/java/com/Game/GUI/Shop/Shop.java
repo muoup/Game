@@ -87,8 +87,8 @@ public class Shop {
     public void baseUpdate() {
         if (Input.GetMouseDown(1)) {
             Vector2 rectBounds = beginPos.addClone(size.x - GUI.IntBoxSize / 2, 0);
-            if (Input.mouseInBounds(rectBounds, rectBounds.offsetClone(GUI.IntBoxSize / 2))) {
-                GUI.currentShop = Shop.empty;
+            if (Input.mouseInBounds(rectBounds, rectBounds.addClone(GUI.IntBoxSize / 2))) {
+                GUI.disableShop();
                 return;
             }
         }

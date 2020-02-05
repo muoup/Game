@@ -71,7 +71,7 @@ public class GUIWindow {
     }
 
     public Vector2 offset(Vector2 position) {
-        return position.addClone(startOffset).offsetClone(padding);
+        return position.addClone(startOffset).addClone(padding);
     }
 
     public Vector2 getPosition() {

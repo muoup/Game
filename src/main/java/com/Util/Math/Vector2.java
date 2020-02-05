@@ -134,7 +134,7 @@ public class Vector2 {
         return new Vector2(xx, yy);
     }
 
-    public Vector2 offsetClone(float offset) {
+    public Vector2 addClone(float offset) {
         float xx = x + offset;
         float yy = y + offset;
 

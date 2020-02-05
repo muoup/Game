@@ -5,7 +5,6 @@ import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.GUI;
 import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.RightClick;
-import com.Game.GUI.Shop.Shop;
 import com.Game.Items.ItemStack;
 import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
@@ -144,7 +143,7 @@ public class Player {
 
         if (!movement.equalTo(Vector2.zero())) {
             position.add(movement);
-            GUI.currentShop = Shop.empty;
+            GUI.disableShop();
             changeSprite(runAnimation);
             sendMovementPacket();
 

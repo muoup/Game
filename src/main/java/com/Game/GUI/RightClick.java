@@ -1,5 +1,7 @@
 package com.Game.GUI;
+package com.Game.GUI;
 
+import com.Game.GUI.Banking.BankingHandler;
 import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.Inventory.InventoryDrag;
 import com.Game.GUI.Inventory.InventoryManager;
@@ -211,6 +213,12 @@ public class RightClick {
             if (inventoryStack().getID() != 0) {
                 Shop.selected = inventoryStack().getItemList();
                 customRightClick((int option) -> GUI.currentShop.sellOption(option), "Sell 1", "Sell 10", "Sell 50", "Sell 100", "Sell All");
+            }
+            return;
+        }  else if (GUI.renderBank) {
+            if (inventoryStack().getID() != 0) {
+                Shop.selected = inventoryStack().getItemList();
+                customRightClick((int option) -> BankingHandler.rightClickOption(option), "Deposit 1", "Deposit 10", "Deposit 50", "Deposit 100", "Deposit All");
             }
             return;
         }

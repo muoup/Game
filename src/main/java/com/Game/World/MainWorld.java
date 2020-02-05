@@ -8,6 +8,7 @@ import com.Game.Object.AreaTeleporter.InvisibleTeleporter;
 import com.Game.Object.SkillingAreas.*;
 import com.Game.Object.Utilities.Anvil;
 import com.Game.Object.Utilities.Furnace;
+import com.Game.Object.Utilities.StorageChest;
 
 public class MainWorld extends World {
     public MainWorld() {
@@ -57,6 +58,8 @@ public class MainWorld extends World {
         new Chicken(4223, 2993);
         new Chicken(4532, 2993);
         new Chicken(4532, 2696);
+
+        new StorageChest(3038, 3395);
 
         // Beach Area
         new FishingArea(885, 5595, FishingPreset.clownFish);

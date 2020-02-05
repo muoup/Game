@@ -12,6 +12,6 @@ public class Fisher extends NPC {
     }
 
     public void onInteract() {
-        GUI.currentShop = Shop.fishing;
+        GUI.enableShop(Shop.fishing);
     }
 }
