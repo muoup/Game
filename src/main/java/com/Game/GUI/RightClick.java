@@ -1,5 +1,4 @@
 package com.Game.GUI;
-package com.Game.GUI;
 
 import com.Game.GUI.Banking.BankingHandler;
 import com.Game.GUI.Inventory.AccessoriesManager;
