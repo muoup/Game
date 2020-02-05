@@ -1,9 +1,12 @@
 package com.Game.Networking;
 
+import com.Game.GUI.Banking.BankingHandler;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.Skills.Skills;
+import com.Game.Items.ItemList;
+import com.Game.Items.ItemStack;
 import com.Game.Main.Main;
 import com.Game.Main.MenuHandler;
 import com.Game.Main.MethodHandler;
@@ -59,9 +62,14 @@ public class Client {
         this.port = port;
     }
 
+    public DatagramSocket getSocket() {
+        return socket;
+    }
+
     public void listen() {
         while (listening) {
             DatagramPacket packet = new DatagramPacket(dataBuffer, dataBuffer.length);
+
             try {
                 socket.receive(packet);
             } catch (IOException e) {
@@ -118,6 +126,9 @@ public class Client {
             case "07":
                 takeQuestData(message.split(":"));
                 break;
+            case "08":
+                takeBankData(message.split(":"));
+                break;
             case "12":
                 String[] parts = message.split(":");
                 MethodHandler.playerConnections.add(new PlayerObject(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), parts[2]));
@@ -137,6 +148,7 @@ public class Client {
                 }
                 break;
             case "76":
+                System.out.println("76!");
                 send("76" + Main.player.name);
                 break;
             case "66":
@@ -155,13 +167,25 @@ public class Client {
         dataBuffer = new byte[4096];
     }
 
+    private void takeBankData(String[] split) {
+        for (String string : split) {
+            System.out.println(string);
+            String[] newSplit = string.split(" ");
+            int id = Integer.parseInt(newSplit[0]);
+            int amount = Integer.parseInt(newSplit[1]);
+            int data = Integer.parseInt(newSplit[2]);
+
+            BankingHandler.items.add(new ItemStack(ItemList.values()[id], amount, data));
+        }
+    }
+
     private void takeQuestData(String[] split) {
         for (int i = 1; i < split.length; i++) {
             String s = split[i];
             String[] split2 = s.split(" ");
             int id = Integer.parseInt(split2[0]);
             int data = Integer.parseInt(split2[1]);
-            QuestManager.setData(id, data);
+            QuestManager.setClientData(id, data);
         }
     }
 

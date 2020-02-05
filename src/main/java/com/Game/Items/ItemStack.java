@@ -144,4 +144,8 @@ public class ItemStack {
     public boolean equivalent(ItemStack stack) {
         return stack.getID() == getID() && stack.getData() == getData();
     }
+
+    public int getPrice() {
+        return getItemList().getPrice();
+    }
 }

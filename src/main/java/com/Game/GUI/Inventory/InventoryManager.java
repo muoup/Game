@@ -70,6 +70,15 @@ public class InventoryManager {
         return amount;
     }
 
+    public static int itemCount(ItemList item, int data) {
+        int amount = 0;
+        for (ItemStack stack : inventory) {
+            if (stack.getID() == item.getID() && stack.getData() == data)
+                amount += stack.getAmount();
+        }
+        return amount;
+    }
+
     public static int indexOf(ItemList item) {
         for (int i = 0; i < inventory.length; i++) {
             ItemStack stack = inventory[i];

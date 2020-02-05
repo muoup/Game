@@ -62,7 +62,6 @@ public class MethodHandler {
                 Settings.disablePause();
         }
 
-
         if (Input.GetKeyDown(KeyEvent.VK_F1))
             Settings.showFPS = !Settings.showFPS;
 

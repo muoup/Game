@@ -164,6 +164,11 @@ public class Main extends Canvas {
                 Input.update();
 
                 if (isConnected && Main.dTime() != 0) {
+                    if (!client.getSocket().isConnected()) {
+                        client.disconnect();
+                        return;
+                    }
+
                     update();
                     render();
                 } else {

@@ -110,8 +110,8 @@ public class GUI {
         currentShop.baseUpdate();
 
         if (renderBank) {
-            BankingHandler.render();
             BankingHandler.update();
+            BankingHandler.render();
         }
 
         RightClick.update();

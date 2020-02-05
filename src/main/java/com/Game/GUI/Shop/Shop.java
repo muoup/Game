@@ -5,6 +5,7 @@ import com.Game.GUI.GUI;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.RightClick;
 import com.Game.Items.ItemList;
+import com.Game.Items.ItemStack;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
@@ -19,9 +20,9 @@ public class Shop {
             ItemList.fishBait
     });
 
-    public static ItemList selected = ItemList.empty;
+    public static ItemStack selected = ItemStack.empty();
 
-    private static final int amountOptions[] = {
+    public static final int amountOptions[] = {
             1,
             10,
             50,
@@ -109,7 +110,7 @@ public class Shop {
                 RightClick.customRightClick((int option) -> buyOption(option),
                         "Buy 1", "Buy 10", "Buy 50", "Buy 100");
 
-                selected = offeredItems[i];
+                selected = offeredItems[i].singleStack();
                 break;
             }
         }
@@ -117,14 +118,14 @@ public class Shop {
 
     public void buyOption(int option) {
         int multiplier = amountOptions[option];
-
-        int price = selected.getPrice() * multiplier;
+        int indPrice = selected.getPrice();
+        int price = indPrice * multiplier;
 
         int gold = InventoryManager.getAmount(ItemList.gold);
 
         if (gold < price) {
-            multiplier = gold / selected.getPrice();
-            price = multiplier * selected.getPrice();
+            multiplier = gold / indPrice;
+            price = multiplier * indPrice;
         }
         if (multiplier == 0) {
             ChatBox.sendMessage("You are out of money!");
@@ -134,14 +135,12 @@ public class Shop {
         multiplier = Math.min(multiplier, InventoryManager.emptySpace() * selected.getMaxAmount());
 
         InventoryManager.removeItem(ItemList.gold, price);
-        InventoryManager.addItem(selected, multiplier);
+        InventoryManager.addItem(selected.getItemList(), multiplier);
     }
 
     public void sellOption(int option) {
         int multiplier = amountOptions[option];
-        int amt = InventoryManager.getAmount(selected);
-
-        System.out.println(multiplier + " " + selected);
+        int amt = InventoryManager.getAmount(selected.getItemList(), selected.getData());
 
         if (multiplier == -1 || amt < multiplier) {
             multiplier = amt;
@@ -152,7 +151,7 @@ public class Shop {
             return;
         }
 
-        InventoryManager.removeItem(selected, multiplier);
+        InventoryManager.removeItem(selected.getItemList(), multiplier, selected.getData());
         InventoryManager.addItem(ItemList.gold, (int) (selected.getPrice() * multiplier * 0.95f));
     }
 }

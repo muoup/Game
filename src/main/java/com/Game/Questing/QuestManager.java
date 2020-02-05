@@ -71,4 +71,8 @@ public class QuestManager {
     public static int getData(int id) {
         return questList[id].data;
     }
+
+    public static void setClientData(int id, int data) {
+        questList[id].data = data;
+    }
 }

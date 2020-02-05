@@ -210,13 +210,13 @@ public class RightClick {
     private static void inventoryRightClick() {
         if (GUI.currentShop != Shop.empty) {
             if (inventoryStack().getID() != 0) {
-                Shop.selected = inventoryStack().getItemList();
+                Shop.selected = inventoryStack();
                 customRightClick((int option) -> GUI.currentShop.sellOption(option), "Sell 1", "Sell 10", "Sell 50", "Sell 100", "Sell All");
             }
             return;
         }  else if (GUI.renderBank) {
             if (inventoryStack().getID() != 0) {
-                Shop.selected = inventoryStack().getItemList();
+                BankingHandler.hover = inventoryStack();
                 customRightClick((int option) -> BankingHandler.rightClickOption(option), "Deposit 1", "Deposit 10", "Deposit 50", "Deposit 100", "Deposit All");
             }
             return;
