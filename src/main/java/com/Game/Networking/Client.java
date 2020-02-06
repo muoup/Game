@@ -148,7 +148,6 @@ public class Client {
                 }
                 break;
             case "76":
-                System.out.println("76!");
                 send("76" + Main.player.name);
                 break;
             case "66":
@@ -169,7 +168,8 @@ public class Client {
 
     private void takeBankData(String[] split) {
         for (String string : split) {
-            System.out.println(string);
+            if (string.trim().equals(""))
+                continue;
             String[] newSplit = string.split(" ");
             int id = Integer.parseInt(newSplit[0]);
             int amount = Integer.parseInt(newSplit[1]);

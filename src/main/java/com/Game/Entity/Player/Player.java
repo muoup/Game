@@ -147,7 +147,10 @@ public class Player {
             changeSprite(runAnimation);
             sendMovementPacket();
 
-            if (movement.x > 0) leftFacing = false; else leftFacing = true;
+            if (movement.x > 0)
+                leftFacing = false;
+            else if (movement.x < 0)
+                leftFacing = true;
         } else if (current == runAnimation){
             changeSprite(idleAnimation);
         }

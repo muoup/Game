@@ -140,6 +140,8 @@ public class TextBox {
     }
 
     private static void next() {
+        if (textBoxes.isEmpty())
+            return;
         textBoxes.remove(0);
         choiceIndex--;
         counter = 0;

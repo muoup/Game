@@ -92,9 +92,11 @@ public class BankingHandler {
     }
 
     public static void addItem(ItemStack stack) {
-        for (ItemStack bankStack : items) {
+        for (int i = 0; i < items.size(); i++) {
+            ItemStack bankStack = items.get(i);
             if (bankStack.equivalent(stack)) {
                 bankStack.amount += stack.amount;
+                sendBankSlotData(i);
                 return;
             }
         }

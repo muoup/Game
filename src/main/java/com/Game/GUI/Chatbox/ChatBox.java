@@ -133,8 +133,13 @@ public class ChatBox {
             scroll = (int) (maxScroll - height);
     }
 
+    /**
+     * Renders the Chat Box text box. Handles drawing only the text that will show up in the ChatBox
+     * depending on how the player has scrolled through the Chat Box.
+     *
+     * If you need me to document this for something, tell me because I will.
+     */
     public static void renderText() {
-        // For the sake of simplicity for now, assume all text is one line.
         Render.setColor(Color.BLACK);
         Render.setFont(textFont);
 
@@ -214,8 +219,24 @@ public class ChatBox {
                 && (Input.mousePosition.compareTo(mPos.addClone(mSize)) == -1);
     }
 
+    /**
+     * Client-side form of sendPublicMessage(String message), does not send the message
+     * to all other players in the game. Used either by the server to display messages
+     * on player clients or for in-game Chat Box implementations such as Object/Item requirement
+     * messages.
+     * @param message String form of the message
+     */
     public static void sendMessage(String message) {
         Message msg = new Message(message, Color.BLACK);
+
+        /*
+            Basic spam filtering, prevents the chat box from sending multiple of the same message.
+            Also use full so that the requirement message does not repeat over and over again
+            if you are trying to use a game object.
+         */
+        if (!messages.isEmpty())
+            if (messages.get(messages.size() - 1).message.replace("/n", " ").equals(message))
+                return;
 
         scrollDown = (scroll == (int) (maxScroll - height)) || (height == bSize.y);
 
@@ -232,6 +253,14 @@ public class ChatBox {
         distScroll += msg.getHeight() + getPadding();
     }
 
+    /**
+     * Sends a chat box message to all other players on the server, only used right-now for
+     * player messages. There is no call to sendMessage(String message) because it pings to
+     * the server and then back to all of the clients. sendMessage(String message) contains
+     * anti-spam protection so player's Chat Boxes will not be filled with player chat if
+     * someone keeps typing in the same message over and over again.
+     * @param message
+     */
     public static void sendPublicMessage(String message) {
         Message msg = new Message(message, Color.BLACK);
 

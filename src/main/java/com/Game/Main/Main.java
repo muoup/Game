@@ -164,10 +164,10 @@ public class Main extends Canvas {
                 Input.update();
 
                 if (isConnected && Main.dTime() != 0) {
-                    if (!client.getSocket().isConnected()) {
-                        client.disconnect();
-                        return;
-                    }
+//                    if (!client.getSocket().isClosed()) {
+//                        client.disconnect();
+//                        return;
+//                    }
 
                     update();
                     render();
@@ -213,7 +213,7 @@ public class Main extends Canvas {
 
     public BufferedImage getImageFromRoot(Object root) {
         BufferedImage image = null;
-        InputStream stream = Main.class.getResourceAsStream("/res/images/" + root);
+        InputStream stream = Main.class.getResourceAsStream("/images/" + root);
 
         if (stream == null) {
             System.err.println("Unrecognized file: /res/images/" + root.toString());
@@ -232,7 +232,7 @@ public class Main extends Canvas {
     }
 
     public static Font getFont(String root, float size, int style) {
-        InputStream is = Main.class.getResourceAsStream("/res/fonts/" + root);
+        InputStream is = Main.class.getResourceAsStream("/fonts/" + root);
 
         try {
             Font font = Font.createFont(Font.TRUETYPE_FONT, is);
