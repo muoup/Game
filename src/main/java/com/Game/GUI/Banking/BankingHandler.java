@@ -111,7 +111,10 @@ public class BankingHandler {
 
     public static void withdrawItem(int index, int amount) {
         ItemStack bankItem = items.get(index);
-        amount = Math.min(amount, bankItem.getAmount());
+
+        if (amount == -1 || amount > bankItem.getAmount()) {
+            amount = bankItem.getAmount();
+        }
 
         bankItem.amount -= amount; // Removes the withdrawal from the bank
         InventoryManager.addItem(bankItem.getItemList(), amount, bankItem.getData()); // Adds it to the inventory.
@@ -139,7 +142,13 @@ public class BankingHandler {
 
     public static void depositInventory(ItemStack hover, int amount) {
         ItemStack inventory = hover.clone();
+        if (amount == -1) {
+            amount = InventoryManager.itemCount(inventory.getItemList(), inventory.getData());
+        }
+
         inventory.amount = amount;
+
+
 
         addItem(inventory);
         InventoryManager.removeItem(hover.getItemList(), amount, hover.getData());

@@ -5,6 +5,7 @@ import com.Game.Main.MethodHandler;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
+import com.Util.Other.Settings;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -14,10 +15,12 @@ public class GroundItem {
     public ArrayList<ItemStack> stack;
     private Image topImage;
     private static final float maxDistance = 256f;
+    private long time = 0;
 
     public GroundItem(int x, int y, ArrayList<ItemStack> items) {
         this.position = new Vector2(x, y);
         this.stack = new ArrayList<ItemStack>();
+        this.time = System.currentTimeMillis();
         handleStack(items);
 
         MethodHandler.groundItems.add(this);
@@ -26,15 +29,28 @@ public class GroundItem {
     public GroundItem(Vector2 position, ArrayList<ItemStack> items) {
         this.position = position.clone();
         this.stack = new ArrayList<ItemStack>();
+        this.time = System.currentTimeMillis();
         handleStack(items);
 
         MethodHandler.groundItems.add(this);
     }
 
+    public GroundItem(Vector2 position, ItemStack drop) {
+        this.position = position.clone();
+        this.stack = new ArrayList<ItemStack>();
+        this.time = System.currentTimeMillis();
+        handleItem(drop);
+
+        MethodHandler.groundItems.add(this);
+    }
+
     public void handleStack(ArrayList<ItemStack> stack) {
-        for (ItemStack item : stack) {
-            this.stack.add(item);
-        }
+        stack.forEach(this::handleItem);
+    }
+
+    public void handleItem(ItemStack stack) {
+        this.stack.add(stack);
+        System.out.println(this);
     }
 
     public void updateStack() {
@@ -55,16 +71,20 @@ public class GroundItem {
 
     public void addItem(ItemStack item) {
         for (ItemStack s : stack) {
-            if (s.getID() == item.getID()) {
+            if (s.getID() == item.getID() && s.getData() == s.getData()) {
                 s.amount += item.getAmount();
+                System.out.println(this);
                 return;
             }
         }
+
+        stack.add(item);
+
+        time = System.currentTimeMillis();
     }
 
     public void addItems(ArrayList<ItemStack> stack) {
-        for (ItemStack s : stack)
-            addItem(s);
+        stack.forEach(this::addItem);
     }
 
     public void update() {
@@ -73,7 +93,7 @@ public class GroundItem {
                 stack.remove(i);
         }
 
-        if (stack.size() == 0)
+        if (stack.size() == 0 || System.currentTimeMillis() - time >= Settings.groundItemDuration)
             MethodHandler.groundItems.remove(this);
     }
 
@@ -98,5 +118,24 @@ public class GroundItem {
         }
 
         new GroundItem(position, drops);
+
+    }
+
+    public static void createGroundItem(Vector2 position, ItemStack drop) {
+        for (GroundItem i : MethodHandler.groundItems) {
+            if (Vector2.distance(i.position, position) < maxDistance) {
+                i.addItem(drop);
+                return;
+            }
+        }
+
+        new GroundItem(position, drop);
+    }
+
+    public String toString() {
+        StringBuilder ret = new StringBuilder();
+        stack.forEach(ret::append);
+
+        return ret.toString();
     }
 }

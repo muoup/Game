@@ -47,7 +47,7 @@ public class RightClick {
             return;
         }
 
-        Render.setFont(new Font("Arial", Font.BOLD, 14));
+        Render.setFont(Settings.groundFont);
 
         for (int y = 0; y < options.size(); y++) {
             Vector2 newPos = deltaDraw.addClone(0, percentBox * y);
@@ -137,6 +137,8 @@ public class RightClick {
 
                 removed += InventoryManager.addItem(selected.getItem(), amount);
 
+
+
                 MethodHandler.groundItems.get(groundItem).stack.get(option).amount -= removed;
 
                 reset();
@@ -183,7 +185,7 @@ public class RightClick {
 
         options.clear();
 
-        Render.setFont(Settings.itemFont);
+        Render.setFont(Settings.groundFont);
 
         options.addAll(optionArray);
 
@@ -240,7 +242,7 @@ public class RightClick {
 
         options.clear();
 
-        Render.setFont(Settings.itemFont);
+        Render.setFont(Settings.groundFont);
 
         if (item.getEquipmentStatus() != -1)
             options.add("Equip");
@@ -292,7 +294,7 @@ public class RightClick {
 
         options.clear();
 
-        Render.setFont(Settings.itemFont);
+        Render.setFont(Settings.groundFont);
 
         for (ItemStack item : hover.stack) {
             String content = item.getAmount() + " " + item.getItem().name;
@@ -305,8 +307,10 @@ public class RightClick {
             options.add(content);
         }
 
-        if (maxWidth * 1.1f + deltaDraw.x > Settings.curResolution().x)
-            deltaDraw.x = Settings.curResolution().x - maxWidth * 1.1f;
+        maxWidth *= maxMultiplier;
+
+        if (maxWidth + deltaDraw.x > Settings.curResolution().x)
+            deltaDraw.x = Settings.curResolution().x - maxWidth;
     }
 
     private static void objectRightClick(UsableGameObject object) {
@@ -335,10 +339,12 @@ public class RightClick {
             maxWidth = Math.max(maxWidth, Render.getStringWidth(s));
         }
 
-        Render.setFont(Settings.itemFont);
+        maxWidth *= maxMultiplier;
 
-        if (maxWidth * 1.1f + deltaDraw.x > Settings.curResolution().x)
-            deltaDraw.x = Settings.curResolution().x - maxWidth * 1.1f;
+        Render.setFont(Settings.groundFont);
+
+        if (maxWidth + deltaDraw.x > Settings.curResolution().x)
+            deltaDraw.x = Settings.curResolution().x - maxWidth;
     }
 
     public static boolean onPopup() {

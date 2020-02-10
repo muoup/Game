@@ -8,8 +8,6 @@ public class Bullet extends Projectile {
         super(position, aim, damage, speed, expMultiplier, friendly);
         this.duration = 1.25f;
         this.attackStyle = 1;
-        setScale(16);
-        setImage("bullet.png");
     }
 
     public void render() {

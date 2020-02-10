@@ -59,6 +59,14 @@ public class AnimatedSprite {
         return spriteSheet.getCell((int) cell.x, (int) cell.y);
     }
 
+    public BufferedImage getFrame(int frame) {
+        if (cellList.length == 0 || frame >= cellList.length)
+            return null;
+
+        Vector2 cell = cellList[frame];
+        return spriteSheet.getCell((int) cell.x, (int) cell.y);
+    }
+
     private BufferedImage getColumnImage() {
         int cellNum = (int) ((timer * fps) % spriteSheet.columns);
         return spriteSheet.getCell(cellNum, row);
@@ -97,5 +105,9 @@ public class AnimatedSprite {
 
     public String toString() {
         return spriteSheet.columns + " x " + spriteSheet.rows;
+    }
+
+    public int getFrame() {
+        return (int) ((timer * fps) % cellList.length);
     }
 }

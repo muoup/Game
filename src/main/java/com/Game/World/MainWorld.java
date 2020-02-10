@@ -2,9 +2,11 @@ package com.Game.World;
 
 import com.Game.Entity.Enemy.Chicken;
 import com.Game.Entity.NPC.BirdWatcher;
+import com.Game.Entity.NPC.BoatingCaptain;
 import com.Game.Entity.NPC.Fisher;
 import com.Game.Object.AreaTeleporter.CaveEntrance;
 import com.Game.Object.AreaTeleporter.InvisibleTeleporter;
+import com.Game.Object.AreaTeleporter.TribalTeleport;
 import com.Game.Object.SkillingAreas.*;
 import com.Game.Object.Utilities.Anvil;
 import com.Game.Object.Utilities.Furnace;
@@ -76,6 +78,9 @@ public class MainWorld extends World {
         // Quest NPC
         new BirdWatcher(2024, 2881);
 
+        // Boatsman
+        new BoatingCaptain(2, 841, 4303);
+
         // Fisher
         new Fisher(1301, 5497);
 
@@ -83,6 +88,6 @@ public class MainWorld extends World {
         new InvisibleTeleporter(5507, 1643, 135, 125, 2);
 
         // Teleporter to Tribal Lands
-        new InvisibleTeleporter(500, 4100,1652, 3098, 3);
+        new TribalTeleport(500, 4100,1652, 3098, 3);
     }
 }

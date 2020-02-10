@@ -19,6 +19,9 @@ public class Shop {
             ItemList.clownfish,
             ItemList.fishBait
     });
+    public static Shop kanuna = new Shop(new ItemList[] {
+            ItemList.kanunaNecklace
+    });
 
     public static ItemStack selected = ItemStack.empty();
 
@@ -94,9 +97,6 @@ public class Shop {
             }
         }
 
-        if (!Input.GetMouseDown(3))
-            return;
-
         for (int i = 0; i < offeredItems.length; i++) {
             int x = i % maxRow;
             int y = i / maxRow;
@@ -107,11 +107,15 @@ public class Shop {
             Vector2 pos2 = pos.addClone(imageScale);
 
             if (Input.mousePosition.greaterThan(pos) && pos2.greaterThan(Input.mousePosition)) {
-                RightClick.customRightClick((int option) -> buyOption(option),
-                        "Buy 1", "Buy 10", "Buy 50", "Buy 100");
+                if (Input.GetMouseDown(3)) {
+                    RightClick.customRightClick((int option) -> buyOption(option),
+                            "Buy 1", "Buy 10", "Buy 50", "Buy 100");
 
-                selected = offeredItems[i].singleStack();
-                break;
+                    selected = offeredItems[i].singleStack();
+                    break;
+                } else if (Input.GetMouseDown(1)) {
+                    ChatBox.sendMessage("This item costs " + offeredItems[i].getPrice() + " gold.");
+                }
             }
         }
     }

@@ -14,7 +14,7 @@ public class SoundHandler {
         new Thread(() -> {
             try {
                 // Open an audio input stream.
-                InputStream stream = Main.class.getResourceAsStream("/res/sfx/" + fileName);
+                InputStream stream = Main.class.getResourceAsStream("/sfx/" + fileName);
                 AudioInputStream audioIn = AudioSystem.getAudioInputStream(stream);
                 // Get a sound clip resource.
                 Clip clip = AudioSystem.getClip();

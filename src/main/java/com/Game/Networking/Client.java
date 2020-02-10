@@ -1,5 +1,6 @@
 package com.Game.Networking;
 
+import com.Game.Entity.Player.Player;
 import com.Game.GUI.Banking.BankingHandler;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.Inventory.AccessoriesManager;
@@ -143,6 +144,7 @@ public class Client {
                 for (PlayerObject o : MethodHandler.playerConnections) {
                     if (o.getUsername().equals(movement[0].trim())) {
                         o.setPos(Integer.parseInt(movement[1]), Integer.parseInt(movement[2]), Integer.parseInt(movement[3]));
+                        o.setImage(Player.getAnimation(movement[4]));
                         break;
                     }
                 }
@@ -170,6 +172,7 @@ public class Client {
         for (String string : split) {
             if (string.trim().equals(""))
                 continue;
+
             String[] newSplit = string.split(" ");
             int id = Integer.parseInt(newSplit[0]);
             int amount = Integer.parseInt(newSplit[1]);
@@ -238,7 +241,7 @@ public class Client {
                     Integer.parseInt(itemData[0]), Integer.parseInt(itemData[1]), Integer.parseInt(itemData[2]));
         }
 
-        AccessoriesManager.calculateArmor();
+        AccessoriesManager.calculateStats();
     }
 
     public void joinServer(String username) {
@@ -251,7 +254,7 @@ public class Client {
         send("55" + Main.player.name);
         Settings.disablePause();
         World.curWorld.resetWorld();
-        MenuHandler.setState(MenuHandler.MenuState.TextBoxPause);
+        MenuHandler.setState(MenuHandler.MenuState.NoPause);
         InventoryManager.reset();
         AccessoriesManager.init();
         Main.logout();

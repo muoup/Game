@@ -39,7 +39,7 @@ public class Main extends Canvas {
     public static MethodHandler methods;
 
     private static long updateLength;
-    private static int timer;
+    private static long ups = 0;
 
     public static void main(String[] args) {
         main = new Main();
@@ -82,12 +82,13 @@ public class Main extends Canvas {
     public void init() {
         Main.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-        player = new Player(Settings.playerSpawn, 275f, Color.GREEN, 2.75f);
+        player = new Player(Settings.playerSpawn, 225f, Color.GREEN, 2.75f);
         menu = new MenuHandler();
 
         Settings.npcFont = getFont("npc-text.ttf", 24, Font.BOLD);
         Settings.skillPopupFont = getFont("skill-text.ttf", 16, Font.PLAIN);
         Settings.questFont = getFont("quest-text.ttf", 16, Font.PLAIN);
+        Settings.groundFont = getFont("ground-text.ttf", 14, Font.BOLD);
 
         methods = new MethodHandler();
 
@@ -142,9 +143,10 @@ public class Main extends Canvas {
             lastFpsTime += updateLength;
             lfps++;
 
-            if (lastFpsTime >= 1000000000) {
+            // Occurs once every second. Used to refresh the frame count per second.
+            if (lastFpsTime >= 250000000) {
                 lastFpsTime = 0;
-                fps = lfps;
+                fps = lfps * 4;
                 lfps = 0;
             }
 
@@ -216,10 +218,9 @@ public class Main extends Canvas {
         InputStream stream = Main.class.getResourceAsStream("/images/" + root);
 
         if (stream == null) {
-            System.err.println("Unrecognized file: /res/images/" + root.toString());
+            System.err.println("Unrecognized file: /images/" + root.toString());
             return null;
         }
-
         try {
             image = ImageIO.read(stream);
         } catch (IOException e) {

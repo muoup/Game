@@ -2,6 +2,7 @@ package com.Game.Questing;
 
 import com.Game.GUI.GUI;
 import com.Game.Questing.Quests.BirdWatching;
+import com.Game.Questing.Quests.AyeAyeCaptain;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
@@ -18,7 +19,8 @@ public class QuestManager {
     public static final Color COMPLETE = Color.GREEN.darker();
 
     public static Quest[] questList = {
-            new BirdWatching(0, "Bird Watching")
+            new BirdWatching(0, "Bird Watching"),
+            new AyeAyeCaptain(1, "Aye Aye Captain")
     };
 
     public static void init() {
@@ -39,8 +41,8 @@ public class QuestManager {
 
         for (int i = 0; i < questList.length; i++) {
             Quest curQuest = questList[i];
-            Render.setColor(curQuest.getColor());
 
+            Render.setColor(curQuest.getColor());
             Render.drawText(curQuest.name, GUI.GuiPos.addClone(32, 24 + Render.getStringHeight() * (i + 2.5f)));
         }
     }
@@ -49,11 +51,11 @@ public class QuestManager {
         if (!GUI.inGUI() || !Input.GetMouseDown(1))
             return;
 
-        Vector2 pos = GUI.GuiPos.addClone(32, 24 + Render.getStringHeight() * 2.5f);
+        Vector2 pos = GUI.GuiPos.addClone(32, 24 + Render.getStringHeight() * 1.5f);
         Vector2 mouse = Input.mousePosition;
 
         if (mouse.x > pos.x && mouse.x < GUI.GUIEnd().x - 64) {
-            int index = (int) ((mouse.y - pos.y) / (Render.getStringHeight() * 2.5f));
+            int index = (int) ((mouse.y - pos.y) / Render.getStringHeight());
 
             if (index < questList.length && index >= 0)
                 questList[index].printClue();
@@ -74,5 +76,10 @@ public class QuestManager {
 
     public static void setClientData(int id, int data) {
         questList[id].data = data;
+        questList[id].parseData();
+    }
+
+    public static boolean isComplete(int id) {
+        return questList[id].getColor() == COMPLETE;
     }
 }

@@ -5,7 +5,6 @@ import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.Skills.Skills;
 import com.Game.GUI.TextBox;
 import com.Game.Items.ItemList;
-import com.Game.Main.Main;
 import com.Game.Questing.QuestManager;
 
 public class BirdWatcher extends NPC {
@@ -13,7 +12,7 @@ public class BirdWatcher extends NPC {
     public BirdWatcher(int x, int y) {
         super(0, x, y);
 
-        image = Main.main.getImageFromRoot("testNPC.png");
+        setImage("birdWatcher.png");
     }
 
     public void onInteract() {

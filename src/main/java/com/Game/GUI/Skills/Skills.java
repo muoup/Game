@@ -46,10 +46,11 @@ public class Skills {
             return;
         }
 
+        float initialXP = exp[skill];
         exp[skill] += amount;
         Main.sendPacket("07" + skill + ":" + amount + ":" + Main.player.name);
         deltaLevel(skill, true);
-        new SkillPopup(skill, amount);
+        new SkillPopup(skill, (float) (Math.floor(exp[skill]) - Math.floor(initialXP)));
     }
 
     public static void setExperience(int skill, float amount) {

@@ -1,5 +1,6 @@
 package com.Game.GUI;
 
+import com.Game.Main.Main;
 import com.Game.Main.MenuHandler;
 import com.Game.listener.Input;
 import com.Util.Other.Render;
@@ -72,7 +73,7 @@ public class TextBox {
             return;
         }
 
-        counter += Settings.scrollSpeed;
+        counter += Settings.scrollSpeed * Main.dTime();
 
         if (textBoxes.size() != 0) {
             String currentText = textBoxes.get(0);

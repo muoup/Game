@@ -13,7 +13,18 @@ public class Teleporter extends GameObject {
         this.sub = sub;
     }
 
+    public boolean isSuccessful() {
+        return true;
+    }
+
+    public void unSuccessful() {
+
+    }
+
     public void onInteraction() {
-        Main.player.tpToPos(tx, ty, sub);
+        if (isSuccessful())
+            Main.player.tpToPos(tx, ty, sub);
+        else
+            unSuccessful();
     }
 }

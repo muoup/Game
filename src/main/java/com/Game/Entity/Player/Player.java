@@ -19,6 +19,7 @@ import com.Util.Other.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 
 public class Player {
     public Vector2 position;
@@ -40,11 +41,11 @@ public class Player {
 
     public float healthRegen = 1f;
 
-    public static final SpriteSheet playerIdle = new SpriteSheet("/Player/player_idle_1.png", 32, 32);
-    public static final SpriteSheet playerRun = new SpriteSheet("/Player/player_run.png", 32, 32);
-    public static final SpriteSheet playerChop  = new SpriteSheet("/Player/player_chop.png", 32, 32);
+    public static final SpriteSheet playerIdle = new SpriteSheet("Player/player_idle_1.png", 32, 32);
+    public static final SpriteSheet playerRun = new SpriteSheet("Player/player_run.png", 32, 32);
+    public static final SpriteSheet playerChop  = new SpriteSheet("Player/player_chop.png", 32, 32);
 
-    public static final AnimatedSprite idleAnimation = new AnimatedSprite(1, playerIdle, 2);
+    public static final AnimatedSprite idleAnimation = new AnimatedSprite(2, playerIdle, 2);
     public static final AnimatedSprite runAnimation = new AnimatedSprite(6, playerRun, 4);
     public static final AnimatedSprite chopAnimation = new AnimatedSprite(8, playerChop, 8);
 
@@ -62,6 +63,7 @@ public class Player {
     }
 
     public void init() {
+
     }
 
     public void update() {
@@ -91,7 +93,7 @@ public class Player {
 
     public void movement() {
         if (speedMod > 0.1) {
-            speedMod *= 0.93;
+            speedMod *= Math.pow(0.93, Main.dTime() * 37.5);
         } else if (speedMod < 0.1) {
             speedMod = 0;
         }
@@ -138,7 +140,7 @@ public class Player {
             }
         }
 
-        Vector2 move = curSpeed.normalize().scaleClone((float) Main.dTime() * speed * (1 + speedMod));
+        Vector2 move = curSpeed.scaleClone((float) Main.dTime() * speed * (1 + speedMod));
         Vector2 movement = handleCollision(move);
 
         if (!movement.equalTo(Vector2.zero())) {
@@ -160,6 +162,7 @@ public class Player {
         if (current != spriteSheet) {
             current = spriteSheet;
             current.reset();
+            sendMovementPacket();
         }
     }
 
@@ -172,7 +175,46 @@ public class Player {
 
     public void sendMovementPacket() {
         cancelCurrent();
-        Main.sendPacket("15" + Main.player.name + ":" + (int) position.x + ":" + (int) position.y + ":" + subWorld);
+        Main.sendPacket("15" + Main.player.name + ":" + (int) position.x + ":" + (int) position.y + ":" + subWorld + ":" + animationInformation() + " " + leftFacing);
+    }
+
+    private String animationInformation() {
+        int spriteSheet = 0;
+
+        if (current == idleAnimation)
+            spriteSheet = 0;
+        else if (current == runAnimation)
+            spriteSheet = 1;
+        else if (current == chopAnimation)
+            spriteSheet = 2;
+
+        int frame = current.getFrame();
+
+        return spriteSheet + " " + frame;
+    }
+
+    public static BufferedImage getAnimation(String information) {
+        String[] parts = information.split(" ");
+        AnimatedSprite sheet = null;
+
+        switch (parts[0]) {
+            case "0": // Idle Animation
+                sheet = idleAnimation;
+                break;
+            case "1":
+                sheet = runAnimation;
+                break;
+            case "2":
+                sheet = chopAnimation;
+                break;
+        }
+
+        BufferedImage image = sheet.getFrame(Integer.parseInt(parts[1]));
+
+        if (Objects.equals(parts[2], "true"))
+            image = Render.mirrorImageHorizontally(image);
+
+        return image;
     }
 
     private void cancelCurrent() {
@@ -283,7 +325,8 @@ public class Player {
     }
 
     public void render() {
-        Render.drawImage((!leftFacing) ? getImage() : Render.mirrorImageHorizontally(getImage()), position.x - scale.x / 2 - World.curWorld.offset.x,
+        Render.drawImage((!leftFacing) ? getImage() : Render.mirrorImageHorizontally(getImage()) /* Image is mirrored horizontally if the player is moving to the left.*/,
+                position.x - scale.x / 2 - World.curWorld.offset.x,
                 position.y - scale.y / 2 - World.curWorld.offset.y);
 
         renderStats();

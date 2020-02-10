@@ -4,6 +4,7 @@ import com.Game.GUI.GUI;
 import com.Game.GUI.RightClick;
 import com.Game.Items.Item;
 import com.Game.Items.ItemList;
+import com.Game.Items.ItemSets;
 import com.Game.Items.ItemStack;
 import com.Game.Main.Main;
 import com.Util.Math.Vector2;
@@ -79,6 +80,16 @@ public class InventoryManager {
         return amount;
     }
 
+    public static int itemCount(ItemSets set) {
+        int amount = 0;
+
+        for (int id : set.items) {
+            amount += itemCount(ItemList.values()[id]);
+        }
+
+        return amount;
+    }
+
     public static int indexOf(ItemList item) {
         for (int i = 0; i < inventory.length; i++) {
             ItemStack stack = inventory[i];
@@ -138,7 +149,7 @@ public class InventoryManager {
         return amount;
     }
 
-    public static boolean removeItem(ItemList item, int amount, int data) {
+    public static int removeItem(ItemList item, int amount, int data) {
         int remove = amount;
         for (int i = 0; i < inventory.length; i++) {
             ItemStack stack = inventory[i];
@@ -147,18 +158,26 @@ public class InventoryManager {
                 removeItem(i, removeAmount);
                 remove -= removeAmount;
                 if (remove == 0)
-                    return false;
+                    return 0;
             }
         }
 
-        return true;
+        return amount;
     }
 
-    public static boolean removeItem(ItemList item, int amount) {
+    public static void removeItem(ItemSets item, int amount) {
+        int removeRemaining = amount;
+
+        for (int id : item.items) {
+            removeRemaining = removeItem(ItemList.values()[id], removeRemaining);
+        }
+    }
+
+    public static int removeItem(ItemList item, int amount) {
         return removeItem(item, amount, 0);
     }
 
-    public static boolean removeItem(ItemStack stack) {
+    public static int removeItem(ItemStack stack) {
         return removeItem(stack.getItemList(), stack.amount, stack.data);
     }
 

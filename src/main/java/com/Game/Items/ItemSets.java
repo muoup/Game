@@ -5,6 +5,14 @@ public enum ItemSets {
     arrows(new int[]{
             3, // Arrow
             14 // Rock Arrow
+    }),
+    wood(new int[] {
+            2,
+            23,
+            24,
+            25,
+            26,
+            7
     });
 
     public int[] items;

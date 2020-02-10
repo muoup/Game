@@ -4,6 +4,7 @@ import com.Game.Items.Ammo.ArrowItem;
 import com.Game.Items.Ammo.RockArrowItem;
 import com.Game.Items.Armor.Rock.ArmorPiece;
 import com.Game.Items.Armor.Rock.ArmorType;
+import com.Game.Items.Armor.Tribal.AmuletOfKanuna;
 import com.Game.Items.Consumables.Food.BlueFishFood;
 import com.Game.Items.Consumables.Food.ClownFishFood;
 import com.Game.Items.Consumables.Food.Seaweed;
@@ -17,7 +18,6 @@ import com.Game.Items.Weapon.Superclasses.DaggerWeapon;
 
 import java.awt.image.BufferedImage;
 
-// TODO: Organize Item IDS eventually. Change player saves.
 public enum ItemList {
     empty(new Item(0, "/", "/", "/", 0, 0)),
     bow(new BowWeapon(1, 0, 1, "Bow", "Get ready for the power of my bow!", 1, 170)),
@@ -64,7 +64,8 @@ public enum ItemList {
     bronzeLeggings(new ArmorPiece(42, ArmorType.leggings, 10, "Bronze Leggings", "It wasn't a copper.", 1, 4000)),
     bronzeBoots(new ArmorPiece(43, ArmorType.boots, 10, "Bronze Boots", "It was a copper lobster.", 1, 2000)),
     birdNest(new BirdNest(44, "bird_nest.png", "Bird Nest", "It appears that the bird left some goodies.", 1, -1)),
-    fishBait(new Item(45, "fish_bait.png", "Fish Bait", "This will make me fish faster.", 25000000, 55));
+    fishBait(new Item(45, "fish_bait.png", "Fish Bait", "This will make me fish faster.", 25000000, 55)),
+    kanunaNecklace(new AmuletOfKanuna(46, "necklacePower.png", "Necklace of Kanuna", "Makes me a little bit stronger.", 1, 7500));
 
     public Item item;
 
@@ -107,5 +108,13 @@ public enum ItemList {
 
     public int getMaxAmount() {
         return item.maxStack;
+    }
+
+    public float getDamageMulti() {
+        return item.damageMulti;
+    }
+
+    public float getMoveSpeed() {
+        return item.moveSpeed;
     }
 }

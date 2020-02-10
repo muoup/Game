@@ -64,8 +64,11 @@ public class GameObject {
             Main.player.changeSprite(Player.idleAnimation);
         }
 
-        if (!Input.GetKey(KeyEvent.VK_E) && distance <= maxDistance) {
+        if (!Input.GetKey(KeyEvent.VK_E) && distance <= maxDistance && !ChatBox.typing) {
             loseFocus();
+            Main.player.changeSprite(Player.idleAnimation);
+            timer = 0;
+            canInteract = true;
         }
     }
 

@@ -1,6 +1,7 @@
 package com.Game.Projectile;
 
 import com.Game.Entity.Enemy.Enemy;
+import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.Skills.Skills;
 import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
@@ -37,7 +38,7 @@ public class Projectile {
     public Projectile(Vector2 position, Vector2 aim, float damage, float speed, float expMultiplier, boolean friendly) {
         this.position = position.clone();
         this.aim = aim.clone();
-        this.damage = damage;
+        this.damage = damage * 1 + ((friendly) ? AccessoriesManager.damageMultiplier : 0) * DeltaMath.range(0.2f, 1.5f);
         this.friendly = friendly;
         this.expMultiplier = expMultiplier;
         this.speed = speed * Settings.projLengthMultiplier;
@@ -46,6 +47,8 @@ public class Projectile {
         initPos = position.clone();
 
         direction = Vector2.magnitudeDirection(position, aim).scale(speed);
+
+        image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 
         // If the bullet is not going to move, there is no point in spawning it in.
         if (!position.equalTo(aim)) {
@@ -94,7 +97,7 @@ public class Projectile {
 
     public void setImage(String root) {
         try {
-            this.image = ImageIO.read(getClass().getResource("/res/images/Projectiles/" + root));
+            this.image = ImageIO.read(getClass().getResource("/images/Projectiles/" + root));
         } catch (IOException e) {
             e.printStackTrace();
         }

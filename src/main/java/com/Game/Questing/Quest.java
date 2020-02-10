@@ -60,6 +60,8 @@ public class Quest {
         this.data = data;
         Main.sendPacket("57" + id + ":" + data + ":" + Main.player.name);
         parseData();
+        if (isComplete())
+            ChatBox.sendMessage("Congratulations! You have completed " + name + "!");
     }
 
     public void printClue() {

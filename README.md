@@ -6,7 +6,7 @@ This is an MMO game WIP
 Programmed by Zachary Verlardi  
 Backend security, server administration, and save files by Connor McDermid  
 Art by Filip Sigda (placeholders by Zachary Verlardi)  
-Music and SFX by Dillion Fitz and Justin Ecarma  
+Music and SFX by Dillon Fitz and Justin Ecarma
 
 Controls:
 W - Up

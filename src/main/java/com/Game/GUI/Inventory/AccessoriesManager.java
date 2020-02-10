@@ -26,6 +26,9 @@ public class AccessoriesManager {
 
     public static float armor = 0;
 
+    public static float damageMultiplier = 0;
+    public static float moveSpeedMultiplier = 0;
+
     public static void init() {
         for (int i = 0; i < accessories.length; i++) {
             accessories[i] = Item.emptyStack();
@@ -49,32 +52,24 @@ public class AccessoriesManager {
     }
 
     public static void setSlot(ItemStack item, int slot) {
-//        if (accessories[slot].getID() == item.getID()
-//                && accessories[slot].getData() == item.getData()) {
-//            int maxAmount = accessories[slot].getMaxAmount() - accessories[slot].getAmount();
-//            if (maxAmount > item.getAmount())
-//                maxAmount = item.getAmount();
-//
-//            Main.sendPacket("09" + slot + ":" + item.getID() + ":" + maxAmount + ":" + item.getData() + ":" + Main.player.name);
-//            accessories[slot].amount = maxAmount;
-//        } else {
-//            accessories[slot] = item;
-//            Main.sendPacket("09" + slot + ":" + item.getID() + ":" + item.getAmount() + ":" + item.getData() + ":" + Main.player.name);
-//        }
-
         int stackSet = Math.min(item.getAmount(), item.getMaxAmount());
 
         accessories[slot] = new ItemStack(item.getItemList(), stackSet, item.getData());
 
         Main.sendPacket("09" + slot + ":" + item.getID() + ":" + item.getAmount() + ":" + item.getData() + ":" + Main.player.name);
 
-        calculateArmor();
+        calculateStats();
     }
 
-    public static void calculateArmor() {
+    public static void calculateStats() {
         armor = 0;
+        damageMultiplier = 0;
+        moveSpeedMultiplier = 0;
+
         for (ItemStack item : accessories) {
             armor += item.getArmor();
+            damageMultiplier += item.getDamageMultiplier();
+            moveSpeedMultiplier += item.getMoveSpeed();
         }
     }
 

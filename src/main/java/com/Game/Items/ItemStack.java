@@ -16,7 +16,7 @@ public class ItemStack {
     public ItemRequirement requirement = ItemRequirement.none();
     public BufferedImage image;
     public int equipStatus;
-    public float armor;
+    public float armor = 0;
 
     public ItemStack(Item item, int amount, int data) {
         this.item = item;
@@ -147,5 +147,13 @@ public class ItemStack {
 
     public int getPrice() {
         return getItemList().getPrice();
+    }
+
+    public float getMoveSpeed() {
+        return getItemList().getMoveSpeed();
+    }
+
+    public float getDamageMultiplier() {
+        return getItemList().getDamageMulti();
     }
 }

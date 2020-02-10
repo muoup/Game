@@ -8,6 +8,7 @@ import com.Game.GUI.RightClick;
 import com.Game.GUI.Shop.Shop;
 import com.Game.Main.Main;
 import com.Game.Projectile.Projectile;
+import com.Game.World.GroundItem;
 import com.Util.Math.DeltaMath;
 import com.Util.Math.Vector2;
 
@@ -29,6 +30,8 @@ public class Item {
     public float armor = 0; // Armor amount, default if nothing is set in setData(ItemStack stack)
     public ItemRequirement requirement = ItemRequirement.none(); // Requirements to use an item.
     public float expMultiplier = 1f;
+    public float damageMulti = 0;
+    public float moveSpeed = 0;
 
     public Item(int id, String imageName, String name, String examineText, int maxStack, int worth) {
         this.id = id;
@@ -63,12 +66,13 @@ public class Item {
 
     public void ClickIdentities(int index) {
         if (GUI.currentShop == Shop.empty)
-            if (InventoryManager.getStack(index).equipStatus != -1) {
-                equipItem(index);
-            } else {
-                InventoryManager.useIndex = -1;
-                    OnClick(index);
-            }
+            if (!RightClick.render)
+                if (InventoryManager.getStack(index).equipStatus != -1) {
+                    equipItem(index);
+                } else {
+                    InventoryManager.useIndex = -1;
+                        OnClick(index);
+                }
         else {
             ItemStack selected = InventoryManager.getStack(index);
 
@@ -98,9 +102,16 @@ public class Item {
             examineItem(index);
 
         if (option == RightClick.options.size() - 2)
-            InventoryManager.setItem(index, emptyStack());
+            dropItem(index);
 
         OnRightClick(index, option);
+    }
+
+    private void dropItem(int index) {
+        ItemStack stack = InventoryManager.getStack(index).clone();
+        GroundItem.createGroundItem(Main.player.position, stack);
+
+        InventoryManager.setItem(index, ItemStack.empty());
     }
 
     public void OnRightClick(int index, int option) {

@@ -1,5 +1,6 @@
 package com.Game.Entity.NPC;
 
+import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.TextBox;
 import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
@@ -29,6 +30,10 @@ public class NPC {
         MethodHandler.npcs.add(this);
     }
 
+    public void setImage(String imageName) {
+        this.image = Main.main.getImageFromRoot("Entities/NPCs/" + imageName);
+    }
+
     public void update() {
         if (image == null)
             return;
@@ -38,7 +43,8 @@ public class NPC {
             if (Input.GetKeyDown(KeyEvent.VK_E)
                     && Vector2.distance(Main.player.position, position) < 150
                     && !Settings.paused()
-                    && TextBox.noText()) {
+                    && TextBox.noText()
+                    && !ChatBox.typing) {
                 onInteract();
             }
         }
