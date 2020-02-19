@@ -87,8 +87,8 @@ public class RightClick {
             if (state == State.inventory) {
                 Vector2 deltaDraw = draw.subtractClone(GUI.GuiPos);
 
-                int xx = (int) deltaDraw.x / GUI.IntBoxSize;
-                int yy = (int) deltaDraw.y / GUI.IntBoxSize;
+                int xx = (int) deltaDraw.x / GUI.intBoxSize;
+                int yy = (int) deltaDraw.y / GUI.intBoxSize;
 
                 ItemStack item = InventoryManager.inventory[xx + yy * 4];
 
@@ -181,6 +181,7 @@ public class RightClick {
         state = State.misc;
         draw = Input.mousePosition.clone();
         deltaDraw = draw.clone();
+        maxWidth = 0;
         RightClick.run = run;
 
         options.clear();
@@ -198,6 +199,10 @@ public class RightClick {
 
         if (deltaDraw.x + maxWidth > Settings.curResolution().x * 0.9f)
             deltaDraw.x -= maxWidth;
+
+        if (deltaDraw.y + options.size() * percentBox > Settings.curResolution().y * 0.9) {
+            deltaDraw.y -= options.size() * percentBox;
+        }
     }
 
     public static void customRightClick(RightClickRunnable run, String... options) {
@@ -266,8 +271,8 @@ public class RightClick {
     public static ItemStack inventoryStack() {
         Vector2 deltaMouse = Input.mousePosition.subtractClone(GUI.GuiPos);
 
-        int xx = (int) deltaMouse.x / GUI.IntBoxSize;
-        int yy = (int) deltaMouse.y / GUI.IntBoxSize;
+        int xx = (int) deltaMouse.x / GUI.intBoxSize;
+        int yy = (int) deltaMouse.y / GUI.intBoxSize;
 
         return InventoryManager.inventory[xx + yy * 4];
     }

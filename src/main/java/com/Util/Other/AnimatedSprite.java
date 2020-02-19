@@ -110,4 +110,9 @@ public class AnimatedSprite {
     public int getFrame() {
         return (int) ((timer * fps) % cellList.length);
     }
+
+    public boolean equivalent(AnimatedSprite animated) {
+        return spriteSheet == animated.spriteSheet
+               && cellList == animated.cellList;
+    }
 }

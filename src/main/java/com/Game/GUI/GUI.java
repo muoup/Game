@@ -2,7 +2,6 @@ package com.Game.GUI;
 
 import com.Game.GUI.Banking.BankingHandler;
 import com.Game.GUI.Chatbox.ChatBox;
-import com.Game.GUI.GUIWindow.GUIWindow;
 import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.Inventory.InventoryDrag;
 import com.Game.GUI.Inventory.InventoryManager;
@@ -23,9 +22,8 @@ public class GUI {
 
     private static float coolDown = 0f;
     private static Image[] inventoryOptions;
-    public static int select, IntBoxSize, curMain = 0;
+    public static int select, intBoxSize, curMain = 0;
     public static Vector2 below, GuiPos, invSize, categorySize;
-    public static GUIWindow currentGUI = GUIWindow.emptyGUI;
     private static final String[] invImgNames = {
             "backpack.png",
             "accessories.png",
@@ -38,7 +36,7 @@ public class GUI {
     public static boolean renderBank = false;
 
     public static Vector2 GUIEnd() {
-        return GuiPos.addClone(4 * IntBoxSize, 5 * IntBoxSize);
+        return GuiPos.addClone(4 * intBoxSize, 5 * intBoxSize);
     }
 
     public static boolean inGUI() {
@@ -46,20 +44,20 @@ public class GUI {
     }
 
     public static Vector2 getGridPosition(int x, int y) {
-        return new Vector2(x, y).scale(GUI.IntBoxSize).add(GuiPos);
+        return new Vector2(x, y).scale(GUI.intBoxSize).add(GuiPos);
     }
 
     public static void init() {
 
         Vector2 res = Settings.curResolution();
         inventoryOptions = new Image[invImgNames.length];
-        IntBoxSize = (int) (res.x * 0.05f);
-        invSize = Vector2.identity(IntBoxSize);
-        select = (int) (IntBoxSize * 0.75);
+        intBoxSize = (int) (res.x * 0.05f);
+        invSize = Vector2.identity(intBoxSize);
+        select = (int) (intBoxSize * 0.75);
         categorySize = Vector2.identity(select);
-        Vector2 mainOffset = new Vector2(IntBoxSize * 0.5f, IntBoxSize * 1.5f);
-        GuiPos = res.subtractClone(new Vector2(IntBoxSize * 4f, IntBoxSize * 5.5f)).subtractClone(mainOffset);
-        below = GuiPos.addClone(0, IntBoxSize * 5);
+        Vector2 mainOffset = new Vector2(intBoxSize * 0.5f, intBoxSize * 1.5f);
+        GuiPos = res.subtractClone(new Vector2(intBoxSize * 4f, intBoxSize * 5.5f)).subtractClone(mainOffset);
+        below = GuiPos.addClone(0, intBoxSize * 5);
         Settings.itemFont = new Font("Arial", Font.PLAIN, (int) Settings.curResolution().x / 75);
 
         for (int i = 0; i < invImgNames.length; i++) {
@@ -104,8 +102,6 @@ public class GUI {
         ChatBox.update();
         ChatBox.render();
 
-        currentGUI.tick();
-
         currentShop.baseRender();
         currentShop.baseUpdate();
 
@@ -121,7 +117,7 @@ public class GUI {
     }
 
     public static void update() {
-        Vector2 end = below.addClone(new Vector2(IntBoxSize * inventoryOptions.length, IntBoxSize));
+        Vector2 end = below.addClone(new Vector2(intBoxSize * inventoryOptions.length, intBoxSize));
 
         if (Input.mousePosition.compareTo(below) == 1 && end.compareTo(Input.mousePosition) == 1 && Input.GetMouse(1) && !RightClick.render && InventoryDrag.itemDrag.getID() == 0) {
             Vector2 mouseOffset = Input.mousePosition.subtractClone(below);
@@ -191,7 +187,7 @@ public class GUI {
             String text = formatAmount(stack.getAmount());
             Render.setFont(Settings.itemFont);
 
-            Vector2 textPos = rectPos.addClone(new Vector2(GUI.IntBoxSize - Settings.sWidth(text) - 4, GUI.IntBoxSize - 4));
+            Vector2 textPos = rectPos.addClone(new Vector2(GUI.intBoxSize - Settings.sWidth(text) - 4, GUI.intBoxSize - 4));
 
             // Draws the amount of items in the item stack along with a white rectangle on top of it so that
             // the text is easier to read.

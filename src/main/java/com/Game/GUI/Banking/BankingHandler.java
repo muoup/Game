@@ -1,5 +1,6 @@
 package com.Game.GUI.Banking;
 
+import com.Game.GUI.GUIWindow.BasicGUIWindow;
 import com.Game.GUI.GUI;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.RightClick;
@@ -8,57 +9,29 @@ import com.Game.Items.ItemStack;
 import com.Game.Main.Main;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
-import com.Util.Other.Render;
 import com.Util.Other.Settings;
 
-import java.awt.*;
 import java.util.ArrayList;
 
-public class BankingHandler {
+public class BankingHandler extends BasicGUIWindow {
     public static ArrayList<ItemStack> items = new ArrayList();
 
     private static int padding = 16;
 
     private static final Vector2 beginPos = Settings.curResolution().scale(0.25f);
     private static final Vector2 size = Settings.curResolution().scale(0.5f);
-    private static final int maxRow = (int) ((size.x - padding) / (padding + GUI.IntBoxSize));
+    private static final int maxRow = (int) ((size.x - padding) / (padding + GUI.intBoxSize));
 
     public static ItemStack hover = ItemStack.empty();
     public static int withdrawIndex = -1;
 
     public static void render() {
-        // Draw basic stuff for every shop such as background and items.
-        Render.setColor(new Color(182, 124, 45));
-        Render.drawBorderedRect(beginPos, size);
-
-        for (int i = 0; i < items.size(); i++) {
-            int x = i % maxRow;
-            int y = i / maxRow;
-
-            String text = GUI.formatAmount(items.get(i).getAmount());
-
-            Vector2 imageScale = new Vector2(GUI.IntBoxSize);
-
-            Vector2 rectPos = beginPos.addClone(padding + (padding + GUI.IntBoxSize) * x, padding + (padding + GUI.IntBoxSize) * y);
-            Vector2 textPos = rectPos.addClone(new Vector2(GUI.IntBoxSize - Settings.sWidth(text) - 4, GUI.IntBoxSize - 4));
-
-            Render.setColor(Color.BLACK);
-            Render.drawRectOutline(rectPos, imageScale);
-            Render.drawImage(Render.getScaledImage(items.get(i).getImage(), imageScale), rectPos);
-
-            Render.setColor(Color.BLACK);
-            Render.setFont(Settings.itemFont);
-            Render.drawText(text, textPos.addClone(1, 0));
-        }
-
-        Render.setColor(Color.RED);
-        Render.drawBorderedRect(beginPos.addClone(size.x - GUI.IntBoxSize / 2, 0), new Vector2(GUI.IntBoxSize / 2));
     }
 
     public static void update() {
         if (Input.GetMouseDown(1)) {
-            Vector2 rectBounds = beginPos.addClone(size.x - GUI.IntBoxSize / 2, 0);
-            if (Input.mouseInBounds(rectBounds, rectBounds.addClone(GUI.IntBoxSize / 2))) {
+            Vector2 rectBounds = beginPos.addClone(size.x - GUI.intBoxSize / 2, 0);
+            if (Input.mouseInBounds(rectBounds, rectBounds.addClone(GUI.intBoxSize / 2))) {
                 GUI.disableBankInterface();
                 return;
             }
@@ -71,9 +44,9 @@ public class BankingHandler {
             int x = i % maxRow;
             int y = i / maxRow;
 
-            Vector2 imageScale = new Vector2(GUI.IntBoxSize);
+            Vector2 imageScale = new Vector2(GUI.intBoxSize);
 
-            Vector2 pos = beginPos.addClone(padding + (padding + GUI.IntBoxSize) * x, padding + (padding + GUI.IntBoxSize) * y);
+            Vector2 pos = beginPos.addClone(padding + (padding + GUI.intBoxSize) * x, padding + (padding + GUI.intBoxSize) * y);
             Vector2 pos2 = pos.addClone(imageScale);
 
             if (Input.mousePosition.greaterThan(pos) && pos2.greaterThan(Input.mousePosition)) {

@@ -50,7 +50,6 @@ public class GroundItem {
 
     public void handleItem(ItemStack stack) {
         this.stack.add(stack);
-        System.out.println(this);
     }
 
     public void updateStack() {
@@ -73,7 +72,6 @@ public class GroundItem {
         for (ItemStack s : stack) {
             if (s.getID() == item.getID() && s.getData() == s.getData()) {
                 s.amount += item.getAmount();
-                System.out.println(this);
                 return;
             }
         }

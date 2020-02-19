@@ -100,7 +100,6 @@ public class World {
         BufferedImage imageMap = Render.getScaledImage(subImage, Settings.curResolution());
 
         Render.drawImage(imageMap, Vector2.zero());
-
     }
 
     public void renderMiniMap() {

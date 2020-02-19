@@ -15,7 +15,8 @@ public class Tree extends GameObject {
 
     TreePreset preset;
     int woodAmount;
-    float rpTimer;
+    private long delta = 0;
+    private float resetTime = 0;
 
     public Tree(int x, int y, TreePreset preset) {
         super(x, y);
@@ -28,9 +29,8 @@ public class Tree extends GameObject {
 
     public void update() {
         if (woodAmount == 0) {
-            rpTimer -= Main.dTime();
 
-            if (rpTimer <= 0) {
+            if (System.currentTimeMillis() - delta > resetTime) {
                 woodAmount = preset.getWoodAmount();
                 image = getImage(preset.imageName);
             }
@@ -82,7 +82,8 @@ public class Tree extends GameObject {
             }
 
             if (woodAmount == 0) {
-                rpTimer = preset.getTimer() * 2;
+                delta = System.currentTimeMillis();
+                resetTime = (preset.getTimer() * 2) * 1000;
                 image = getImage("toppled_" + preset.imageName);
             }
         }

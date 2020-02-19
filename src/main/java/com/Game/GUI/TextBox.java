@@ -132,17 +132,19 @@ public class TextBox {
             float rx = Settings.curResolution().x * 0.25f + buttonPadding * (i + 1) + buttonWidth * i;
             float tx = rx + buttonWidth / 2 - Render.getStringWidth(buttonText) / 2;
 
-            Render.setColor(Color.GRAY);
-            Render.drawBorderedRect(rx, Settings.curResolution().y * 0.8f, buttonWidth, Render.getStringHeight() * 1.5f);
+            Render.setColor(new Color(145, 82, 21));
+            Render.drawBorderedRect(rx, Settings.curResolution().y * 0.9f, buttonWidth, Render.getStringHeight() * 1.5f);
 
             Render.setColor(Color.BLACK);
-            Render.drawText(buttonText, tx, Settings.curResolution().y * 0.8f + Render.getStringHeight());
+            Render.drawText(buttonText, tx, Settings.curResolution().y * 0.9f + Render.getStringHeight());
         }
     }
 
     private static void next() {
-        if (textBoxes.isEmpty())
+        if (textBoxes.isEmpty()) {
+            Settings.disablePause();
             return;
+        }
         textBoxes.remove(0);
         choiceIndex--;
         counter = 0;
@@ -163,7 +165,7 @@ public class TextBox {
             return;
 
         float my = Input.mousePosition.y;
-        float ry = Settings.curResolution().y * 0.8f;
+        float ry = Settings.curResolution().y * 0.9f;
 
         if (my > ry && my < ry + Render.getStringHeight() * 1.5f) {
             // The mouse cursor is within the height range for the button, this means that it is possible

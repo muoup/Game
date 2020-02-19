@@ -57,7 +57,7 @@ public class SkillsManager {
             String text = Integer.toString(Skills.getLevel(i));
 
             Render.drawText(text,
-                    rectPos.addClone(new Vector2(GUI.IntBoxSize - Settings.sWidth(text) - 2, GUI.IntBoxSize - 2)));
+                    rectPos.addClone(new Vector2(GUI.intBoxSize - Settings.sWidth(text) - 2, GUI.intBoxSize - 2)));
         }
     }
 

@@ -38,8 +38,8 @@ public class MouseHover {
             return;
         }
         Vector2 deltaMouse = Input.mousePosition.subtractClone(GUI.GuiPos);
-        int dx = (int) deltaMouse.x / GUI.IntBoxSize;
-        int dy = (int) deltaMouse.y / GUI.IntBoxSize;
+        int dx = (int) deltaMouse.x / GUI.intBoxSize;
+        int dy = (int) deltaMouse.y / GUI.intBoxSize;
 
         hover = dx + dy * 4;
         draw = deltaMouse.clone();

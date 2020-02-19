@@ -159,7 +159,7 @@ public class Player {
     }
 
     public void changeSprite(AnimatedSprite spriteSheet) {
-        if (current != spriteSheet) {
+        if (!current.equivalent(spriteSheet)) {
             current = spriteSheet;
             current.reset();
             sendMovementPacket();
@@ -292,15 +292,15 @@ public class Player {
     public void drawBar(Vector2 startPos, Color color, float current, float max) {
         Render.setColor(Color.LIGHT_GRAY);
         Render.drawRectangle(startPos,
-                new Vector2(GUI.IntBoxSize * 4, 16));
+                new Vector2(GUI.intBoxSize * 4, 16));
 
         Render.setColor(color);
         Render.drawRectangle(startPos,
-                new Vector2(GUI.IntBoxSize * 4 * (current / max), 16));
+                new Vector2(GUI.intBoxSize * 4 * (current / max), 16));
 
         Render.setColor(Color.BLACK);
         Render.drawRectOutline(startPos,
-                new Vector2(GUI.IntBoxSize * 4, 16));
+                new Vector2(GUI.intBoxSize * 4, 16));
     }
 
     public void renderStats() {

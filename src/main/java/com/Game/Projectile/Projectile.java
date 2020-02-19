@@ -127,6 +127,7 @@ public class Projectile {
 
     public void setScale(int scale) {
         this.scale = new Vector2(scale);
+        this.position.subtractClone(scale / 2, scale / 2);
     }
 
     public Vector2 adjustedPosition() {

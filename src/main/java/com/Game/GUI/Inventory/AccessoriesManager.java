@@ -117,8 +117,8 @@ public class AccessoriesManager {
             if (Input.GetMouse(1)) {
                 Vector2 deltaMouse = Input.mousePosition.subtract(GUI.GuiPos);
 
-                int x = (int) deltaMouse.x / GUI.IntBoxSize;
-                int y = (int) deltaMouse.y / GUI.IntBoxSize;
+                int x = (int) deltaMouse.x / GUI.intBoxSize;
+                int y = (int) deltaMouse.y / GUI.intBoxSize;
 
                 int index = x + y * 4;
 

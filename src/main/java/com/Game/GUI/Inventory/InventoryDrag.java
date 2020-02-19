@@ -43,7 +43,7 @@ public class InventoryDrag {
                 Render.setFont(Settings.itemFont);
 
                 Render.drawText(text,
-                        rectPos.addClone(new Vector2(GUI.IntBoxSize - Settings.sWidth(text) - 4, GUI.IntBoxSize - 4)));
+                        rectPos.addClone(new Vector2(GUI.intBoxSize - Settings.sWidth(text) - 4, GUI.intBoxSize - 4)));
             }
 
         } else if (itemDrag.getID() != 0 && !drag && GUI.inGUI() && !click) {
@@ -111,8 +111,8 @@ public class InventoryDrag {
     private static int getInventoryIndex() {
         Vector2 mousePos = Input.mousePosition.subtractClone(GUI.GuiPos);
 
-        int x = (int) mousePos.x / GUI.IntBoxSize;
-        int y = (int) mousePos.y / GUI.IntBoxSize;
+        int x = (int) mousePos.x / GUI.intBoxSize;
+        int y = (int) mousePos.y / GUI.intBoxSize;
 
         return x + y * 4;
     }

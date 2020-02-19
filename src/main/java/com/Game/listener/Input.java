@@ -7,7 +7,6 @@ import com.Util.Math.Vector2;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 
 public class Input implements KeyListener, MouseListener, MouseMotionListener {
 
@@ -22,7 +21,8 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
     }
 
     public static boolean GetKey(int code) {
-        for (KeyInstance instance : keyArray) {
+        for (int i = 0; i < keyArray.size(); i++) {
+            KeyInstance instance = keyArray.get(i);
             if (instance.code == code) {
                 return instance.state != KeyState.released;
             }
@@ -32,7 +32,8 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
     }
 
     public static boolean GetKeyDown(int code) {
-        for (KeyInstance instance : keyArray) {
+        for (int i = 0; i < keyArray.size(); i++) {
+            KeyInstance instance = keyArray.get(i);
             if (instance.code == code) {
                 return instance.state == KeyState.pressed;
             }
@@ -81,8 +82,7 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
     }
 
     public static void update() {
-        for (Iterator<Integer> iterator = keyPressedArray.iterator(); iterator.hasNext(); ) {
-            int i = iterator.next();
+        for (int i : keyPressedArray) {
             int id = -1;
 
             for (int i1 = 0; i1 < keyArray.size(); i1++) {

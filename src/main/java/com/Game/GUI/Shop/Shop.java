@@ -37,7 +37,7 @@ public class Shop {
 
     private static final Vector2 beginPos = Settings.curResolution().scale(0.25f);
     private static final Vector2 size = Settings.curResolution().scale(0.5f);
-    private static final int maxRow = (int) ((size.x - padding) / (padding + GUI.IntBoxSize));
+    private static final int maxRow = (int) ((size.x - padding) / (padding + GUI.intBoxSize));
 
     private ItemList[] offeredItems;
 
@@ -50,6 +50,10 @@ public class Shop {
 
     public boolean empty() {
         return offeredItems.length == 0;
+    }
+
+    public int getLength() {
+        return offeredItems.length;
     }
 
     public void baseInit() {
@@ -70,10 +74,10 @@ public class Shop {
 
             String text = GUI.formatAmount(offeredItems[i].getPrice());
 
-            Vector2 imageScale = new Vector2(GUI.IntBoxSize);
+            Vector2 imageScale = new Vector2(GUI.intBoxSize);
 
-            Vector2 rectPos = beginPos.addClone(padding + (padding + GUI.IntBoxSize) * x, padding + (padding + GUI.IntBoxSize) * y);
-            Vector2 textPos = rectPos.addClone(new Vector2(GUI.IntBoxSize - Settings.sWidth(text) - 4, GUI.IntBoxSize - 4));
+            Vector2 rectPos = beginPos.addClone(padding + (padding + GUI.intBoxSize) * x, padding + (padding + GUI.intBoxSize) * y);
+            Vector2 textPos = rectPos.addClone(new Vector2(GUI.intBoxSize - Settings.sWidth(text) - 4, GUI.intBoxSize - 4));
 
             Render.setColor(Color.BLACK);
             Render.drawRectOutline(rectPos, imageScale);
@@ -85,13 +89,13 @@ public class Shop {
         }
 
         Render.setColor(Color.RED);
-        Render.drawBorderedRect(beginPos.addClone(size.x - GUI.IntBoxSize / 2, 0), new Vector2(GUI.IntBoxSize / 2));
+        Render.drawBorderedRect(beginPos.addClone(size.x - GUI.intBoxSize / 2, 0), new Vector2(GUI.intBoxSize / 2));
     }
 
     public void baseUpdate() {
         if (Input.GetMouseDown(1)) {
-            Vector2 rectBounds = beginPos.addClone(size.x - GUI.IntBoxSize / 2, 0);
-            if (Input.mouseInBounds(rectBounds, rectBounds.addClone(GUI.IntBoxSize / 2))) {
+            Vector2 rectBounds = beginPos.addClone(size.x - GUI.intBoxSize / 2, 0);
+            if (Input.mouseInBounds(rectBounds, rectBounds.addClone(GUI.intBoxSize / 2))) {
                 GUI.disableShop();
                 return;
             }
@@ -101,9 +105,9 @@ public class Shop {
             int x = i % maxRow;
             int y = i / maxRow;
 
-            Vector2 imageScale = new Vector2(GUI.IntBoxSize);
+            Vector2 imageScale = new Vector2(GUI.intBoxSize);
 
-            Vector2 pos = beginPos.addClone(padding + (padding + GUI.IntBoxSize) * x, padding + (padding + GUI.IntBoxSize) * y);
+            Vector2 pos = beginPos.addClone(padding + (padding + GUI.intBoxSize) * x, padding + (padding + GUI.intBoxSize) * y);
             Vector2 pos2 = pos.addClone(imageScale);
 
             if (Input.mousePosition.greaterThan(pos) && pos2.greaterThan(Input.mousePosition)) {

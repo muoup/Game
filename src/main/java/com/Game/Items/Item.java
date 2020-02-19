@@ -5,7 +5,6 @@ import com.Game.GUI.GUI;
 import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.RightClick;
-import com.Game.GUI.Shop.Shop;
 import com.Game.Main.Main;
 import com.Game.Projectile.Projectile;
 import com.Game.World.GroundItem;
@@ -16,6 +15,10 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * This class is just the skeleton for ItemStack, there should be no other instances of this other than
+ * in ItemList.
+ */
 public class Item {
     public ArrayList<String> options = new ArrayList<String>();
 
@@ -65,15 +68,15 @@ public class Item {
     }
 
     public void ClickIdentities(int index) {
-        if (GUI.currentShop == Shop.empty)
-            if (!RightClick.render)
+        if (GUI.currentShop.empty()) {
+            //if (!RightClick.render)
                 if (InventoryManager.getStack(index).equipStatus != -1) {
                     equipItem(index);
                 } else {
                     InventoryManager.useIndex = -1;
-                        OnClick(index);
+                    OnClick(index);
                 }
-        else {
+        } else {
             ItemStack selected = InventoryManager.getStack(index);
 
             ChatBox.sendMessage(selected.name + " will sell for " + (int) (selected.item.worth * 0.95f) + " coins each.");
