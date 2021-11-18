@@ -1,4 +1,4 @@
-package com.Game.Entity.Enemy;
+package com.Game.Entity;
 
 import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
@@ -114,7 +114,7 @@ public class Enemy {
     }
 
     public Vector2 getPlayer() {
-        return Main.player.position;
+        return Player.position;
     }
 
     public boolean withinBounds() {
@@ -131,7 +131,7 @@ public class Enemy {
     }
 
     public void renderEnemy() {
-        Vector2 deltaPosition = position.subtractClone(World.curWorld.offset);
+        Vector2 deltaPosition = position.subtractClone(World.offset);
 
         if (image == null) {
             System.err.println(name + ": " + id + " did not load image correctly :(.");
@@ -214,7 +214,7 @@ public class Enemy {
     }
 
     public float range() {
-        return Vector2.distance(position, Main.player.position);
+        return Vector2.distance(position, Player.position);
     }
 
     public static BufferedImage getImage(String name) {

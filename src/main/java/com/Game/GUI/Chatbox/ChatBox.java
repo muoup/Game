@@ -1,5 +1,6 @@
 package com.Game.GUI.Chatbox;
 
+import com.Game.Entity.Player;
 import com.Game.GUI.GUI;
 import com.Game.Main.Main;
 import com.Game.listener.Input;
@@ -21,7 +22,7 @@ public class ChatBox {
     public static Color chatColor = new Color(175, 129, 34);
 
     // There is not harm in touching these but it will not change it.
-    // They are changed every tick to help with cleaning up math when rendering the chatbox.
+    // They are changed every render to help with cleaning up math when rendering the chatbox.
     private static Vector2 size = Vector2.zero(); // Size of state for below variables.
     protected static Vector2 bSize; // Chat Box scrollbar size.
     protected static Vector2 gSize; // Chat Box GUI size.
@@ -57,7 +58,7 @@ public class ChatBox {
     }
 
     public static void startUp() {
-        sendMessage("Welcome " + Main.player.name + ", to the Game!");
+        sendMessage("Welcome " + Player.name + ", to the Game!");
     }
 
     public static void render() {
@@ -192,7 +193,7 @@ public class ChatBox {
         else if (Input.GetMouse(1) && !inType()) typing = false;
 
         if (Input.GetKey(KeyEvent.VK_ENTER) && !type.isEmpty()) {
-            sendPublicMessage("[" + Main.player.name + "] " + type);
+            sendPublicMessage("[" + Player.name + "] " + type);
             type = "";
         }
     }
@@ -222,7 +223,7 @@ public class ChatBox {
     /**
      * Client-side form of sendPublicMessage(String message), does not send the message
      * to all other players in the game. Used either by the server to display messages
-     * on player clients or for in-game Chat Box implementations such as Object/Item requirement
+     * on player clients or for in-game Chat Box implementations such as Objects/Item requirement
      * messages.
      * @param message String form of the message
      */

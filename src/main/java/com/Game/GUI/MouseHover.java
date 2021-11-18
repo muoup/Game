@@ -1,11 +1,10 @@
 package com.Game.GUI;
 
-import com.Game.Entity.Enemy.Enemy;
+import com.Game.Entity.Enemy;
 import com.Game.GUI.Inventory.InventoryDrag;
 import com.Game.GUI.Inventory.InventoryManager;
-import com.Game.GUI.Shop.Shop;
 import com.Game.GUI.Skills.Skills;
-import com.Game.Items.ItemStack;
+import com.Game.Items.ItemData;
 import com.Game.Main.MethodHandler;
 import com.Game.World.World;
 import com.Game.listener.Input;
@@ -51,27 +50,21 @@ public class MouseHover {
     }
 
     public static void render(int index) {
-        if (hover <= -1 || GUI.currentShop != Shop.empty)
+        if (hover <= -1 || GUI.renderShop)
             return;
 
-        if (index == 0 && !RightClick.render && InventoryDrag.itemDrag.getID() == 0) { // Handle Item Inventory Hovering
-            ItemStack item = InventoryManager.getStack(hover);
-            String text;
+        if (index == 0 && !RightClick.render && InventoryDrag.itemDrag.notEmpty()) { // Handle Item Inventory Hovering
+            ItemData item = InventoryManager.getStack(hover);
+            String text = item.getName();
 
-            if (item.getID() == 0)
+            if (!item.notEmpty())
                 return;
 
-            if (item.equipStatus >= 0) {
-                text = "Equip " + item.name;
-            } else {
-                text = item.getOptionText(0);
-            }
-
             if (InventoryManager.useIndex != -1) {
-                ItemStack use = InventoryManager.getStack(InventoryManager.useIndex);
-                if (use.getID() != 0)
-                    text = "Use " + use.name + "" +
-                            " on " + item.name;
+                ItemData use = InventoryManager.getStack(InventoryManager.useIndex);
+                if (use.notEmpty())
+                    text = "Use " + use.getName() + "" +
+                            " on " + item.getName();
             }
             Render.setFont(new Font("Arial", Font.BOLD, 14));
 
@@ -125,7 +118,7 @@ public class MouseHover {
 
                 if (!Render.onScreen(e.position, e.image) || !e.enabled)
                     continue;
-                if (Vector2.distance(Input.mousePosition, e.position.subtractClone(World.curWorld.offset)) <= e.image.getHeight()) {
+                if (Vector2.distance(Input.mousePosition, e.position.subtractClone(World.offset)) <= e.image.getHeight()) {
                     draw = Input.mousePosition.clone();
                     hoverEntity = e;
                     return;

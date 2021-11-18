@@ -2,10 +2,8 @@ package com.Game.GUI.Shop;
 
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.GUI;
-import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.RightClick;
-import com.Game.Items.ItemList;
-import com.Game.Items.ItemStack;
+import com.Game.Items.ItemData;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
@@ -14,17 +12,6 @@ import com.Util.Other.Settings;
 import java.awt.*;
 
 public class Shop {
-    public static Shop empty = new Shop(new ItemList[0]);
-    public static Shop fishing = new Shop(new ItemList[] {
-            ItemList.clownfish,
-            ItemList.fishBait
-    });
-    public static Shop kanuna = new Shop(new ItemList[] {
-            ItemList.kanunaNecklace
-    });
-
-    public static ItemStack selected = ItemStack.empty();
-
     public static final int amountOptions[] = {
             1,
             10,
@@ -33,34 +20,39 @@ public class Shop {
             -1 // Custom, buy custom or sell all.
     };
 
+    private static ItemData[] offeredItems = new ItemData[0];
+
+    public static int[] prices = null;
+
+    public static int selected;
+
     private static int padding = 16;
 
     private static final Vector2 beginPos = Settings.curResolution().scale(0.25f);
     private static final Vector2 size = Settings.curResolution().scale(0.5f);
     private static final int maxRow = (int) ((size.x - padding) / (padding + GUI.intBoxSize));
 
-    private ItemList[] offeredItems;
 
     // TODO: Item refilling?
     private long timeClosed;
 
-    public Shop(ItemList[] stacks) {
-        this.offeredItems = stacks;
+    public static void setItems(ItemData[] stacks) {
+        offeredItems = stacks;
     }
 
-    public boolean empty() {
+    public static boolean empty() {
         return offeredItems.length == 0;
     }
 
-    public int getLength() {
+    public static int getLength() {
         return offeredItems.length;
     }
 
-    public void baseInit() {
+    public static void baseInit() {
 
     }
 
-    public void baseRender() {
+    public static void baseRender() {
         if (empty())
             return;
 
@@ -72,7 +64,7 @@ public class Shop {
             int x = i % maxRow;
             int y = i / maxRow;
 
-            String text = GUI.formatAmount(offeredItems[i].getPrice());
+            String text = GUI.formatAmount(prices[i]);
 
             Vector2 imageScale = new Vector2(GUI.intBoxSize);
 
@@ -92,7 +84,7 @@ public class Shop {
         Render.drawBorderedRect(beginPos.addClone(size.x - GUI.intBoxSize / 2, 0), new Vector2(GUI.intBoxSize / 2));
     }
 
-    public void baseUpdate() {
+    public static void baseUpdate() {
         if (Input.GetMouseDown(1)) {
             Vector2 rectBounds = beginPos.addClone(size.x - GUI.intBoxSize / 2, 0);
             if (Input.mouseInBounds(rectBounds, rectBounds.addClone(GUI.intBoxSize / 2))) {
@@ -115,51 +107,51 @@ public class Shop {
                     RightClick.customRightClick((int option) -> buyOption(option),
                             "Buy 1", "Buy 10", "Buy 50", "Buy 100");
 
-                    selected = offeredItems[i].singleStack();
+                    selected = i;
                     break;
                 } else if (Input.GetMouseDown(1)) {
-                    ChatBox.sendMessage("This item costs " + offeredItems[i].getPrice() + " gold.");
+                    ChatBox.sendMessage("This item costs " + prices[i] + " gold.");
                 }
             }
         }
     }
 
-    public void buyOption(int option) {
-        int multiplier = amountOptions[option];
-        int indPrice = selected.getPrice();
-        int price = indPrice * multiplier;
-
-        int gold = InventoryManager.getAmount(ItemList.gold);
-
-        if (gold < price) {
-            multiplier = gold / indPrice;
-            price = multiplier * indPrice;
-        }
-        if (multiplier == 0) {
-            ChatBox.sendMessage("You are out of money!");
-            return;
-        }
-
-        multiplier = Math.min(multiplier, InventoryManager.emptySpace() * selected.getMaxAmount());
-
-        InventoryManager.removeItem(ItemList.gold, price);
-        InventoryManager.addItem(selected.getItemList(), multiplier);
+    public static void buyOption(int option) {
+//        int multiplier = amountOptions[option];
+//        int indPrice = selected.getPrice();
+//        int price = indPrice * multiplier;
+//
+//        int gold = InventoryManager.getAmount(ItemList.gold);
+//
+//        if (gold < price) {
+//            multiplier = gold / indPrice;
+//            price = multiplier * indPrice;
+//        }
+//        if (multiplier == 0) {
+//            ChatBox.sendMessage("You are out of money!");
+//            return;
+//        }
+//
+//        multiplier = Math.min(multiplier, InventoryManager.emptySpace() * selected.getMaxAmount());
+//
+//        InventoryManager.removeItem(ItemList.gold, price);
+//        InventoryManager.addItem(selected.getItemList(), multiplier);
     }
 
-    public void sellOption(int option) {
-        int multiplier = amountOptions[option];
-        int amt = InventoryManager.getAmount(selected.getItemList(), selected.getData());
-
-        if (multiplier == -1 || amt < multiplier) {
-            multiplier = amt;
-        }
-
-        if (multiplier == 0) {
-            ChatBox.sendMessage("You do not have any of this item!");
-            return;
-        }
-
-        InventoryManager.removeItem(selected.getItemList(), multiplier, selected.getData());
-        InventoryManager.addItem(ItemList.gold, (int) (selected.getPrice() * multiplier * 0.95f));
+    public static void sellOption(int option) {
+//        int multiplier = amountOptions[option];
+//        int amt = InventoryManager.getAmount(selected.getItemList(), selected.getData());
+//
+//        if (multiplier == -1 || amt < multiplier) {
+//            multiplier = amt;
+//        }
+//
+//        if (multiplier == 0) {
+//            ChatBox.sendMessage("You do not have any of this item!");
+//            return;
+//        }
+//
+//        InventoryManager.removeItem(selected.getItemList(), multiplier, selected.getData());
+//        InventoryManager.addItem(ItemList.gold, (int) (selected.getPrice() * multiplier * 0.95f));
     }
 }

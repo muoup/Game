@@ -1,16 +1,11 @@
-package com.Game.Entity.NPC;
+package com.Game.Entity;
 
-import com.Game.GUI.Chatbox.ChatBox;
-import com.Game.GUI.TextBox;
 import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
 import com.Game.World.World;
-import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
-import com.Util.Other.Settings;
 
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
 public class NPC {
@@ -34,31 +29,23 @@ public class NPC {
         this.image = Main.main.getImageFromRoot("Entities/NPCs/" + imageName);
     }
 
-    public void update() {
+    public void render() {
         if (image == null)
             return;
 
         if (Render.onScreen(position, image)) {
-            Render.drawImage(image, position.subtractClone(World.curWorld.offset));
-            if (Input.GetKeyDown(KeyEvent.VK_E)
-                    && Vector2.distance(Main.player.position, position) < 150
-                    && !Settings.paused()
-                    && TextBox.noText()
-                    && !ChatBox.typing) {
-                onInteract();
-            }
+            Render.drawImage(image, position.subtractClone(World.offset));
+//            if (Input.GetKeyDown(KeyEvent.VK_E)
+//                    && Vector2.distance(Player.position, position) < 150
+//                    && !Settings.paused()
+//                    && TextBox.noText()
+//                    && !ChatBox.typing) {
+//                onInteract();
+//            }
         }
-
-        move();
     }
 
-    // When the npc is being interacted with, do so-and-so
     public void onInteract() {
-
-    }
-
-    // Update the NPC's position with a movement AI
-    public void move() {
 
     }
 }

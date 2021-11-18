@@ -6,44 +6,40 @@ import com.Util.Math.Vector2;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class AnimatedSprite {
+public class AnimatedSprite extends Sprite {
     public float timer = 0;
     private SpriteSheet spriteSheet;
-    private Vector2[] cellList;
+    private Vector2[] cellList = new Vector2[0];
     private BufferedImage image;
     private float fps;
     public int row = -1;
 
-    public AnimatedSprite(SpriteSheet sheet, int fps) {
-        this.spriteSheet = sheet;
-        this.fps = fps;
-        calculateCells();
+    public AnimatedSprite(String params) {
+        String root = params.split("|")[0];
+        String other = params.split("|")[1];
+
+        String[] dims = other.split(";")[0].split(",");
+        String[] frames = other.split(";")[1].split(",");
+
+        spriteSheet = new SpriteSheet(root, Integer.parseInt(dims[0]), Integer.parseInt(dims[1]));
+
+        calculateCells(Integer.parseInt(frames[0]));
+
+        this.fps = Integer.parseInt(frames[1]);
     }
 
-    public AnimatedSprite(int fps, SpriteSheet sheet, int totalCells) {
-        this.spriteSheet = sheet;
+    public AnimatedSprite(SpriteSheet spriteSheet, int frameCount, int fps) {
+        this.spriteSheet = spriteSheet;
         this.fps = fps;
-        calculateCells(totalCells);
-    }
 
-    public AnimatedSprite(SpriteSheet sheet, Vector2[] cellList, int fps) {
-        this.fps = fps;
-        this.spriteSheet = sheet;
-        this.cellList = cellList;
-    }
-
-    public AnimatedSprite(SpriteSheet sheet, int fps, int column) {
-        this(sheet, fps);
-        this.row = column;
+        calculateCells(frameCount);
     }
 
     public void update() {
-        timer += Main.dTime();
     }
 
     public void reset() {
         timer = 0;
-
     }
 
     public BufferedImage getImage() {
@@ -56,7 +52,15 @@ public class AnimatedSprite {
         int cellNum = (int) ((timer * fps) % cellList.length);
 
         Vector2 cell = cellList[cellNum];
+
+        timer += Main.dTime();
+
         return spriteSheet.getCell((int) cell.x, (int) cell.y);
+    }
+
+    public BufferedImage getImageDontAnimate() {
+        timer -= Main.dTime();
+        return getImage();
     }
 
     public BufferedImage getFrame(int frame) {

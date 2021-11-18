@@ -1,9 +1,7 @@
 package com.Game.GUI.Inventory;
 
 import com.Game.GUI.GUI;
-import com.Game.Items.Item;
-import com.Game.Items.ItemList;
-import com.Game.Items.ItemStack;
+import com.Game.Items.ItemData;
 import com.Game.Main.Main;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
@@ -12,8 +10,6 @@ import com.Util.Other.Render;
 import java.awt.*;
 
 public class AccessoriesManager {
-
-    public static ItemStack[] accessories = new ItemStack[23];
 
     public static final int WEAPON_SLOT = 0;
     public static final int AMMO_SLOT = 4;
@@ -24,58 +20,21 @@ public class AccessoriesManager {
     public static final int LEGGING_SLOT = 15;
     public static final int BOOT_SLOT = 19;
 
-    public static float armor = 0;
-
-    public static float damageMultiplier = 0;
-    public static float moveSpeedMultiplier = 0;
+    public static ItemData[] accessories = new ItemData[23];
 
     public static void init() {
         for (int i = 0; i < accessories.length; i++) {
-            accessories[i] = Item.emptyStack();
+            accessories[i] = new ItemData();
         }
     }
 
-    public static ItemStack getSlot(int slot) {
+    public static ItemData getSlot(int slot) {
         return accessories[slot];
     }
 
-    public static void handleInventory() {
-        for (int i = 0; i < accessories.length; i++) {
-            if (accessories[i].getAmount() <= 0 && accessories[i].getID() != 0) {
-                accessories[i] = Item.emptyStack();
-            }
-        }
-    }
+    public static void setSlot(ItemData item, int index) {
+        accessories[index] = item;
 
-    public static void addAmount(int slot, int amount) {
-        setSlot(new ItemStack(accessories[slot].getItem(), amount + accessories[slot].getAmount()), slot);
-    }
-
-    public static void setSlot(ItemStack item, int slot) {
-        int stackSet = Math.min(item.getAmount(), item.getMaxAmount());
-
-        accessories[slot] = new ItemStack(item.getItemList(), stackSet, item.getData());
-
-        Main.sendPacket("09" + slot + ":" + item.getID() + ":" + item.getAmount() + ":" + item.getData() + ":" + Main.player.name);
-
-        calculateStats();
-    }
-
-    public static void calculateStats() {
-        armor = 0;
-        damageMultiplier = 0;
-        moveSpeedMultiplier = 0;
-
-        for (ItemStack item : accessories) {
-            armor += item.getArmor();
-            damageMultiplier += item.getDamageMultiplier();
-            moveSpeedMultiplier += item.getMoveSpeed();
-        }
-    }
-
-    public static void clientSetItem(int slot, int id, int amount, int data) {
-        accessories[slot] = new ItemStack(ItemList.values()[id], amount);
-        accessories[slot].setData(data);
     }
 
     public static void render() {
@@ -106,7 +65,7 @@ public class AccessoriesManager {
 
             Vector2 rectPos = GUI.getGridPosition(x, y);
 
-            if (accessories[i].getID() != 0) {
+            if (accessories[i].notEmpty()) {
                 Render.drawImage(Render.getScaledImage(accessories[i].getImage(), GUI.invSize), rectPos);
             }
         }
@@ -122,12 +81,18 @@ public class AccessoriesManager {
 
                 int index = x + y * 4;
 
-                ItemStack stack = accessories[index].clone();
+                ItemData stack = accessories[index];
 
-                InventoryManager.addItem(stack.getItem(), stack.getAmount(), stack.getData());
-
-                setSlot(Item.emptyStack(), index);
+                unEquip(index);
             }
         }
+    }
+
+    private static void unEquip(int index) {
+        Main.sendPacket("un" + index);
+    }
+
+    public static void clientSetItem(int id, String imageID, String examineText, String options) {
+
     }
 }

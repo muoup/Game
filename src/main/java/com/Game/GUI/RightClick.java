@@ -1,16 +1,15 @@
 package com.Game.GUI;
 
+import com.Game.Entity.Player;
 import com.Game.GUI.Banking.BankingHandler;
-import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.Inventory.InventoryDrag;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.Shop.Shop;
-import com.Game.Items.ItemStack;
-import com.Game.Main.Main;
+import com.Game.Items.ItemData;
 import com.Game.Main.MethodHandler;
 import com.Game.Object.GameObject;
+import com.Game.Object.GroundItem;
 import com.Game.Object.UsableGameObject;
-import com.Game.World.GroundItem;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
@@ -25,7 +24,7 @@ public class RightClick {
     public static boolean render = false;
     public static State state = State.none;
     public static int groundItem;
-    public static UsableGameObject object = UsableGameObject.empty;
+    public static UsableGameObject object = null;
     public static ArrayList<String> options;
     public static float percentBox;
     private static float maxWidth = 0;
@@ -90,60 +89,60 @@ public class RightClick {
                 int xx = (int) deltaDraw.x / GUI.intBoxSize;
                 int yy = (int) deltaDraw.y / GUI.intBoxSize;
 
-                ItemStack item = InventoryManager.inventory[xx + yy * 4];
+                ItemData item = InventoryManager.inventory[xx + yy * 4];
 
                 int option = (int) Input.mousePosition.subtract(draw).y / (int) percentBox;
 
-                item.getItem().RightClickIdentities(xx + yy * 4, option);
+                item.RightClickIdentities(xx + yy * 4, option);
 
                 RightClick.coolDown = 0.1f;
                 reset();
             } else if (state == State.groundItem) {
-                if (MethodHandler.groundItems.size() - 1 < groundItem) {
-                    render = false;
-                    return;
-                }
-
-                if (Vector2.distance(Main.player.position, MethodHandler.groundItems.get(groundItem).position) > 512) {
-                    render = false;
-                    return;
-                }
-
-                int option = (int) Input.mousePosition.subtract(draw).y / (int) percentBox;
-
-                GroundItem ground = MethodHandler.groundItems.get(groundItem);
-
-                if (option > ground.stack.size() - 1)
-                    return;
-
-                ItemStack selected = ground.stack.get(option);
-
-                int amount = selected.getAmount();
-                int removed = 0;
-
-                if (selected.getEquipmentStatus() != -1) {
-                    ItemStack accessory = AccessoriesManager.getSlot(selected.equipStatus);
-
-                    if (accessory.getID() == selected.getID()) {
-                        int maxAdd = accessory.getMaxAmount() - accessory.getAmount();
-                        int add = (amount > maxAdd) ? maxAdd : amount;
-
-                        AccessoriesManager.addAmount(selected.getEquipmentStatus(), add);
-                        amount -= add;
-
-                        removed += add;
-                    }
-                }
-
-                removed += InventoryManager.addItem(selected.getItem(), amount);
-
-
-
-                MethodHandler.groundItems.get(groundItem).stack.get(option).amount -= removed;
+//                if (MethodHandler.groundItems.size() - 1 < groundItem) {
+//                    render = false;
+//                    return;
+//                }
+//
+//                if (Vector2.distance(`Player.position, MethodHandler.groundItems.get(groundItem).position) > 512) {
+//                    render = false;
+//                    return;
+//                }
+//
+//                int option = (int) Input.mousePosition.subtract(draw).y / (int) percentBox;
+//
+//                GroundItem ground = MethodHandler.groundItems.get(groundItem);
+//
+//                if (option > ground.stack.size() - 1)
+//                    return;
+//
+//                ItemData selected = ground.stack.get(option);
+//
+//                int amount = selected.getAmount();
+//                int removed = 0;
+//
+//                if (selected.getEquipmentStatus() != -1) {
+//                    ItemData accessory = AccessoriesManager.getSlot(selected.equipStatus);
+//
+//                    if (accessory.getID() == selected.getID()) {
+//                        int maxAdd = accessory.getMaxAmount() - accessory.getAmount();
+//                        int add = (amount > maxAdd) ? maxAdd : amount;
+//
+//                        AccessoriesManager.addAmount(selected.getEquipmentStatus(), add);
+//                        amount -= add;
+//
+//                        removed += add;
+//                    }
+//                }
+//
+//                removed += InventoryManager.addItem(selected.getItem(), amount);
+//
+//
+//
+//                MethodHandler.groundItems.get(groundItem).stack.get(option).amount -= removed;
 
                 reset();
             } else if (state == State.object) {
-                if (Vector2.distance(Main.player.position, object.position) > 512) {
+                if (Vector2.distance(Player.position, object.position) > 512) {
                     render = false;
                     return;
                 }
@@ -215,30 +214,29 @@ public class RightClick {
     }
 
     private static void inventoryRightClick() {
-        if (GUI.currentShop != Shop.empty) {
-            if (inventoryStack().getID() != 0) {
-                Shop.selected = inventoryStack();
-                customRightClick((int option) -> GUI.currentShop.sellOption(option), "Sell 1", "Sell 10", "Sell 50", "Sell 100", "Sell All");
+        if (GUI.renderShop) {
+            if (inventoryStack().notEmpty()) {
+                customRightClick((int option) -> Shop.sellOption(option), "Sell 1", "Sell 10", "Sell 50", "Sell 100", "Sell All");
             }
             return;
         }  else if (GUI.renderBank) {
-            if (inventoryStack().getID() != 0) {
+            if (inventoryStack().notEmpty()) {
                 BankingHandler.hover = inventoryStack();
                 customRightClick((int option) -> BankingHandler.rightClickOption(option), "Deposit 1", "Deposit 10", "Deposit 50", "Deposit 100", "Deposit All");
             }
             return;
         }
 
-        if (InventoryDrag.itemDrag.getID() != 0)
+        if (InventoryDrag.itemDrag.notEmpty())
             return;
 
         maxWidth = 0;
 
         state = State.inventory;
 
-        ItemStack item = inventoryStack();
+        ItemData item = inventoryStack();
 
-        if (item.getID() == 0 || item.getAmount() == 0)
+        if (!item.notEmpty() || item.getAmount() == 0)
             return;
 
         render = true;
@@ -249,10 +247,9 @@ public class RightClick {
 
         Render.setFont(Settings.groundFont);
 
-        if (item.getEquipmentStatus() != -1)
-            options.add("Equip");
-
-        options.addAll(item.options);
+        for (String option : item.getOptions()) {
+            options.add(option);
+        }
 
         for (String s : options) {
             if (Render.getStringWidth(s) > maxWidth)
@@ -268,7 +265,7 @@ public class RightClick {
         options.add("Examine");
     }
 
-    public static ItemStack inventoryStack() {
+    public static ItemData inventoryStack() {
         Vector2 deltaMouse = Input.mousePosition.subtractClone(GUI.GuiPos);
 
         int xx = (int) deltaMouse.x / GUI.intBoxSize;
@@ -278,7 +275,7 @@ public class RightClick {
     }
 
     private static void groundRightClick() {
-        GroundItem hover = GroundItem.mouseOver();
+        GroundItem hover = null;
         UsableGameObject object = GameObject.mouseOver();
 
         if (hover == null && object != null) {
@@ -301,16 +298,17 @@ public class RightClick {
 
         Render.setFont(Settings.groundFont);
 
-        for (ItemStack item : hover.stack) {
-            String content = item.getAmount() + " " + item.getItem().name;
-            if (item.getAmount() > 1)
-                content += "s";
-
-            if (Settings.sWidth(content) > maxWidth)
-                maxWidth = Settings.sWidth(content);
-
-            options.add(content);
-        }
+        // TODO: Right click ground item
+//        for (ItemData item : hover) {
+//            String content = item.getAmount() + " " + item.name;
+//            if (item.getAmount() > 1)
+//                content += "s";
+//
+//            if (Settings.sWidth(content) > maxWidth)
+//                maxWidth = Settings.sWidth(content);
+//
+//            options.add(content);
+//        }
 
         maxWidth *= maxMultiplier;
 

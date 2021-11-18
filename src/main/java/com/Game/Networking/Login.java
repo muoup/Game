@@ -1,5 +1,6 @@
 package com.Game.Networking;
 
+import com.Game.Entity.Player;
 import com.Game.Main.Main;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
@@ -67,7 +68,7 @@ public class Login {
     }
 
     public static void connect(int loginCode) {
-        Main.player.name = nameField.trim();
+        Player.name = nameField.trim();
         boolean con = Main.serverConnect(nameField, passwordField, loginCode);
         if (!con) {
             Client.Error err = Main.client.getErrorCode();

@@ -1,13 +1,11 @@
 package com.Game.Networking;
 
-import com.Game.Entity.Player.Player;
-import com.Game.GUI.Banking.BankingHandler;
+import com.Game.Entity.Player;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.Skills.Skills;
-import com.Game.Items.ItemList;
-import com.Game.Items.ItemStack;
+import com.Game.Items.ItemData;
 import com.Game.Main.Main;
 import com.Game.Main.MenuHandler;
 import com.Game.Main.MethodHandler;
@@ -15,8 +13,10 @@ import com.Game.Questing.QuestManager;
 import com.Game.World.World;
 import com.Util.Math.Vector2;
 import com.Util.Other.Settings;
+import com.Util.Other.Sprite;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.net.*;
 
@@ -89,13 +89,19 @@ public class Client {
         String[] index;
 
         switch (start) {
+            case "00":
+                index = message.split(":");
+                Settings.questCount = Integer.parseInt(index[0]);
+                QuestManager.init();
+                // index[1] is the skill count if ever needed.
+                break;
             case "02":
                 index = message.split(":");
                 if (message.charAt(0) == 'p') {
                     JOptionPane.showMessageDialog(null, "That player is already logged in. Wait a second and retry again.");
                     return;
                 } else if (message.charAt(0) == 'v') {
-                    JOptionPane.showMessageDialog(null, "You are running the wrong client version! Please update your client.");
+                    JOptionPane.showMessageDialog(null, "You are running the wrong client version! Please restart your client.");
                     return;
                 }
                 boolean c = message.charAt(1) == 'c';
@@ -118,17 +124,11 @@ public class Client {
             case "04":
                 takeSkillData(message.split(":"));
                 break;
-            case "05":
-                takeItemData(message.split(":"));
-                break;
             case "06":
                 takeAccData(message.split(":"));
                 break;
             case "07":
                 takeQuestData(message.split(":"));
-                break;
-            case "08":
-                takeBankData(message.split(":"));
                 break;
             case "12":
                 String[] parts = message.split(":");
@@ -136,6 +136,7 @@ public class Client {
                 break;
             case "13":
             case "55":
+            case "me":
                 // Message is received
                 ChatBox.sendMessage(message);
                 break;
@@ -143,14 +144,14 @@ public class Client {
                 String[] movement = message.split(":");
                 for (PlayerObject o : MethodHandler.playerConnections) {
                     if (o.getUsername().equals(movement[0].trim())) {
-                        o.setPos(Integer.parseInt(movement[1]), Integer.parseInt(movement[2]), Integer.parseInt(movement[3]));
+                        o.setPos(Integer.parseInt(movement[1]), Integer.parseInt(movement[2]));
                         o.setImage(Player.getAnimation(movement[4]));
                         break;
                     }
                 }
                 break;
             case "76":
-                send("76" + Main.player.name);
+                send("76" + Player.name);
                 break;
             case "66":
                 for (PlayerObject o : MethodHandler.playerConnections) {
@@ -163,33 +164,48 @@ public class Client {
             case "99":
                 Main.logout();
                 break;
+            case "wc": // World Change
+                World.setWorld(message);
+                break;
+            case "ob": // Spawn Objects
+                World.spawnObject(message);
+                break;
+            case "ou": // Object Update
+                World.updateObject(message);
+                break;
+            case "pc": // Position Change
+                index = message.split(";");
+                Player.position = new Vector2(Integer.parseInt(index[0]), Integer.parseInt(index[1]));
+                break;
+            case "in": // Inventory Change
+                index = message.split(";");
+                ItemData inventory = InventoryManager.inventory[Integer.parseInt(index[0])];
+                inventory.setName(index[1]);
+                inventory.setAmount(Integer.parseInt(index[2]));
+                inventory.setImage(Sprite.identifierSprite(index[3]));
+                inventory.setExamineText(index[4]);
+                break;
+            case "ac": // Accessory Change
+                index = message.split(";");
+                ItemData accessory = AccessoriesManager.accessories[Integer.parseInt(index[0])];
+                accessory.setName(index[1]);
+                accessory.setAmount(Integer.parseInt(index[2]));
+                accessory.setImage(Sprite.identifierSprite(index[3]));
+                accessory.setExamineText(index[4]);
+                break;
+            case "oi": // Object Interaction
+                Player.interactionFinish = Long.parseLong(message);
+                Player.interactionStart = System.currentTimeMillis();
+                break;
+            case "lf":
+                Player.interactionFinish = 0;
+                Player.interactionStart = 0;
+                break;
+            default:
+                System.out.println("Unhandled server input: " + start + "\n" + content);
         }
 
         dataBuffer = new byte[4096];
-    }
-
-    private void takeBankData(String[] split) {
-        for (String string : split) {
-            if (string.trim().equals(""))
-                continue;
-
-            String[] newSplit = string.split(" ");
-            int id = Integer.parseInt(newSplit[0]);
-            int amount = Integer.parseInt(newSplit[1]);
-            int data = Integer.parseInt(newSplit[2]);
-
-            BankingHandler.items.add(new ItemStack(ItemList.values()[id], amount, data));
-        }
-    }
-
-    private void takeQuestData(String[] split) {
-        for (int i = 1; i < split.length; i++) {
-            String s = split[i];
-            String[] split2 = s.split(" ");
-            int id = Integer.parseInt(split2[0]);
-            int data = Integer.parseInt(split2[1]);
-            QuestManager.setClientData(id, data);
-        }
     }
 
     public boolean connect(String username, String password, int connectionCode) {
@@ -208,7 +224,7 @@ public class Client {
             errorCode = Error.SOCKET_EXCEPTION;
             return false;
         }
-        send(Main.connectionCode + username + ":" + password + ":" + connectionCode + ":" + (int) Main.player.position.x + ":" + (int) Main.player.position.y + ":" + clientVersion);
+        send(Main.connectionCode + username + ":" + password + ":" + connectionCode + ":" + clientVersion);
         listening = true;
 
         listenerThread = new Thread(() -> listen());
@@ -217,20 +233,11 @@ public class Client {
     }
 
     public void takeSkillData(String[] index) {
-        // 0 - Username; 1 & 2 -> pos; 3 -> subWorld; 4-? -> skills;
-        Main.player.name = index[0];
-        Main.player.position = new Vector2(Integer.parseInt(index[1]), Integer.parseInt(index[2]));
-        World.changeWorld(Integer.parseInt(index[3]));
-        for (int i = 4; i < index.length; i++) {
-            Skills.setExperience(i - 4, Float.parseFloat(index[i]));
-        }
-    }
+        // 0 - Username; 1-? -> skills;
+        Player.name = index[0];
 
-    public void takeItemData(String[] index) {
         for (int i = 1; i < index.length; i++) {
-            String[] itemData = index[i].split(" ");
-            InventoryManager.clientSetItem(i - 1,
-                    Integer.parseInt(itemData[0]), Integer.parseInt(itemData[1]), Integer.parseInt(itemData[2]));
+            Skills.setExperience(i - 1, Float.parseFloat(index[i]));
         }
     }
 
@@ -238,24 +245,28 @@ public class Client {
         for (int i = 1; i < index.length; i++) {
             String[] itemData = index[i].split(" ");
             AccessoriesManager.clientSetItem(i - 1,
-                    Integer.parseInt(itemData[0]), Integer.parseInt(itemData[1]), Integer.parseInt(itemData[2]));
+                    itemData[0], itemData[1], itemData[2]);
         }
+    }
 
-        AccessoriesManager.calculateStats();
+    private void takeQuestData(String[] index) {
+        int id = Integer.parseInt(index[1]);
+
+        QuestManager.setName(id, index[2]);
+        QuestManager.setColor(id, new Color(Integer.parseInt(index[3])));
+        QuestManager.setClue(id, index[4]);
     }
 
     public void joinServer(String username) {
-        ChatBox.tag = "[" + Main.player.name + "]: ";
+        ChatBox.tag = "[" + Player.name + "]: ";
 
         Main.isConnected = true;
     }
 
     public void disconnect() {
-        send("55" + Main.player.name);
+        send("55" + Player.name);
         Settings.disablePause();
-        World.curWorld.resetWorld();
         MenuHandler.setState(MenuHandler.MenuState.NoPause);
-        InventoryManager.reset();
         AccessoriesManager.init();
         Main.logout();
     }

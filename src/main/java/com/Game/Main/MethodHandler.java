@@ -1,15 +1,15 @@
 package com.Game.Main;
 
-import com.Game.Entity.Enemy.Enemy;
-import com.Game.Entity.NPC.NPC;
-import com.Game.Entity.Player.Player;
+import com.Game.Entity.Enemy;
+import com.Game.Entity.NPC;
+import com.Game.Entity.Player;
 import com.Game.GUI.GUI;
 import com.Game.GUI.SkillPopup.SkillPopup;
 import com.Game.GUI.TextBox;
 import com.Game.Networking.PlayerObject;
 import com.Game.Object.GameObject;
+import com.Game.Object.GroundItem;
 import com.Game.Projectile.Projectile;
-import com.Game.World.GroundItem;
 import com.Game.World.World;
 import com.Game.listener.Input;
 import com.Util.Other.Render;
@@ -75,7 +75,7 @@ public class MethodHandler {
 
     public void render() {
         if (canRender()) {
-            World.curWorld.renderWorld();
+            World.renderWorld();
 
             /*
              * These used to be foreach but kept returning ConcurrentModificationErrors
@@ -85,32 +85,33 @@ public class MethodHandler {
              */
             for (int i = 0; i < groundItems.size(); i++) {
                 GroundItem groundItem = groundItems.get(i);
-                groundItem.updateStack();
+                groundItem.renderStack();
             }
             for (int i = 0; i < objects.size(); i++) {
                 GameObject object = objects.get(i);
-                object.updateObject();
+                object.renderObject();
             }
             for (int i = 0; i < npcs.size(); i++) {
-                npcs.get(i).update();
+                npcs.get(i).render();
             }
             for (int i = 0; i < playerConnections.size(); i++) {
                 PlayerObject playerObject = playerConnections.get(i);
-                playerObject.tick();
+                playerObject.render();
             }
             for (int i = 0; i < projectiles.size(); i++) {
                 Projectile p = projectiles.get(i);
-                p.projectileUpdate();
+                p.renderProjectile();
             }
             for (int i = 0; i < enemies.size(); i++) {
                 Enemy enemy = enemies.get(i);
+                // TODO: i dunno
                 enemy.updateEnemy();
             }
 
             player.render();
 
             GUI.render();
-            World.curWorld.renderMiniMap();
+            World.renderMiniMap();
 
             for (int i = 0; i < skillPopups.size(); i++) {
                 SkillPopup popup = skillPopups.get(i);

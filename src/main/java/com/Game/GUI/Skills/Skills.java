@@ -1,9 +1,9 @@
 package com.Game.GUI.Skills;
 
+import com.Game.Entity.Player;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.SkillPopup.SkillPopup;
 import com.Game.Main.Main;
-import com.Util.Other.Settings;
 
 public class Skills {
     public static int RANGED = 0;
@@ -41,14 +41,9 @@ public class Skills {
     }
 
     public static void addExperience(int skill, float amount) {
-        if (getLevel(skill) >= Settings.lvlMax) {
-            ChatBox.sendMessage("You have reached the maximum level. This amount will be increased in the future.");
-            return;
-        }
-
         float initialXP = exp[skill];
         exp[skill] += amount;
-        Main.sendPacket("07" + skill + ":" + amount + ":" + Main.player.name);
+        Main.sendPacket("07" + skill + ":" + amount + ":" + Player.name);
         deltaLevel(skill, true);
         new SkillPopup(skill, (float) (Math.floor(exp[skill]) - Math.floor(initialXP)));
     }

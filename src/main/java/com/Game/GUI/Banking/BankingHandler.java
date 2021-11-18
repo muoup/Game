@@ -1,12 +1,10 @@
 package com.Game.GUI.Banking;
 
-import com.Game.GUI.GUIWindow.BasicGUIWindow;
 import com.Game.GUI.GUI;
-import com.Game.GUI.Inventory.InventoryManager;
+import com.Game.GUI.GUIWindow.BasicGUIWindow;
 import com.Game.GUI.RightClick;
 import com.Game.GUI.Shop.Shop;
-import com.Game.Items.ItemStack;
-import com.Game.Main.Main;
+import com.Game.Items.ItemData;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Settings;
@@ -14,7 +12,7 @@ import com.Util.Other.Settings;
 import java.util.ArrayList;
 
 public class BankingHandler extends BasicGUIWindow {
-    public static ArrayList<ItemStack> items = new ArrayList();
+    public static ArrayList<ItemData> items = new ArrayList();
 
     private static int padding = 16;
 
@@ -22,7 +20,7 @@ public class BankingHandler extends BasicGUIWindow {
     private static final Vector2 size = Settings.curResolution().scale(0.5f);
     private static final int maxRow = (int) ((size.x - padding) / (padding + GUI.intBoxSize));
 
-    public static ItemStack hover = ItemStack.empty();
+    public static ItemData hover = new ItemData();
     public static int withdrawIndex = -1;
 
     public static void render() {
@@ -64,66 +62,66 @@ public class BankingHandler extends BasicGUIWindow {
         withdrawItem(withdrawIndex, Math.min(Shop.amountOptions[option], items.get(withdrawIndex).getAmount()));
     }
 
-    public static void addItem(ItemStack stack) {
-        for (int i = 0; i < items.size(); i++) {
-            ItemStack bankStack = items.get(i);
-            if (bankStack.equivalent(stack)) {
-                bankStack.amount += stack.amount;
-                sendBankSlotData(i);
-                return;
-            }
-        }
-
-        items.add(stack);
-        sendBankCreate(stack);
+    public static void addItem(ItemData stack) {
+//        for (int i = 0; i < items.size(); i++) {
+//            ItemData bankStack = items.get(i);
+//            if (bankStack.equivalent(stack)) {
+//                bankStack.amount += stack.amount;
+//                sendBankSlotData(i);
+//                return;
+//            }
+//        }
+//
+//        items.add(stack);
+//        sendBankCreate(stack);
     }
 
     public static void rightClickOption(int option) {
-        depositInventory(hover, Math.min(Shop.amountOptions[option], InventoryManager.itemCount(hover.getItemList(), hover.getData())));
+//        depositInventory(hover, Math.min(Shop.amountOptions[option], InventoryManager.itemCount(hover.getItemList(), hover.getData())));
     }
 
     public static void withdrawItem(int index, int amount) {
-        ItemStack bankItem = items.get(index);
-
-        if (amount == -1 || amount > bankItem.getAmount()) {
-            amount = bankItem.getAmount();
-        }
-
-        bankItem.amount -= amount; // Removes the withdrawal from the bank
-        InventoryManager.addItem(bankItem.getItemList(), amount, bankItem.getData()); // Adds it to the inventory.
-
-        if (bankItem.getAmount() == 0) {
-            items.remove(index);
-            sendBankRemove(index);
-        } else {
-            sendBankSlotData(index);
-        }
+//        ItemData bankItem = items.get(index);
+//
+//        if (amount == -1 || amount > bankItem.getAmount()) {
+//            amount = bankItem.getAmount();
+//        }
+//
+//        bankItem.amount -= amount; // Removes the withdrawal from the bank
+//        InventoryManager.addItem(bankItem.getItemList(), amount, bankItem.getData()); // Adds it to the inventory.
+//
+//        if (bankItem.getAmount() == 0) {
+//            items.remove(index);
+//            sendBankRemove(index);
+//        } else {
+//            sendBankSlotData(index);
+//        }
     }
 
     public static void sendBankSlotData(int slot) {
-        ItemStack bankStack = items.get(slot);
-        Main.sendPacket("6e" + slot + ":" + bankStack.getID() + ":" + bankStack.getAmount() + ":" + bankStack.getData() + ":" + Main.player.name);
+//        ItemData bankStack = items.get(slot);
+//        Main.sendPacket("6e" + slot + ":" + bankStack.getID() + ":" + bankStack.getAmount() + ":" + bankStack.getData() + ":" + Player.name);
     }
 
     public static void sendBankRemove(int slot) {
-        Main.sendPacket("6d" + slot + ":" + Main.player.name);
+//        Main.sendPacket("6d" + slot + ":" + Player.name);
     }
 
-    public static void sendBankCreate(ItemStack bankStack) {
-        Main.sendPacket("6c" + bankStack.getID() + ":" + bankStack.getAmount() + ":" + bankStack.getData() + ":" + Main.player.name);
+    public static void sendBankCreate(ItemData bankStack) {
+//        Main.sendPacket("6c" + bankStack.getID() + ":" + bankStack.getAmount() + ":" + bankStack.getData() + ":" + Player.name);
     }
 
-    public static void depositInventory(ItemStack hover, int amount) {
-        ItemStack inventory = hover.clone();
-        if (amount == -1) {
-            amount = InventoryManager.itemCount(inventory.getItemList(), inventory.getData());
-        }
-
-        inventory.amount = amount;
-
-
-
-        addItem(inventory);
-        InventoryManager.removeItem(hover.getItemList(), amount, hover.getData());
+    public static void depositInventory(ItemData hover, int amount) {
+//        ItemData inventory = hover.clone();
+//        if (amount == -1) {
+//            amount = InventoryManager.itemCount(inventory.getItemList(), inventory.getData());
+//        }
+//
+//        inventory.amount = amount;
+//
+//
+//
+//        addItem(inventory);
+//        InventoryManager.removeItem(hover.getItemList(), amount, hover.getData());
     }
 }

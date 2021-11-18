@@ -8,7 +8,7 @@ import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.Shop.Shop;
 import com.Game.GUI.Skills.Skills;
 import com.Game.GUI.Skills.SkillsManager;
-import com.Game.Items.ItemStack;
+import com.Game.Items.ItemData;
 import com.Game.Main.Main;
 import com.Game.Questing.QuestManager;
 import com.Game.listener.Input;
@@ -31,9 +31,8 @@ public class GUI {
             "questing.png"
     };
 
-    public static Shop currentShop = Shop.empty;
-
     public static boolean renderBank = false;
+    public static boolean renderShop = false;
 
     public static Vector2 GUIEnd() {
         return GuiPos.addClone(4 * intBoxSize, 5 * intBoxSize);
@@ -48,7 +47,6 @@ public class GUI {
     }
 
     public static void init() {
-
         Vector2 res = Settings.curResolution();
         inventoryOptions = new Image[invImgNames.length];
         intBoxSize = (int) (res.x * 0.05f);
@@ -94,16 +92,13 @@ public class GUI {
             coolDown -= Main.dTime();
         }
 
-        InventoryManager.handleInventory();
-        AccessoriesManager.handleInventory();
-
         handleInventory();
 
         ChatBox.update();
         ChatBox.render();
 
-        currentShop.baseRender();
-        currentShop.baseUpdate();
+        Shop.baseRender();
+        Shop.baseUpdate();
 
         if (renderBank) {
             BankingHandler.update();
@@ -119,7 +114,7 @@ public class GUI {
     public static void update() {
         Vector2 end = below.addClone(new Vector2(intBoxSize * inventoryOptions.length, intBoxSize));
 
-        if (Input.mousePosition.compareTo(below) == 1 && end.compareTo(Input.mousePosition) == 1 && Input.GetMouse(1) && !RightClick.render && InventoryDrag.itemDrag.getID() == 0) {
+        if (Input.mousePosition.compareTo(below) == 1 && end.compareTo(Input.mousePosition) == 1 && Input.GetMouse(1) && !RightClick.render && !InventoryDrag.itemDrag.notEmpty()) {
             Vector2 mouseOffset = Input.mousePosition.subtractClone(below);
 
             int selection = (int) mouseOffset.x / (int) categorySize.x;
@@ -170,13 +165,13 @@ public class GUI {
         }
     }
 
-    public static void drawItem(int x, int y, ItemStack stack) {
+    public static void drawItem(int x, int y, ItemData stack) {
         Vector2 rectPos = getGridPosition(x, y);
 
         Render.setColor(Color.BLACK);
         Render.drawRectOutline(rectPos, GUI.invSize);
 
-        if (stack.getID() == 0)
+        if (stack.getSprite() == null)
             return;
 
         Render.drawImage(Render.getScaledImage(stack.getImage(), GUI.invSize), rectPos);
@@ -213,11 +208,11 @@ public class GUI {
         renderBank = false;
     }
 
-    public static void enableShop(Shop shop) {
-        currentShop = shop;
+    public static void enableShop(String args) {
+        renderShop = true;
     }
 
     public static void disableShop() {
-        currentShop = Shop.empty;
+        renderShop = false;
     }
 }

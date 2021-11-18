@@ -1,13 +1,8 @@
 package com.Game.GUI.Chatbox;
 
-import com.Game.GUI.Inventory.InventoryManager;
+import com.Game.Entity.Player;
 import com.Game.GUI.SkillPopup.SkillPopup;
-import com.Game.GUI.Skills.Skills;
-import com.Game.Items.ItemList;
 import com.Game.Main.Main;
-import com.Game.Object.SkillingAreas.Tree;
-import com.Game.Object.SkillingAreas.TreePreset;
-import com.Game.Questing.QuestManager;
 import com.Game.World.World;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
@@ -45,44 +40,38 @@ public class Commands {
         try {
             switch (command.toLowerCase()) {
                 case "pos":
-                    ChatBox.sendMessage(Main.player.position.ints());
+                    ChatBox.sendMessage(Player.position.ints());
                     break;
                 case "health":
-                    ChatBox.sendMessage(Float.toString(Main.player.health));
+                    ChatBox.sendMessage(Float.toString(Player.health));
                     break;
                 case "tp":
                     if (parameters.length == 2 || parameters.length == 3) {
                         Vector2 tp = new Vector2(Integer.parseInt(parameters[0]), Integer.parseInt(parameters[1]));
                         ChatBox.sendMessage("Teleported to: " + tp.toString());
                         if (parameters.length == 3) {
-                            World.changeWorld(Integer.parseInt(parameters[2].trim()));
                             ChatBox.sendMessage("Changed Subworld");
                         }
-                        Main.player.position = tp.clone();
+                        //Player.position = tp.clone();
                     } else {
                         ChatBox.sendMessage("Correct parameters are (x, y) or (x, y, subWorld)");
                     }
                     break;
                 case "tpmouse":
                     ChatBox.sendMessage("Teleported.");
-                    Vector2 tp = Input.mousePosition.add(World.curWorld.offset);
-                    break;
-                case "resetworld":
-                    World.curWorld.resetWorld();
+                    Vector2 tp = Input.mousePosition.add(World.offset);
                     break;
                 case "newtree":
                     if (!nullParam) {
-                        int x = (int) Main.player.position.x;
-                        int y = (int) Main.player.position.y;
+                        int x = (int) Player.position.x;
+                        int y = (int) Player.position.y;
                         String type = parameters[0];
 
                         switch (type) {
                             case "log":
-                                new Tree(x, y, TreePreset.tree);
                                 System.out.println("new Tree(" + x + ", " + y + ", Tree.log);");
                                 break;
                             case "maple":
-                                new Tree(x, y, TreePreset.mapleTree);
                                 System.out.println("new Tree(" + x + ", " + y + ", Tree.maple);");
                                 break;
                             default:
@@ -95,13 +84,10 @@ public class Commands {
                         ChatBox.sendMessage("setquest [quest id] [completion id]");
                         break;
                     }
-                    QuestManager.setStatus(Integer.parseInt(parameters[0]),
-                            Integer.parseInt(parameters[1]));
                 case "setskill":
                     if (parameters.length >= 2) {
                         int skill = Integer.parseInt(parameters[0]);
                         int level = Integer.parseInt(parameters[1]);
-                        Skills.setLevel(skill, level);
                     }
                     break;
                 case "disconnect":
@@ -111,8 +97,6 @@ public class Commands {
                     if (parameters.length >= 2) {
                         int item = Integer.parseInt(parameters[0]);
                         int amount = Integer.parseInt(parameters[1]);
-
-                        InventoryManager.addItem(ItemList.values()[item], amount);
                     }
                     break;
                 case "testpopup":

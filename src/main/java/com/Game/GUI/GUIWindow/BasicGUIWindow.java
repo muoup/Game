@@ -1,7 +1,7 @@
 package com.Game.GUI.GUIWindow;
 
 import com.Game.GUI.GUI;
-import com.Game.Items.ItemStack;
+import com.Game.Items.ItemData;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 import com.Util.Other.Settings;
@@ -19,7 +19,7 @@ public class BasicGUIWindow {
     }
 
     /**
-     * Do not override, this is the render + update method for the superclass.
+     * Do not override, this is the render + render method for the superclass.
      */
     public static void tick() {
 
@@ -40,7 +40,7 @@ public class BasicGUIWindow {
         Render.drawBorderedRect(beginPos, size);
     }
 
-    public static void renderItems(Vector2 offset, int padding, ArrayList<ItemStack> items) {
+    public static void renderItems(Vector2 offset, int padding, ArrayList<ItemData> items) {
         int maxRow = (int) ((size.x - padding) / (padding + itemScale.x));
 
         for (int i = 0; i < items.size(); i++) {
@@ -51,7 +51,7 @@ public class BasicGUIWindow {
         }
     }
 
-    public static void renderItemSlot(ItemStack stack, Vector2 gridPosition, Vector2 scale, int padding, boolean ignoreAmount) {
+    public static void renderItemSlot(ItemData stack, Vector2 gridPosition, Vector2 scale, int padding, boolean ignoreAmount) {
         String text = GUI.formatAmount(stack.getAmount());
 
         Vector2 rectPos = beginPos.addClone(padding + (padding + GUI.intBoxSize) * gridPosition.x, padding + (padding + GUI.intBoxSize) * gridPosition.y);

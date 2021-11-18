@@ -14,7 +14,6 @@ public class SpriteSheet {
     public static final SpriteSheet woodSheet = new SpriteSheet("Items/wood_sheet.png", 48, 48);
     public static final SpriteSheet playerSheet = new SpriteSheet("player_spritesheet.png", 7, 19);
 
-
     BufferedImage image;
     int width, height;
     public int columns, rows;

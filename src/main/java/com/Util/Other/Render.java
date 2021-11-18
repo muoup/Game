@@ -68,7 +68,7 @@ public class Render {
     }
 
     public static boolean onScreen(Vector2 position, Image image) {
-        Vector2 offset = World.curWorld.offset;
+        Vector2 offset = World.offset;
 
         return position.compareTo(offset.subtractClone(Render.getDimensions(image))) == 1
                 && offset.addClone(Settings.curResolution()).compareTo(position) == 1;

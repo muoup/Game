@@ -1,10 +1,11 @@
 package com.Game.Main;
 
-import com.Game.Entity.Player.Player;
+import com.Game.Entity.Player;
 import com.Game.GUI.GUI;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.Networking.Client;
 import com.Game.Networking.Login;
+import com.Game.World.World;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Settings;
@@ -82,7 +83,7 @@ public class Main extends Canvas {
     public void init() {
         Main.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-        player = new Player(Settings.playerSpawn, 225f, Color.GREEN, 2.75f);
+        Player.init(Settings.playerSpawn, 225f, Color.GREEN, 2.75f);
         menu = new MenuHandler();
 
         Settings.npcFont = getFont("npc-text.ttf", 24, Font.BOLD);
@@ -165,7 +166,7 @@ public class Main extends Canvas {
 
                 Input.update();
 
-                if (isConnected && Main.dTime() != 0) {
+                if (isConnected && Main.dTime() != 0 && !World.isNull()) {
 //                    if (!client.getSocket().isClosed()) {
 //                        client.disconnect();
 //                        return;
@@ -194,12 +195,12 @@ public class Main extends Canvas {
         }
     }
 
-    // Calls every tick - use for game logic and other similar non-graphical devices
+    // Calls every render - use for game logic and other similar non-graphical devices
     public void update() {
         methods.update();
     }
 
-    // Calls every tick - use for drawing graphics and other things similar
+    // Calls every render - use for drawing graphics and other things similar
     public void render() {
         methods.render();
     }
