@@ -15,6 +15,7 @@ public class SkillsManager {
     public static String[] skillImageNames = {
             "ranged.png",
             "melee.png",
+            "lifepoints.png",
             "fishing.png",
             "woodcutting.png",
             "fletching.png",
@@ -39,12 +40,12 @@ public class SkillsManager {
         Render.setColor(Color.LIGHT_GRAY);
         Render.drawBounds(GUI.GuiPos, GUI.GUIEnd());
 
-        Render.setColor(Color.BLACK);
-        Render.drawRectOutlineBounds(GUI.GuiPos, GUI.GUIEnd());
-
         for (int i = 0; i < skillImageNames.length; i++) {
             int x = i % 4;
             int y = i / 4;
+
+            Render.setColor(Color.BLACK);
+            Render.drawRectOutlineBounds(GUI.GuiPos, GUI.GUIEnd());
 
             Vector2 rectPos = GUI.getGridPosition(x, y);
 

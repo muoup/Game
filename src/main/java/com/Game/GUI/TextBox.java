@@ -1,5 +1,6 @@
 package com.Game.GUI;
 
+import com.Game.Entity.Player;
 import com.Game.Main.Main;
 import com.Game.Main.MenuHandler;
 import com.Game.listener.Input;
@@ -65,6 +66,8 @@ public class TextBox {
     }
 
     public static void handleTextbox() {
+        //System.out.println(noText());
+
         if (noText())
             return;
 
@@ -87,11 +90,12 @@ public class TextBox {
             if (counter >= text.length() * 2) {
                 counter = text.length() * 2;
 
-                if (Input.GetKeyDown(KeyEvent.VK_E) && choiceIndex != 0) {
+                if (isNextPressed() && choiceIndex != 0) {
                     next();
+                    Player.shootBlockedUntil = System.currentTimeMillis() + 250;
                 }
 
-            } else if (Input.GetKeyDown(KeyEvent.VK_E)) {
+            } else if (isNextPressed()) {
                 counter = text.length() * 2;
             }
 
@@ -224,5 +228,31 @@ public class TextBox {
         }
 
         return fMsg;
+    }
+
+    public static void addText(String message) {
+        String[] messages = message.split(";");
+        setText(messages);
+    }
+
+    public static void setChoices(String message) {
+        String[] parts = message.split(";");
+        String npcID = parts[0];
+        String text = parts[1];
+        String[] choices = new String[parts.length - 2];
+
+        for (int i = 2; i < parts.length; i++) {
+            choices[i - 2] = parts[2];
+        }
+
+        setChoice(() -> sendChoicePacket(npcID, choices[0]), () -> sendChoicePacket(npcID, choices[1]), choices[0], choices[1], text);
+    }
+
+    public static void sendChoicePacket(String npcID, String message) {
+        Main.sendPacket("ch" + Player.name + ";" + npcID + ";" + message);
+    }
+
+    public static boolean isNextPressed() {
+        return Input.GetKeyDown(KeyEvent.VK_E) || Input.GetKeyDown(KeyEvent.VK_SPACE);
     }
 }

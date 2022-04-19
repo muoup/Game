@@ -1,9 +1,6 @@
 package com.Game.GUI.Skills;
 
-import com.Game.Entity.Player;
-import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.SkillPopup.SkillPopup;
-import com.Game.Main.Main;
 
 public class Skills {
     public static int RANGED = 0;
@@ -21,66 +18,31 @@ public class Skills {
     public static String[] skillNames = {
             "Archery",
             "Attack",
+            "Life Points",
             "Fishing",
             "Woodcutting",
             "Fletching",
             "Mining",
             "Smithing"
     };
-    private static boolean[] levelUp;
-
     public static void initExperience() {
         skillAmt = SkillsManager.skillImageNames.length;
         exp = new float[skillAmt];
         lvl = new int[skillAmt];
-        levelUp = new boolean[skillAmt];
-
-        for (int i = 0; i < lvl.length; i++) {
-            deltaLevel(i, false);
-        }
     }
 
-    public static void addExperience(int skill, float amount) {
+    public static void setExperience(int skill, float amount, boolean popup) {
         float initialXP = exp[skill];
-        exp[skill] += amount;
-        Main.sendPacket("07" + skill + ":" + amount + ":" + Player.name);
-        deltaLevel(skill, true);
-        new SkillPopup(skill, (float) (Math.floor(exp[skill]) - Math.floor(initialXP)));
-    }
 
-    public static void setExperience(int skill, float amount) {
         exp[skill] = amount;
-        deltaLevel(skill, false);
+
+        if (popup) {
+            new SkillPopup(skill, (float) (Math.floor(exp[skill]) - Math.floor(initialXP)));
+        }
     }
 
     public static void setLevel(int skill, int level) {
-        addExperience(skill, levelToExp(level) - exp[skill]);
-    }
-
-    private static void deltaLevel(int skill, boolean lvlUp) {
-        int level = expToLevel(exp[skill]);
-        int initLevel = getLevel(skill);
-
-        if (level > lvl[skill]) {
-            levelUp[skill] = true;
-            lvl[skill] = level;
-        }
-
-        if (lvlUp && initLevel < level) {
-            ChatBox.sendMessage("Congratulations, you have reached level " + lvl[skill] + " " + Skills.skillNames[skill] + ".");
-        }
-    }
-
-    public static int expToLevel(float exp) {
-        int result = 0;
-        int i = 0;
-
-        while (result - 1 < exp) {
-            i++;
-            result += (int) (Math.pow(1.085, i - 1) * 150);
-        }
-
-        return Math.max(i, 1);
+        lvl[skill] = level;
     }
 
     public static int levelToExp(int lvl) {
@@ -101,7 +63,15 @@ public class Skills {
         return Math.max(1, lvl[skill]);
     }
 
-    public static boolean isLevelUp(int skill) {
-        return levelUp[skill];
+    public static void handleChange(String message) {
+        String[] args = message.split(";");
+
+        int skill = Integer.parseInt(args[0]);
+        int level = Integer.parseInt(args[1]);
+        float xp = Float.parseFloat(args[2]);
+        String popup = args[3];
+
+        setExperience(skill, xp, popup.equals("p"));
+        setLevel(skill, level);
     }
 }

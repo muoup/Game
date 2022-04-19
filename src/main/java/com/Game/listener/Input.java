@@ -1,12 +1,15 @@
 package com.Game.listener;
 
 import com.Game.GUI.Chatbox.ChatBox;
+import com.Game.Main.Main;
 import com.Game.Networking.Login;
 import com.Util.Math.Vector2;
 
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.HashSet;
+import java.util.Objects;
 
 public class Input implements KeyListener, MouseListener, MouseMotionListener {
 
@@ -65,11 +68,6 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
             case KeyEvent.VK_BACK_SPACE:
                 input = "bs";
                 break;
-            case KeyEvent.VK_TAB:
-            case KeyEvent.VK_CONTROL:
-            case KeyEvent.VK_SHIFT:
-                input = "";
-                break;
             case KeyEvent.VK_ENTER:
                 input = "en";
                 break;
@@ -77,30 +75,42 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
                 input = "es";
                 break;
         }
+
+        if (!input.matches("^[a-zA-Z0-9s]+$") && !" -_.,/:;!?'".contains(input))
+            return;
+
         ChatBox.type(input);
         Login.onType(input);
     }
 
     public static void update() {
-        for (int i : keyPressedArray) {
-            int id = -1;
+        try {
+            for (int i : keyPressedArray) {
+                int id = -1;
 
-            for (int i1 = 0; i1 < keyArray.size(); i1++) {
-                KeyInstance instance = keyArray.get(i1);
-                if (instance.code == i) {
-                    id = i;
-                    break;
+                for (int i1 = 0; i1 < keyArray.size(); i1++) {
+                    KeyInstance instance = keyArray.get(i1);
+                    if (instance.code == i) {
+                        id = i;
+                        break;
+                    }
+                }
+
+                // The key has already been pressed the previous frame.
+                if (id != -1) {
+                    Objects.requireNonNull(find(id)).state = KeyState.inPress;
+                }
+                // The key was not pressed before this frame.
+                else {
+                    keyArray.add(new KeyInstance(i, KeyState.pressed));
                 }
             }
+        } catch (ConcurrentModificationException e) {
+            if (Main.client == null)
+                return;
 
-            // The key has already been pressed the previous frame.
-            if (id != -1) {
-                find(id).state = KeyState.inPress;
-            }
-            // The key was not pressed before this frame.
-            else {
-                keyArray.add(new KeyInstance(i, KeyState.pressed));
-            }
+            Main.sendPacket("weirdconcurrenterror");
+            return;
         }
 
         for (int i = 0; i < mouseDown.length; i++) {

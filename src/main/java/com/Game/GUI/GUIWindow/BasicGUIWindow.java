@@ -19,7 +19,7 @@ public class BasicGUIWindow {
     }
 
     /**
-     * Do not override, this is the render + render method for the superclass.
+     * Do not override, this is the render + update method for the superclass.
      */
     public static void tick() {
 

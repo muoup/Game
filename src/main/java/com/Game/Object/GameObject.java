@@ -42,7 +42,7 @@ public class GameObject {
         Main.sendPacket("oi" + Player.name);
     }
 
-    public static void loseFocus() {
+    public static void Player() {
         Player.interactionStart = 0;
         Player.interactionFinish = 0;
         Main.sendPacket("lf" + Player.name);

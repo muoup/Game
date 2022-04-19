@@ -3,7 +3,6 @@ package com.Game.Entity;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.GUI;
 import com.Game.Main.Main;
-import com.Game.Main.MethodHandler;
 import com.Game.Object.GameObject;
 import com.Game.World.World;
 import com.Game.listener.Input;
@@ -19,8 +18,8 @@ import java.awt.image.BufferedImage;
 import java.util.Objects;
 
 public class Player {
+
     public static Vector2 position;
-    public static int subWorld = 0;
     public static float speed;
     public static Color playerColor;
     public static boolean canMove = true;
@@ -31,10 +30,11 @@ public class Player {
     private static Vector2 curSpeed = Vector2.zero();
     public static float dx = 0, dy = 0, dMod = 0, shootTimer = 0;
     public static String name = null;
-    private static final float maxSlide = 8f;
 
     public static long interactionFinish = 0;
     public static long interactionStart = 0;
+
+    public static long shootBlockedUntil = 0;
 
     public static float maxHealth = 100f;
     public static float health = 100f;
@@ -80,9 +80,9 @@ public class Player {
     }
 
     public static void movement() {
-        if (speedMod > 0.1) {
+        if (speedMod > 0.5) {
             speedMod *= Math.pow(0.93, Main.dTime() * 37.5);
-        } else if (speedMod < 0.1) {
+        } else {
             speedMod = 0;
         }
 
@@ -111,23 +111,20 @@ public class Player {
             if (Input.GetKeyDown(KeyEvent.VK_E))
                 GameObject.interact();
 
-//            if (Input.GetKeyDown(KeyEvent.VK_SHIFT) && dashTimer <= 0) {
-//                speedMod = dashMultiplier;
-//                dashTimer = Settings.dashTimer;
-//            }
+            if (Input.GetKeyDown(KeyEvent.VK_ESCAPE))
+                Main.sendPacket("gc" + Player.name);
 
-//            if (Input.GetKey(KeyEvent.VK_SPACE) && shootTimer <= 0) {
-//                ItemData accessory = AccessoriesManager.getSlot(AccessoriesManager.WEAPON_SLOT);
-//                if (accessory.getID() == 0)
-//                    new Fist(position, Input.mousePosition.addClone(World.offset));
-//                else
-//                    accessory.getItem().useWeapon(position, Input.mousePosition.addClone(World.offset));
-//
-//                SoundHandler.playSound("default_shoot.wav");
-//            }
+            if (Input.GetKeyDown(KeyEvent.VK_SHIFT) && dashTimer <= 0) {
+                speedMod = dashMultiplier;
+                dashTimer = Settings.dashTimer;
+            }
+
+            if (Input.GetKey(KeyEvent.VK_SPACE) && System.currentTimeMillis() > shootBlockedUntil) {
+                Main.sendPacket("sb" + Player.name + ";" + Input.mousePosition.addClone(World.offset));
+            }
         }
 
-        Vector2 move = curSpeed.scaleClone((float) Main.dTime() * speed * (1 + speedMod));
+        Vector2 move = curSpeed.normalize().scaleClone((float) Main.dTime() * speed * (1 + speedMod));
         Vector2 movement = handleCollision(move);
 
         if (!movement.equalTo(Vector2.zero())) {
@@ -153,12 +150,23 @@ public class Player {
         }
     }
 
+    public static void changeSprite(String code) {
+        switch (code) {
+            case "idle":
+                changeSprite(idleAnimation);
+                break;
+            case "chop":
+                changeSprite(chopAnimation);
+                break;
+        }
+    }
+
     public static void sendMovementPacket() {
         Main.sendPacket("15" + Player.name + ":" + (int) position.x + ":" + (int) position.y + ":" + animationInformation() + " " + leftFacing);
     }
 
     private static String animationInformation() {
-        int spriteSheet = 0;
+        int spriteSheet = -1;
 
         if (current == idleAnimation)
             spriteSheet = 0;
@@ -203,10 +211,17 @@ public class Player {
         Vector2 pos = position.addClone(offset);
 
         return new Vector2[]{
+                // Corners
                 pos.addClone(new Vector2(scale.x, scale.y).scale(0.5f)),
                 pos.addClone(new Vector2(-scale.x, -scale.y).scale(0.5f)),
                 pos.addClone(new Vector2(-scale.x, scale.y).scale(0.5f)),
-                pos.addClone(new Vector2(scale.x, -scale.y).scale(0.5f))
+                pos.addClone(new Vector2(scale.x, -scale.y).scale(0.5f)),
+
+                // Sides
+                pos.addClone(new Vector2(scale.x, 0).scale(0.5f)),
+                pos.addClone(new Vector2(-scale.x, 0).scale(0.5f)),
+                pos.addClone(new Vector2(0, scale.y).scale(0.5f)),
+                pos.addClone(new Vector2(0, -scale.y).scale(0.5f))
         };
     }
 
@@ -289,7 +304,7 @@ public class Player {
         //System.out.println((System.currentTimeMillis() - Player.interactionStart) + " " + (Player.interactionFinish - Player.interactionStart));
 
 
-        Vector2 sPos = Player.position.subtractClone(24, 35).subtract(World.offset);
+        Vector2 sPos = Player.position.subtractClone(24, 35).subtractClone(World.offset);
         Vector2 rect = new Vector2(48 * ((float) (System.currentTimeMillis() - Player.interactionStart) / (Player.interactionFinish - Player.interactionStart)), 8);
         Vector2 compRect = new Vector2(48, 8);
 
@@ -310,13 +325,7 @@ public class Player {
 
     public static void renderStats() {
         drawBar(GUI.GuiPos.subtractClone(new Vector2(0, 36)), Color.RED, health, maxHealth);
-        //drawBar(GUI.GuiPos.subtractClone(new Vector2(0, 18)), Color.CYAN.darker(), Settings.dashTimer - Math.max(0, dashTimer), Settings.dashTimer);
-    }
-
-    public static void resetAggro() {
-        for (Enemy enemy : MethodHandler.enemies) {
-            enemy.loseTarget();
-        }
+        drawBar(GUI.GuiPos.subtractClone(new Vector2(0, 18)), Color.CYAN.darker(), Settings.dashTimer - Math.max(0, dashTimer), Settings.dashTimer);
     }
 
     public static void render() {
@@ -330,5 +339,9 @@ public class Player {
 
     public static BufferedImage getImage() {
         return current.getImage(scale);
+    }
+
+    public static void playerTest(String message) {
+        System.out.println(Vector2.distance(Vector2.fromString(message), position));
     }
 }

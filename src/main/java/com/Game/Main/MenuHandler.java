@@ -1,5 +1,6 @@
 package com.Game.Main;
 
+import com.Game.GUI.RightClick;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
@@ -187,7 +188,7 @@ public class MenuHandler {
     }
 
     public void update() {
-        if (state == MenuState.TextBoxPause)
+        if (state == MenuState.TextBoxPause || RightClick.render || RightClick.coolDown > 0)
             return;
 
         if (stateLengths[state.ordinal()] == 0)

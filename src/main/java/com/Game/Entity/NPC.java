@@ -5,22 +5,19 @@ import com.Game.Main.MethodHandler;
 import com.Game.World.World;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
+import com.Util.Other.Sprite;
 
 import java.awt.image.BufferedImage;
 
 public class NPC {
 
-    // NOTE: Use id for comparing NPCs rather than comparing the objects themselves.
-    public int id;
-
     protected BufferedImage image;
     public Vector2 position;
 
-    public NPC(int id, int x, int y) {
-        this.id = id;
+    public NPC(Vector2 position, Sprite image) {
 
-        position = new Vector2(x, y);
-        image = null;
+        this.position = position;
+        this.image = image.getImage();
 
         MethodHandler.npcs.add(this);
     }
@@ -34,18 +31,7 @@ public class NPC {
             return;
 
         if (Render.onScreen(position, image)) {
-            Render.drawImage(image, position.subtractClone(World.offset));
-//            if (Input.GetKeyDown(KeyEvent.VK_E)
-//                    && Vector2.distance(Player.position, position) < 150
-//                    && !Settings.paused()
-//                    && TextBox.noText()
-//                    && !ChatBox.typing) {
-//                onInteract();
-//            }
+            Render.drawImage(image, position.subtractClone(World.offset).subtractClone(image.getWidth() / 2, image.getHeight() / 2));
         }
-    }
-
-    public void onInteract() {
-
     }
 }

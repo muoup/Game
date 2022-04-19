@@ -9,10 +9,10 @@ import java.util.TimerTask;
 
 public class Settings {
     public static float cameraZoom = 320;
-    public static int fpsCap = 30;
+    public static int fpsCap = 60;
     public static boolean showFPS = false;
     public static int resolutionIndex = 1;
-    public static final float maxDistance = 50;
+    public static final float maxPickupDistance = 128;
     public static int worldScale = 2;
 
     // In case xp rates are too fast, I'll cap leveling
@@ -36,10 +36,14 @@ public class Settings {
     public static boolean fullScreen = false;
     public static float cameraSensitivity = 0.25f;
 
+    public static int customAmount = 1000;
+
     public static Vector2 playerSpawn = new Vector2(1000, 5500);
     public static final float projLengthMultiplier = 1.775f;
+    public static final float dashTimer = 0.75f;
 
     public static int questCount = 0;
+    public static float playerSpeed = 225f;
 
     public static Vector2 curResolution() {
         return Settings.resolutions[Settings.resolutionIndex].clone();

@@ -1,9 +1,10 @@
 package com.Game.GUI;
 
+import com.Game.Entity.Player;
 import com.Game.GUI.Banking.BankingHandler;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.Inventory.AccessoriesManager;
-import com.Game.GUI.Inventory.InventoryDrag;
+import com.Game.GUI.Inventory.ItemDrag;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.Shop.Shop;
 import com.Game.GUI.Skills.Skills;
@@ -15,6 +16,7 @@ import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 import com.Util.Other.Settings;
+import com.Util.Other.Sprite;
 
 import java.awt.*;
 
@@ -40,6 +42,10 @@ public class GUI {
 
     public static boolean inGUI() {
         return Input.mouseInBounds(GuiPos, GUIEnd());
+    }
+
+    public static boolean inBank() {
+        return Input.mouseInBounds(Settings.curResolution().scaleClone(0.25f), Settings.curResolution().scaleClone(0.75f)) && renderBank;
     }
 
     public static Vector2 getGridPosition(int x, int y) {
@@ -92,18 +98,26 @@ public class GUI {
             coolDown -= Main.dTime();
         }
 
+        if (RightClick.coolDown > 0 && !RightClick.render)
+            RightClick.coolDown -= Main.dTime();
+
         handleInventory();
 
         ChatBox.update();
         ChatBox.render();
 
-        Shop.baseRender();
-        Shop.baseUpdate();
+        if (GUI.renderShop) {
+            Shop.baseRender();
+            Shop.baseUpdate();
+        }
 
         if (renderBank) {
             BankingHandler.update();
             BankingHandler.render();
         }
+
+        ItemDrag.render();
+        ItemDrag.update();
 
         RightClick.update();
         RightClick.render();
@@ -114,7 +128,7 @@ public class GUI {
     public static void update() {
         Vector2 end = below.addClone(new Vector2(intBoxSize * inventoryOptions.length, intBoxSize));
 
-        if (Input.mousePosition.compareTo(below) == 1 && end.compareTo(Input.mousePosition) == 1 && Input.GetMouse(1) && !RightClick.render && !InventoryDrag.itemDrag.notEmpty()) {
+        if (Input.mousePosition.compareTo(below) == 1 && end.compareTo(Input.mousePosition) == 1 && Input.GetMouse(1) && !RightClick.render && RightClick.coolDown <= 0 && !ItemDrag.itemDrag.notEmpty()) {
             Vector2 mouseOffset = Input.mousePosition.subtractClone(below);
 
             int selection = (int) mouseOffset.x / (int) categorySize.x;
@@ -148,7 +162,7 @@ public class GUI {
                 break;
             default:
                 System.err.println("There is something wrong.");
-                System.out.println(curMain);
+                System.err.println(curMain);
                 break;
         }
     }
@@ -198,21 +212,71 @@ public class GUI {
         }
     }
 
-    public static void enableBankInterface() {
+    private static void enableBankInterface() {
         RightClick.render = false;
-        disableShop();
         renderBank = true;
     }
 
-    public static void disableBankInterface() {
+    private static void disableBankInterface() {
         renderBank = false;
     }
 
+    public static void closeBank() {
+        Main.sendPacket("gc" + Player.name);
+    }
+
     public static void enableShop(String args) {
+        args = args.substring(5);
+
+        String[] items = args.split("::");
+
+        ItemData[] shopItems = new ItemData[items.length];
+        int[] prices = new int[items.length];
+
+        for (int i = 0; i < items.length; i++) {
+            String item = items[i];
+
+            String[] parts = item.split(";");
+            ItemData data = new ItemData();
+            data.setName(parts[0]);
+            data.setImage(Sprite.identifierSprite(parts[1]));
+
+            prices[i] = Integer.parseInt(parts[2]);
+
+            data.setExamineText(parts[3]);
+
+            shopItems[i] = data;
+        }
+
+        Shop.prices = prices;
+        Shop.offeredItems = shopItems;
         renderShop = true;
     }
 
     public static void disableShop() {
+        Shop.offeredItems = null;
+        Shop.prices = null;
         renderShop = false;
+
+        Main.sendPacket("lf" + Player.name);
+    }
+
+    public static void openGUI(String message) {
+        String[] args = message.split(";");
+
+        switch (args[0]) {
+            case "bankon":
+                GUI.enableBankInterface();
+                break;
+            case "bankoff":
+                GUI.disableBankInterface();
+                break;
+            case "shop":
+                GUI.enableShop(message);
+                break;
+            case "shopoff":
+                GUI.disableShop();
+                break;
+        }
     }
 }

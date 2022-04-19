@@ -1,5 +1,6 @@
 package com.Game.GUI.Inventory;
 
+import com.Game.Entity.Player;
 import com.Game.GUI.GUI;
 import com.Game.GUI.RightClick;
 import com.Game.Items.ItemData;
@@ -20,17 +21,12 @@ public class InventoryManager {
             inventory[i] = new ItemData();
         }
 
-        InventoryDrag.init();
+        ItemDrag.init();
     }
 
     public static void update() {
-        if (RightClick.coolDown > 0)
-            RightClick.coolDown -= Main.dTime();
-
         if (RightClick.render)
-            useIndex = -1;
-
-        InventoryDrag.update();
+            InventoryManager.useIndex = -1;
     }
 
     public static void render() {
@@ -59,8 +55,6 @@ public class InventoryManager {
             Render.setColor(Color.GREEN);
             Render.drawRectOutline(GUI.getGridPosition(useIndex % 4, useIndex / 4), GUI.invSize);
         }
-
-        InventoryDrag.render();
     }
 
     public static ItemData getStack(int index) {
@@ -68,16 +62,14 @@ public class InventoryManager {
     }
 
     public static void swapSlots(int index1, int index2) {
-        ItemData holder = inventory[index1].clone();
-        inventory[index1] = inventory[index2];
-        inventory[index2] = holder;
+        Main.sendPacket("ss" + Player.name + ";" + index1 + ";" + index2);
     }
 
     public static void use(int inventoryIndex) {
-        Main.sendPacket("us" + inventoryIndex);
+        Main.sendPacket("us" + Player.name + ";" + inventoryIndex);
     }
 
-    public static void ClickIdentities(int inventoryIndex) {
-        Main.sendPacket("ci" + inventoryIndex);
+    public static void leftClick(int inventoryIndex) {
+        Main.sendPacket("lc" + Player.name + ";" + inventoryIndex);
     }
 }

@@ -1,7 +1,6 @@
 package com.Game.Networking;
 
 import com.Game.Entity.Player;
-import com.Game.Main.Main;
 import com.Game.World.World;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
@@ -15,6 +14,7 @@ public class PlayerObject {
     private String username;
     private float nameOffset;
     private BufferedImage image;
+
     public PlayerObject(int x, int y, final String username) {
         this.x = x;
         this.y = y;
@@ -27,6 +27,8 @@ public class PlayerObject {
     public void setPos(int x, int y) {
         this.x = x;
         this.y = y;
+
+        Player.handleOffset();
     }
 
     public Vector2 getPos() {

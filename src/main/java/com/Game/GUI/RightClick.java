@@ -2,10 +2,11 @@ package com.Game.GUI;
 
 import com.Game.Entity.Player;
 import com.Game.GUI.Banking.BankingHandler;
-import com.Game.GUI.Inventory.InventoryDrag;
+import com.Game.GUI.Inventory.ItemDrag;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.Shop.Shop;
 import com.Game.Items.ItemData;
+import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
 import com.Game.Object.GameObject;
 import com.Game.Object.GroundItem;
@@ -17,6 +18,8 @@ import com.Util.Other.Settings;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class RightClick {
     public static Vector2 draw = Vector2.zero();
@@ -33,7 +36,7 @@ public class RightClick {
     public static RightClickRunnable run = null;
 
     public static void init() {
-        options = new ArrayList<String>();
+        options = new ArrayList<>();
         percentBox = Settings.curResolution().y * 0.03f;
     }
 
@@ -73,11 +76,13 @@ public class RightClick {
 
             if (state == State.none)
                 groundRightClick();
+
+            coolDown = 0.1f;
         }
 
         if (render && !onPopup()) {
-            coolDown = 0.1f;
-            render = false;
+            reset();
+            return;
         }
 
         if (render && Input.GetMouse(1)) {
@@ -91,75 +96,51 @@ public class RightClick {
 
                 ItemData item = InventoryManager.inventory[xx + yy * 4];
 
-                int option = (int) Input.mousePosition.subtract(draw).y / (int) percentBox;
+                int option = (int) Input.mousePosition.subtractClone(draw).y / (int) percentBox;
 
-                item.RightClickIdentities(xx + yy * 4, option);
+                item.onRightClick(xx + yy * 4, options.get(option));
 
-                RightClick.coolDown = 0.1f;
                 reset();
             } else if (state == State.groundItem) {
-//                if (MethodHandler.groundItems.size() - 1 < groundItem) {
-//                    render = false;
-//                    return;
-//                }
-//
-//                if (Vector2.distance(`Player.position, MethodHandler.groundItems.get(groundItem).position) > 512) {
-//                    render = false;
-//                    return;
-//                }
-//
-//                int option = (int) Input.mousePosition.subtract(draw).y / (int) percentBox;
-//
-//                GroundItem ground = MethodHandler.groundItems.get(groundItem);
-//
-//                if (option > ground.stack.size() - 1)
-//                    return;
-//
-//                ItemData selected = ground.stack.get(option);
-//
-//                int amount = selected.getAmount();
-//                int removed = 0;
-//
-//                if (selected.getEquipmentStatus() != -1) {
-//                    ItemData accessory = AccessoriesManager.getSlot(selected.equipStatus);
-//
-//                    if (accessory.getID() == selected.getID()) {
-//                        int maxAdd = accessory.getMaxAmount() - accessory.getAmount();
-//                        int add = (amount > maxAdd) ? maxAdd : amount;
-//
-//                        AccessoriesManager.addAmount(selected.getEquipmentStatus(), add);
-//                        amount -= add;
-//
-//                        removed += add;
-//                    }
-//                }
-//
-//                removed += InventoryManager.addItem(selected.getItem(), amount);
-//
-//
-//
-//                MethodHandler.groundItems.get(groundItem).stack.get(option).amount -= removed;
+                if (MethodHandler.groundItems.size() - 1 < groundItem) {
+                    reset();
+                    return;
+                }
 
-                reset();
-            } else if (state == State.object) {
-                if (Vector2.distance(Player.position, object.position) > 512) {
-                    render = false;
+                if (Vector2.distance(Player.position, MethodHandler.groundItems.get(groundItem).position) > 512) {
+                    reset();
                     return;
                 }
 
                 int option = (int) Input.mousePosition.subtract(draw).y / (int) percentBox;
+                int token = MethodHandler.groundItems.get(groundItem).randomToken;
 
-                if (option > options.size() - 1)
+                Main.sendPacket("gi" + Player.name + ";" + token + ";" + option);
+
+                reset();
+            } else if (state == State.object) {
+                if (Vector2.distance(Player.position, object.position) > 512) {
+                    reset();
                     return;
+                }
+
+                int option = (int) Input.mousePosition.subtractClone(deltaDraw).y / (int) percentBox;
+
+                if (option > options.size() - 1) {
+                    reset();
+                    return;
+                }
 
                 object.onOption(option);
 
                 reset();
             } else if (state == State.misc) {
-                int option = (int) Input.mousePosition.subtract(draw).y / (int) percentBox;
+                int option = (int) Input.mousePosition.subtractClone(deltaDraw).y / (int) percentBox;
 
-                if (option > options.size() - 1)
+                if (option > options.size() - 1) {
+                    reset();
                     return;
+                }
 
                 if (run != null)
                     run.run(option);
@@ -205,10 +186,7 @@ public class RightClick {
     }
 
     public static void customRightClick(RightClickRunnable run, String... options) {
-        ArrayList<String> optionArray = new ArrayList();
-
-        for (String o : options)
-            optionArray.add(o);
+        ArrayList<String> optionArray = new ArrayList<>(Arrays.asList(options));
 
         customRightClick(optionArray, run);
     }
@@ -216,18 +194,19 @@ public class RightClick {
     private static void inventoryRightClick() {
         if (GUI.renderShop) {
             if (inventoryStack().notEmpty()) {
-                customRightClick((int option) -> Shop.sellOption(option), "Sell 1", "Sell 10", "Sell 50", "Sell 100", "Sell All");
+                Shop.hover = getHoverIndex();
+                customRightClick(Shop::sellOption, "Sell 1", "Sell 10", "Sell 50", "Sell 100", "Sell All", "Examine");
             }
             return;
         }  else if (GUI.renderBank) {
             if (inventoryStack().notEmpty()) {
-                BankingHandler.hover = inventoryStack();
-                customRightClick((int option) -> BankingHandler.rightClickOption(option), "Deposit 1", "Deposit 10", "Deposit 50", "Deposit 100", "Deposit All");
+                BankingHandler.hover = getHoverIndex();
+                customRightClick(BankingHandler::depositItem, "Deposit 1", "Deposit 10", "Deposit 50", "Deposit 100", "Deposit All", "Examine");
             }
             return;
         }
 
-        if (InventoryDrag.itemDrag.notEmpty())
+        if (ItemDrag.itemDrag.notEmpty())
             return;
 
         maxWidth = 0;
@@ -247,9 +226,7 @@ public class RightClick {
 
         Render.setFont(Settings.groundFont);
 
-        for (String option : item.getOptions()) {
-            options.add(option);
-        }
+        Collections.addAll(options, item.getOptions());
 
         for (String s : options) {
             if (Render.getStringWidth(s) > maxWidth)
@@ -274,8 +251,17 @@ public class RightClick {
         return InventoryManager.inventory[xx + yy * 4];
     }
 
+    public static int getHoverIndex() {
+        Vector2 deltaMouse = Input.mousePosition.subtractClone(GUI.GuiPos);
+
+        int xx = (int) deltaMouse.x / GUI.intBoxSize;
+        int yy = (int) deltaMouse.y / GUI.intBoxSize;
+
+        return xx + yy * 4;
+    }
+
     private static void groundRightClick() {
-        GroundItem hover = null;
+        GroundItem hover = GroundItem.mouseOver();
         UsableGameObject object = GameObject.mouseOver();
 
         if (hover == null && object != null) {
@@ -298,17 +284,16 @@ public class RightClick {
 
         Render.setFont(Settings.groundFont);
 
-        // TODO: Right click ground item
-//        for (ItemData item : hover) {
-//            String content = item.getAmount() + " " + item.name;
-//            if (item.getAmount() > 1)
-//                content += "s";
-//
-//            if (Settings.sWidth(content) > maxWidth)
-//                maxWidth = Settings.sWidth(content);
-//
-//            options.add(content);
-//        }
+        for (ItemData item : hover.itemStacks) {
+            String content = item.getAmount() + " " + item.name;
+            if (item.getAmount() > 1)
+                content += "s";
+
+            if (Settings.sWidth(content) > maxWidth)
+                maxWidth = Settings.sWidth(content);
+
+            options.add(content);
+        }
 
         maxWidth *= maxMultiplier;
 
@@ -317,7 +302,7 @@ public class RightClick {
     }
 
     private static void objectRightClick(UsableGameObject object) {
-        RightClick.object.loseFocus();
+        //onRightClick.object.loseFocus();
         RightClick.object = object;
 
         if (object == null)

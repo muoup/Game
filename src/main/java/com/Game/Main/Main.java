@@ -21,9 +21,9 @@ import java.io.InputStream;
 public class Main extends Canvas {
 
     private boolean running = false;
-    private boolean startup = false;
 
     public static double fps = 0;
+    public static int deltaTime = 0;
     public static Main main;
     public static JFrame frame;
     public static Dimension screenSize;
@@ -33,14 +33,12 @@ public class Main extends Canvas {
     public static boolean isConnected = false;
 
     public static final String ipAddress = "localhost";//"hacksugar.asuscomm.com";
-    public static Player player;
     public static MenuHandler menu;
     public static Client client;
 
     public static MethodHandler methods;
 
     private static long updateLength;
-    private static long ups = 0;
 
     public static void main(String[] args) {
         main = new Main();
@@ -83,7 +81,7 @@ public class Main extends Canvas {
     public void init() {
         Main.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-        Player.init(Settings.playerSpawn, 225f, Color.GREEN, 2.75f);
+        Player.init(Settings.playerSpawn, Settings.playerSpeed, Color.GREEN, 2.75f);
         menu = new MenuHandler();
 
         Settings.npcFont = getFont("npc-text.ttf", 24, Font.BOLD);
@@ -97,11 +95,10 @@ public class Main extends Canvas {
     }
 
     public static double dTime() {
-        return 1 / fps;
+        return deltaTime / 1000f;
     }
 
     public void initMethods() {
-        methods.player = player;
         methods.settings = menu;
 
         GUI.init();
@@ -136,6 +133,7 @@ public class Main extends Canvas {
             long optimalTime = 1000000000 / Settings.fpsCap;
             long now = System.nanoTime();
             updateLength = now - lastLoopTime;
+            deltaTime = (int) updateLength / 1000000;
 
             lastLoopTime = now;
 

@@ -26,11 +26,11 @@ public class SkillPopup {
 
     public SkillPopup(int skillID, float amount) {
         this.skillImage = Render.getScaledImage
-                (SkillsManager.skillImages[skillID], Vector2.identity(64));
+                (SkillsManager.skillImages[skillID], Vector2.identity(32));
         this.skillMessage = "+  " + (int) amount;
         this.duration = DeltaMath.range(1.25f, 1.5f);
         this.speed = DeltaMath.range(45.5f, 47.5f);
-        this.position = new Vector2(GUI.invSize.x * 4 / 2f - 16 + DeltaMath.range(-64, 96), 150);
+        this.position = new Vector2(GUI.invSize.x * 4 / 2f - 16 + DeltaMath.range(0, 250), 300);
 
         MethodHandler.skillPopups.add(this);
     }
@@ -46,7 +46,7 @@ public class SkillPopup {
 
     public void render() {
         Color dColor = Main.graphics.getColor();
-        Render.setFont(Settings.npcFont);
+        Render.setFont(Settings.skillPopupFont);
         Render.setColor(Color.BLACK);
         Render.drawImage(skillImage, position);
         Render.drawText(skillMessage, position.addClone(-Render.getStringWidth(skillMessage) - 12.5f, 28));

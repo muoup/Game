@@ -26,7 +26,7 @@ public class Vector2 {
     }
 
     public String toString() {
-        return x + ", " + y;
+        return x + " " + y;
     }
 
     public Vector2 add(Vector2 other) {
@@ -194,10 +194,17 @@ public class Vector2 {
     public Vector2 normalize() {
         double distance = Math.sqrt(x * x + y * y);
 
+        if (distance == 0)
+            return this;
+
         x /= distance;
         y /= distance;
 
         return this;
+    }
+
+    public float getScale() {
+        return (float) Math.sqrt(x * x + y * y);
     }
 
     public static Vector2 dynamicNormalization(Vector2 origin, Vector2 vector) {
@@ -216,6 +223,9 @@ public class Vector2 {
     }
 
     public static float distance(Vector2 v1, Vector2 v2) {
+        if (v1 == null || v2 == null)
+            return -1;
+
         double x = (v1.x - v2.x);
         double y = (v1.y - v2.y);
 
@@ -234,7 +244,7 @@ public class Vector2 {
     }
 
     public static Vector2 identity(float scale) {
-        return new Vector2(scale, scale);
+        return new Vector2(scale);
     }
 
     public boolean isEqual(Vector2 other) {
@@ -247,5 +257,11 @@ public class Vector2 {
 
     public String ints() {
         return x + ", " + y;
+    }
+
+    public static Vector2 fromString(String string) {
+        String[] parts = string.split(" ");
+
+        return new Vector2(Float.parseFloat(parts[0]), Float.parseFloat(parts[1]));
     }
 }

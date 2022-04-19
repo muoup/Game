@@ -1,7 +1,7 @@
 package com.Game.GUI;
 
 import com.Game.Entity.Enemy;
-import com.Game.GUI.Inventory.InventoryDrag;
+import com.Game.GUI.Inventory.ItemDrag;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.Skills.Skills;
 import com.Game.Items.ItemData;
@@ -50,10 +50,10 @@ public class MouseHover {
     }
 
     public static void render(int index) {
-        if (hover <= -1 || GUI.renderShop)
+        if (hover <= -1 || GUI.renderShop || GUI.renderBank)
             return;
 
-        if (index == 0 && !RightClick.render && InventoryDrag.itemDrag.notEmpty()) { // Handle Item Inventory Hovering
+        if (index == 0 && !RightClick.render && !ItemDrag.itemDrag.notEmpty()) { // Handle Item Inventory Hovering
             ItemData item = InventoryManager.getStack(hover);
             String text = item.getName();
 
@@ -118,6 +118,7 @@ public class MouseHover {
 
                 if (!Render.onScreen(e.position, e.image) || !e.enabled)
                     continue;
+
                 if (Vector2.distance(Input.mousePosition, e.position.subtractClone(World.offset)) <= e.image.getHeight()) {
                     draw = Input.mousePosition.clone();
                     hoverEntity = e;

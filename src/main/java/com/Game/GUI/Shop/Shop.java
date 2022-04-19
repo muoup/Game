@@ -1,9 +1,12 @@
 package com.Game.GUI.Shop;
 
+import com.Game.Entity.Player;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.GUI;
+import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.RightClick;
 import com.Game.Items.ItemData;
+import com.Game.Main.Main;
 import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
@@ -17,14 +20,16 @@ public class Shop {
             10,
             50,
             100,
-            -1 // Custom, buy custom or sell all.
+            -1,
+            //-1 // Custom, buy custom or sell all.
     };
 
-    private static ItemData[] offeredItems = new ItemData[0];
+    public static ItemData[] offeredItems = new ItemData[0];
 
     public static int[] prices = null;
 
     public static int selected;
+    public static int hover;
 
     private static int padding = 16;
 
@@ -75,7 +80,7 @@ public class Shop {
             Render.drawRectOutline(rectPos, imageScale);
             Render.drawImage(Render.getScaledImage(offeredItems[i].getImage(), imageScale), rectPos);
 
-            Render.setColor(new Color(255, 254, 0));
+            Render.setColor(new Color(249, 249, 34));
             Render.setFont(Settings.itemFont);
             Render.drawText(text, textPos.addClone(1, 0));
         }
@@ -104,12 +109,12 @@ public class Shop {
 
             if (Input.mousePosition.greaterThan(pos) && pos2.greaterThan(Input.mousePosition)) {
                 if (Input.GetMouseDown(3)) {
-                    RightClick.customRightClick((int option) -> buyOption(option),
-                            "Buy 1", "Buy 10", "Buy 50", "Buy 100");
+                    RightClick.customRightClick(Shop::buyOption,
+                            "Buy 1", "Buy 10", "Buy 50", "Buy 100", "Buy " + Settings.customAmount, "Examine");
 
                     selected = i;
                     break;
-                } else if (Input.GetMouseDown(1)) {
+                } else if (Input.GetMouseDown(1) && !RightClick.render) {
                     ChatBox.sendMessage("This item costs " + prices[i] + " gold.");
                 }
             }
@@ -117,41 +122,26 @@ public class Shop {
     }
 
     public static void buyOption(int option) {
-//        int multiplier = amountOptions[option];
-//        int indPrice = selected.getPrice();
-//        int price = indPrice * multiplier;
-//
-//        int gold = InventoryManager.getAmount(ItemList.gold);
-//
-//        if (gold < price) {
-//            multiplier = gold / indPrice;
-//            price = multiplier * indPrice;
-//        }
-//        if (multiplier == 0) {
-//            ChatBox.sendMessage("You are out of money!");
-//            return;
-//        }
-//
-//        multiplier = Math.min(multiplier, InventoryManager.emptySpace() * selected.getMaxAmount());
-//
-//        InventoryManager.removeItem(ItemList.gold, price);
-//        InventoryManager.addItem(selected.getItemList(), multiplier);
+        if (option >= amountOptions.length) {
+            System.out.println(option + ", " + selected);
+            ChatBox.sendMessage(offeredItems[selected].examineText);
+            ChatBox.sendMessage("This item costs " + prices[selected] + " coins each.");
+            return;
+        }
+
+        int amount = amountOptions[option];
+
+        Main.sendPacket("si" + Player.name + ";buy;" + selected + ";" + amountOptions[option]);
     }
 
     public static void sellOption(int option) {
-//        int multiplier = amountOptions[option];
-//        int amt = InventoryManager.getAmount(selected.getItemList(), selected.getData());
-//
-//        if (multiplier == -1 || amt < multiplier) {
-//            multiplier = amt;
-//        }
-//
-//        if (multiplier == 0) {
-//            ChatBox.sendMessage("You do not have any of this item!");
-//            return;
-//        }
-//
-//        InventoryManager.removeItem(selected.getItemList(), multiplier, selected.getData());
-//        InventoryManager.addItem(ItemList.gold, (int) (selected.getPrice() * multiplier * 0.95f));
+        if (option >= amountOptions.length) {
+            ItemData stack = InventoryManager.getStack(hover);
+            ChatBox.sendMessage(stack.examineText);
+            ChatBox.sendMessage("This item will sell for " + stack.getSellValue() + " coins each");
+            return;
+        }
+
+        Main.sendPacket("si" + Player.name + ";sell;" + hover + ";" + amountOptions[option]);
     }
 }

@@ -1,19 +1,24 @@
 package com.Game.Networking;
 
 import com.Game.Entity.Player;
+import com.Game.GUI.Banking.BankingHandler;
 import com.Game.GUI.Chatbox.ChatBox;
+import com.Game.GUI.GUI;
 import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.Skills.Skills;
+import com.Game.GUI.TextBox;
 import com.Game.Items.ItemData;
 import com.Game.Main.Main;
 import com.Game.Main.MenuHandler;
 import com.Game.Main.MethodHandler;
+import com.Game.Projectile.HomingProjectile;
+import com.Game.Projectile.Projectile;
 import com.Game.Questing.QuestManager;
 import com.Game.World.World;
 import com.Util.Math.Vector2;
 import com.Util.Other.Settings;
-import com.Util.Other.Sprite;
+import com.Util.Other.SoundHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -124,9 +129,6 @@ public class Client {
             case "04":
                 takeSkillData(message.split(":"));
                 break;
-            case "06":
-                takeAccData(message.split(":"));
-                break;
             case "07":
                 takeQuestData(message.split(":"));
                 break;
@@ -139,6 +141,12 @@ public class Client {
             case "me":
                 // Message is received
                 ChatBox.sendMessage(message);
+                break;
+            case "te":
+                TextBox.addText(message);
+                break;
+            case "ch":
+                TextBox.setChoices(message);
                 break;
             case "15":
                 String[] movement = message.split(":");
@@ -167,11 +175,41 @@ public class Client {
             case "wc": // World Change
                 World.setWorld(message);
                 break;
+            case "pl": // Remove Player
+                World.removePlayer(message);
+                break;
             case "ob": // Spawn Objects
                 World.spawnObject(message);
                 break;
+            case "ns": // NPC Spawn
+                World.spawnNPC(message);
+                break;
+            case "ne": // New Enemy
+                World.spawnEnemy(message);
+                break;
+            case "eu": // Enemy Movement
+                World.updateEnemy(message);
+                break;
+            case "gi": // Ground Item(s)
+                World.spawnGroundItems(message);
+                break;
+            case "gu": // Grounditem Update
+                World.updateGroundItem(message);
+                break;
+            case "gr": // Grounditem Remove
+                World.removeGroundItem(message);
+                break;
             case "ou": // Object Update
                 World.updateObject(message);
+                break;
+            case "cc": // Perform the Chicken Check
+                World.chickenCheck(message);
+                break;
+            case "pp": // Perform the Projectile Ponderance
+                World.projectilePonderance(message);
+                break;
+            case "uu": // User Uxamination
+                Player.playerTest(message);
                 break;
             case "pc": // Position Change
                 index = message.split(";");
@@ -180,29 +218,53 @@ public class Client {
             case "in": // Inventory Change
                 index = message.split(";");
                 ItemData inventory = InventoryManager.inventory[Integer.parseInt(index[0])];
-                inventory.setName(index[1]);
-                inventory.setAmount(Integer.parseInt(index[2]));
-                inventory.setImage(Sprite.identifierSprite(index[3]));
-                inventory.setExamineText(index[4]);
+                inventory.interpretPacketData(index);
                 break;
             case "ac": // Accessory Change
                 index = message.split(";");
                 ItemData accessory = AccessoriesManager.accessories[Integer.parseInt(index[0])];
-                accessory.setName(index[1]);
-                accessory.setAmount(Integer.parseInt(index[2]));
-                accessory.setImage(Sprite.identifierSprite(index[3]));
-                accessory.setExamineText(index[4]);
+                accessory.interpretPacketData(index);
                 break;
             case "oi": // Object Interaction
                 Player.interactionFinish = Long.parseLong(message);
                 Player.interactionStart = System.currentTimeMillis();
                 break;
-            case "lf":
+            case "lf": // Lose Focus
                 Player.interactionFinish = 0;
                 Player.interactionStart = 0;
                 break;
+            case "ui": // User Interface
+                GUI.openGUI(message);
+                break;
+            case "bc": // Bank Change
+                BankingHandler.handleChange(message);
+                break;
+            case "sk": // Set Skill
+                Skills.handleChange(message);
+                break;
+            case "ps": // Projectile Spawn
+                Projectile.spawn(message);
+                break;
+            case "hs": // Homing Projectile Spawn
+                HomingProjectile.spawn(message);
+                break;
+            case "pd": // Projectile Destroy
+                Projectile.destroy(Integer.parseInt(message));
+                break;
+            case "ph": // Player Health
+                index = message.split(";");
+                Player.health = Float.parseFloat(index[0]);
+                Player.maxHealth = Float.parseFloat(index[1]);
+                break;
+            case "so": // Sound
+                SoundHandler.playSound(message);
+                break;
+            case "sc":
+                System.out.println(message);
+                Player.changeSprite(message);
+                break;
             default:
-                System.out.println("Unhandled server input: " + start + "\n" + content);
+                System.err.println("Unhandled server input: " + start + "\n" + content);
         }
 
         dataBuffer = new byte[4096];
@@ -227,7 +289,7 @@ public class Client {
         send(Main.connectionCode + username + ":" + password + ":" + connectionCode + ":" + clientVersion);
         listening = true;
 
-        listenerThread = new Thread(() -> listen());
+        listenerThread = new Thread(this::listen);
         listenerThread.start();
         return true;
     }
@@ -237,7 +299,7 @@ public class Client {
         Player.name = index[0];
 
         for (int i = 1; i < index.length; i++) {
-            Skills.setExperience(i - 1, Float.parseFloat(index[i]));
+            Skills.setExperience(i - 1, Float.parseFloat(index[i]), false);
         }
     }
 
@@ -268,6 +330,7 @@ public class Client {
         Settings.disablePause();
         MenuHandler.setState(MenuHandler.MenuState.NoPause);
         AccessoriesManager.init();
+        ChatBox.messages.clear();
         Main.logout();
     }
 

@@ -183,6 +183,7 @@ public class ChatBox {
         Vector2 tDraw = mPos.addClone(offset, offset * 0.5f);
 
         Render.setColor(Color.BLACK);
+        Render.setFont(textFont);
         float xDif = Math.max(0, (Render.getStringWidth(tag + type)) - (mSize.x - offset * 2) + 1);
 
         Render.drawCroppedText(tag + type + ((typing) ? "|" : ""), tDraw.subtractClone(xDif, 0), new Vector2(xDif, 0));
@@ -228,6 +229,12 @@ public class ChatBox {
      * @param message String form of the message
      */
     public static void sendMessage(String message) {
+        if (message == null)
+            return;
+
+        if (message.length() < 2)
+            return;
+
         Message msg = new Message(message, Color.BLACK);
 
         /*

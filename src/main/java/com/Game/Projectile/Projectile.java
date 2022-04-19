@@ -1,70 +1,74 @@
 package com.Game.Projectile;
 
+import com.Game.Main.Main;
 import com.Game.Main.MethodHandler;
 import com.Game.World.World;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
-import com.Util.Other.Settings;
+import com.Util.Other.Sprite;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class Projectile {
-    protected Vector2 position;
+    public Vector2 position;
     protected Vector2 initPos;
     protected Vector2 aim;
     protected Vector2 direction;
     protected Vector2 scale;
 
     protected boolean rotate;
+    protected boolean friendly;
+    protected boolean homing = false;
 
     protected float speed;
 
-    public BufferedImage image;
+    protected int randomToken;
 
-    public Projectile(Vector2 position, Vector2 aim, float speed) {
+    protected BufferedImage image;
+
+    public Projectile(Vector2 position, boolean friendly, Vector2 direction, float speed, BufferedImage image) {
+        this(position, friendly, speed, image);
+        this.direction = direction;
+        this.aim = direction.clone();
+
+        MethodHandler.projectiles.add(this);
+    }
+
+    public Projectile(Vector2 position, boolean friendly, float speed, BufferedImage image) {
         this.position = position.clone();
-        this.aim = aim.clone();
-        this.speed = speed * Settings.projLengthMultiplier;
+        this.speed = speed;
+        this.friendly = friendly;
         this.image = image;
 
         initPos = position.clone();
-
-        direction = Vector2.magnitudeDirection(position, aim).scale(speed);
     }
 
-    protected Object clone() {
-        return null;
+    public static void spawn(String message) {
+        // 4493.0 2606.0;token;4387.0 2388.875;speed;true;randomToken
+        String[] contents = message.split(";");
+
+        Vector2 position = Vector2.fromString(contents[0]);
+        Vector2 direction = Vector2.fromString(contents[2]);
+
+        Sprite image = Sprite.identifierSprite(contents[1]);
+
+        float speed = Float.parseFloat(contents[3]);
+        boolean friendly = Boolean.parseBoolean(contents[4]);
+
+        new Projectile(position, friendly, direction, speed, image.getImage()).randomToken = Integer.parseInt(contents[5]);
     }
 
-//    public void setImage(String root) {
-//        try {
-//            this.image = ImageIO.read(getClass().getResource("/images/Projectiles/" + root));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        if (image == null) {
-//            System.err.println("Cannot find image: " + root);
-//            return;
-//        }
-//
-//        if (scale == null) {
-//            scale = Vector2.identity(8);
-//        }
-//
-//        image = Render.getScaledImage(image, scale.x, scale.y);
-//
-//        aim.add(image.getWidth() / 2, image.getHeight() / 2);
-//
-//        if (rotate) {
-//            double radians = Math.atan(-(aim.x - position.x) / (aim.y - position.y));
-//
-//            if (aim.y > position.y)
-//                radians += Math.PI;
-//
-//            image = Render.rotateImage(image, radians);
-//        }
-//    }
+    public static void destroy(int id) {
+        ArrayList<Projectile> projectiles = MethodHandler.projectiles;
+        for (int i = 0; i < projectiles.size(); i++) {
+            Projectile p = projectiles.get(i);
+            if (p.randomToken == id) {
+                MethodHandler.projectiles.remove(i);
+                return;
+            }
+        }
+    }
 
     public void setScale(int scale) {
         this.scale = new Vector2(scale);
@@ -75,12 +79,10 @@ public class Projectile {
         return position.subtractClone((float) image.getWidth() / 2, (float) image.getHeight() / 2);
     }
 
-    public Vector2 getCenter() {
-        return adjustedPosition().addClone(Render.getImageSize(image).scale(0.5f));
-    }
-
     public void renderProjectile() {
-        position.add(direction.scaleClone(speed));
+        Vector2 movement = direction.scaleClone(speed * (float) Main.dTime());
+
+        position.add(movement);
 
         Render.drawImage(image, adjustedPosition().subtractClone(World.offset));
 

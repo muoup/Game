@@ -24,7 +24,6 @@ public class MethodHandler {
     public Main main;
 
     public MenuHandler settings;
-    public Player player;
 
     public static ArrayList<NPC> npcs;
     public static ArrayList<GameObject> objects;
@@ -68,7 +67,7 @@ public class MethodHandler {
         if (Settings.paused())
             return;
 
-        player.update();
+        Player.update();
 
         GUI.update();
     }
@@ -83,9 +82,13 @@ public class MethodHandler {
              * This may lead to some items not being updated on a certain frame
              * but that should hopefully not have too large of an impact.
              */
-            for (int i = 0; i < groundItems.size(); i++) {
-                GroundItem groundItem = groundItems.get(i);
-                groundItem.renderStack();
+            for (int i = 0; i < projectiles.size(); i++) {
+                Projectile p = projectiles.get(i);
+                p.renderProjectile();
+            }
+            for (int i = 0; i < playerConnections.size(); i++) {
+                PlayerObject playerObject = playerConnections.get(i);
+                playerObject.render();
             }
             for (int i = 0; i < objects.size(); i++) {
                 GameObject object = objects.get(i);
@@ -94,21 +97,17 @@ public class MethodHandler {
             for (int i = 0; i < npcs.size(); i++) {
                 npcs.get(i).render();
             }
-            for (int i = 0; i < playerConnections.size(); i++) {
-                PlayerObject playerObject = playerConnections.get(i);
-                playerObject.render();
-            }
-            for (int i = 0; i < projectiles.size(); i++) {
-                Projectile p = projectiles.get(i);
-                p.renderProjectile();
-            }
             for (int i = 0; i < enemies.size(); i++) {
                 Enemy enemy = enemies.get(i);
                 // TODO: i dunno
-                enemy.updateEnemy();
+                enemy.renderEnemy();
+            }
+            for (int i = 0; i < groundItems.size(); i++) {
+                GroundItem groundItem = groundItems.get(i);
+                groundItem.renderStack();
             }
 
-            player.render();
+            Player.render();
 
             GUI.render();
             World.renderMiniMap();
