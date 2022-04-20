@@ -65,6 +65,10 @@ public class ItemData {
     }
 
     public void setRcOptions(String rcOptions) {
+        if (rcOptions.equals("NO OPTIONS")) {
+            this.rcOptions = new String[0];
+            return;
+        }
         this.rcOptions = rcOptions.split("\n");
     }
 

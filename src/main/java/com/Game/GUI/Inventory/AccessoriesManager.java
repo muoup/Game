@@ -1,5 +1,6 @@
 package com.Game.GUI.Inventory;
 
+import com.Game.Entity.Player;
 import com.Game.GUI.GUI;
 import com.Game.Items.ItemData;
 import com.Game.Main.Main;
@@ -60,7 +61,6 @@ public class AccessoriesManager {
                 case BOOT_SLOT:
                     GUI.drawItem(x, y, accessories[i]);
                     break;
-
             }
 
             Vector2 rectPos = GUI.getGridPosition(x, y);
@@ -74,14 +74,12 @@ public class AccessoriesManager {
     public static void update() {
         if (GUI.inGUI()) {
             if (Input.GetMouse(1)) {
-                Vector2 deltaMouse = Input.mousePosition.subtract(GUI.GuiPos);
+                Vector2 deltaMouse = Input.mousePosition.subtractClone(GUI.GuiPos);
 
                 int x = (int) deltaMouse.x / GUI.intBoxSize;
                 int y = (int) deltaMouse.y / GUI.intBoxSize;
 
                 int index = x + y * 4;
-
-                ItemData stack = accessories[index];
 
                 unEquip(index);
             }
@@ -89,7 +87,7 @@ public class AccessoriesManager {
     }
 
     private static void unEquip(int index) {
-        Main.sendPacket("un" + index);
+        Main.sendPacket("un" + Player.name + ";" + index);
     }
 
     public static void clientSetItem(int id, String imageID, String examineText, String options) {
