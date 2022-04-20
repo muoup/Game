@@ -85,11 +85,7 @@ public class ItemData {
             setName(index[1]);
             setAmount(Integer.parseInt(index[2]));
             setImage(Sprite.identifierSprite(index[3]));
-
-            // idk get rid of this once options are implemented
-            if (index.length == 5)
-                setRcOptions(index[4]);
-
+            setRcOptions(index[4]);
             setExamineText(index[5]);
             setSellValue(Integer.parseInt(index[6]));
         } catch (Exception e) {

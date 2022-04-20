@@ -260,7 +260,6 @@ public class Client {
                 SoundHandler.playSound(message);
                 break;
             case "sc":
-                System.out.println(message);
                 Player.changeSprite(message);
                 break;
             default:

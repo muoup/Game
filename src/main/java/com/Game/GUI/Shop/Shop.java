@@ -123,7 +123,6 @@ public class Shop {
 
     public static void buyOption(int option) {
         if (option >= amountOptions.length) {
-            System.out.println(option + ", " + selected);
             ChatBox.sendMessage(offeredItems[selected].examineText);
             ChatBox.sendMessage("This item costs " + prices[selected] + " coins each.");
             return;

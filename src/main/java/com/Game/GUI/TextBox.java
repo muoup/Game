@@ -242,7 +242,7 @@ public class TextBox {
         String[] choices = new String[parts.length - 2];
 
         for (int i = 2; i < parts.length; i++) {
-            choices[i - 2] = parts[2];
+            choices[i - 2] = parts[i];
         }
 
         setChoice(() -> sendChoicePacket(npcID, choices[0]), () -> sendChoicePacket(npcID, choices[1]), choices[0], choices[1], text);

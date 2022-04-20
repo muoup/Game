@@ -93,6 +93,7 @@ public class MenuHandler {
                             break;
                         case 3:
                             Main.client.disconnect();
+                            System.exit(0);
                             break;
                     }
                     curSelected = 0;

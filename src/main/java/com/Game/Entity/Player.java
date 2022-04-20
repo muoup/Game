@@ -39,8 +39,6 @@ public class Player {
     public static float maxHealth = 100f;
     public static float health = 100f;
 
-    public static float healthRegen = 1f;
-
     public static final SpriteSheet playerIdle = new SpriteSheet("Player/player_idle_1.png", 32, 32);
     public static final SpriteSheet playerRun = new SpriteSheet("Player/player_run.png", 32, 32);
     public static final SpriteSheet playerChop  = new SpriteSheet("Player/player_chop.png", 32, 32);
@@ -69,9 +67,6 @@ public class Player {
     public static void update() {
         shootTimer -= Main.dTime();
         dashTimer -= Main.dTime();
-
-        if (health < maxHealth)
-            health += Main.dTime() * healthRegen;
 
         if (!Settings.paused())
             movement();
