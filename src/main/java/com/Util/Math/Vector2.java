@@ -141,9 +141,11 @@ public class Vector2 {
         return new Vector2(xx, yy);
     }
 
-    public void offset(float offset) {
+    public Vector2 offset(float offset) {
         x += offset;
         y += offset;
+
+        return this;
     }
 
     public static Vector2 randomVector(float xRange, float yRange) {

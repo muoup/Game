@@ -47,7 +47,7 @@ public class InventoryManager {
                 }
 
                 ItemData stack = getStack(x + y * 4);
-                GUI.drawItem(x, y, stack);
+                GUI.drawMenuItem(x, y, stack);
             }
         }
 

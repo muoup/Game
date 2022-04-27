@@ -59,7 +59,7 @@ public class AccessoriesManager {
                 case CHESTPLATE_SLOT:
                 case LEGGING_SLOT:
                 case BOOT_SLOT:
-                    GUI.drawItem(x, y, accessories[i]);
+                    GUI.drawMenuItem(x, y, accessories[i]);
                     break;
             }
 

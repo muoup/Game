@@ -85,6 +85,7 @@ public class MouseHover {
         } else if (index == 2) { // Handle Stat Hovering
             String xp = "Current XP: " + (int) Skills.getExperience(hover);
             String lvlUp = "XP for Next Level: " + Skills.levelToExp(Skills.getLevel(hover) + 1);
+            String until = "XP Left: " + (int) (Skills.levelToExp(Skills.getLevel(hover) + 1) - Skills.getExperience(hover));
 
             Render.setFont(new Font("Arial", Font.BOLD, 14));
 
@@ -93,17 +94,22 @@ public class MouseHover {
                     Input.mousePosition.x - width * 1.1f : Input.mousePosition.x;
             Vector2 dPos = new Vector2(x, Input.mousePosition.y);
 
-            Render.setColor(Color.BLACK);
-            Render.drawRectangle(dPos, new Vector2(width * 1.1f, Settings.curResolution().y * 0.07f));
+            Render.drawRectMultiText(dPos, Color.GRAY, 2, 2, xp, lvlUp, until);
 
-            Render.setColor(Color.GRAY);
-            Render.drawRectangle(dPos.addClone(2, 2),
-                    new Vector2(width * 1.1f - 4, Settings.curResolution().y * 0.07f - 4));
 
-            Render.setColor(Color.BLACK);
-            Render.drawText(Skills.skillNames[hover], dPos.addClone(width * 0.05f, Settings.curResolution().y * 0.02f));
-            Render.drawText(xp, dPos.addClone(width * 0.05f, Settings.curResolution().y * 0.04f));
-            Render.drawText(lvlUp, dPos.addClone(width * 0.05f, Settings.curResolution().y * 0.06f));
+//
+//            Render.setColor(Color.BLACK);
+//            Render.drawRectangle(dPos, new Vector2(width * 1.1f, Settings.curResolution().y * 0.105f));
+//
+//            Render.setColor(Color.GRAY);
+//            Render.drawRectangle(dPos.addClone(2, 2),
+//                    new Vector2(width * 1.1f - 4, Settings.curResolution().y * 0.105f - 4));
+//
+//            Render.setColor(Color.BLACK);
+//            Render.drawText(Skills.skillNames[hover], dPos.addClone(width * 0.05f, Settings.curResolution().y * 0.02f));
+//            Render.drawText(xp, dPos.addClone(width * 0.05f, Settings.curResolution().y * 0.04f));
+//            Render.drawText(lvlUp, dPos.addClone(width * 0.05f, Settings.curResolution().y * 0.06f));
+//            Render.drawText(lvlUp, dPos.addClone(width * 0.05f, Settings.curResolution().y * 0.08f));
         }
     }
 

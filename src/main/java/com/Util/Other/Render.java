@@ -78,6 +78,10 @@ public class Render {
         return Main.graphics.getFontMetrics().getHeight();
     }
 
+    public static int getStrictStringHeight() {
+        return Main.graphics.getFontMetrics().getAscent();
+    }
+
     public static int getStringSpace() {
         FontMetrics metric = Main.graphics.getFontMetrics();
         return metric.getAscent() + metric.getHeight();
@@ -93,16 +97,27 @@ public class Render {
     }
 
     public static void drawBorderedBounds(Vector2 v1, Vector2 v2) {
+        drawBorderedBounds(v1, v2, 5);
+    }
+    public static void drawBorderedBounds(Vector2 v1, Vector2 v2, float border) {
         Color dcol = Main.graphics.getColor();
 
         Render.setColor(Color.BLACK);
         drawBounds(v1, v2);
         Render.setColor(dcol);
-        drawBounds(v1.addClone(5f), v2.addClone(-5f));
+        drawBounds(v1.addClone(border), v2.addClone(-border));
     }
 
     public static void drawBorderedRect(Vector2 pos, Vector2 size) {
         drawBorderedBounds(pos, pos.addClone(size));
+    }
+
+    public static void drawBorderedRect(Vector2 pos, Vector2 size, float border) {
+        drawBorderedBounds(pos, pos.addClone(size), border);
+    }
+
+    public static void drawBorderedRect(float x, float y, float width, float height, float border) {
+        drawBorderedBounds(new Vector2(x, y), new Vector2(x + width, y + height), border);
     }
 
     public static void drawBorderedRect(float px, float py, float sx, float sy) {
@@ -111,6 +126,126 @@ public class Render {
 
     public static BufferedImage getScaledImage(BufferedImage image, Vector2 scale) {
         return getScaledImage(image, scale.x, scale.y);
+    }
+
+    // Render Text with Contrast from Background
+    public static void drawRectText(String text, Vector2 position, Color bg, int textPadding, int borderSize) {
+        float fontHeight = getStrictStringHeight();
+        Color dCol = Main.graphics.getColor();
+
+        // Calculate adjusted position to take into account text is rendered from the bottom left corner
+        Vector2 adjustedPosition = position.addClone(new Vector2(0, -fontHeight));
+
+        // Create BufferedImage to render text to
+        BufferedImage textImage = new BufferedImage((int) (getStringWidth(text) + textPadding * 2), (int) (fontHeight + textPadding * 2), BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D textGraphics = textImage.createGraphics();
+
+        // Render text to image
+        textGraphics.setColor(dCol);
+        textGraphics.setFont(Main.graphics.getFont());
+        textGraphics.drawString(text, textPadding, (int) (textPadding + fontHeight));
+
+        // Remove border from image
+        BufferedImage noBorderText = setBorder(textImage, textPadding);
+
+        // Replace all transparent pixels with the background color
+        for (int x = 0; x < noBorderText.getWidth(); x++) {
+            for (int y = 0; y < noBorderText.getHeight(); y++) {
+                if (noBorderText.getRGB(x, y) == 0) {
+                    noBorderText.setRGB(x, y, bg.getRGB());
+                }
+            }
+        }
+
+        // Render image to screen
+        setColor(Color.BLACK);
+        drawRectangle((int) adjustedPosition.x - borderSize, (int) adjustedPosition.y - borderSize,
+                noBorderText.getWidth() + 2 * borderSize, noBorderText.getHeight() + 2 * borderSize);
+        drawImage(noBorderText, adjustedPosition);
+    }
+
+    public static void drawRectMultiText(Vector2 dPos, Color gray, int padding, int border, String... texts) {
+        float fontHeight = getStrictStringHeight();
+        Color dCol = Main.graphics.getColor();
+
+        // Calculate adjusted position to take into account text is rendered from the bottom left corner
+        Vector2 adjustedPosition = dPos.addClone(new Vector2(0, -fontHeight));
+
+        // Find text with longest getStringWidth
+        int maxWidth = 0;
+        for (String text : texts) {
+            maxWidth = Math.max(maxWidth, getStringWidth(text));
+        }
+
+        // Create BufferedImage to render text to
+        BufferedImage textImage = new BufferedImage(maxWidth + padding * 2,
+                (int) (fontHeight + padding) * texts.length + padding, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D textGraphics = textImage.createGraphics();
+
+        // Render text to image
+        textGraphics.setColor(dCol);
+        textGraphics.setFont(Main.graphics.getFont());
+        for (int i = 0; i < texts.length; i++) {
+            textGraphics.drawString(texts[i], padding, (int) (padding + fontHeight * (i + 1)));
+        }
+
+        // Remove border from image
+        BufferedImage noBorderText = setBorder(textImage, padding);
+
+        // Replace all transparent pixels with the background color
+        for (int x = 0; x < noBorderText.getWidth(); x++) {
+            for (int y = 0; y < noBorderText.getHeight(); y++) {
+                if (noBorderText.getRGB(x, y) == 0) {
+                    noBorderText.setRGB(x, y, gray.getRGB());
+                }
+            }
+        }
+
+        // Render image to screen
+        setColor(Color.BLACK);
+        drawRectangle((int) adjustedPosition.x - border, (int) adjustedPosition.y - border,
+                noBorderText.getWidth() + 2 * border, noBorderText.getHeight() + 2 * border);
+        drawImage(noBorderText, adjustedPosition);
+    }
+
+    // Calculate the radius of the border of the image, and resize the image to only fit the content of the image
+    public static BufferedImage setBorder(BufferedImage image, int newBorder) {
+        if (image.getHeight() * image.getWidth() == 0) {
+            return image;
+        }
+
+        int leftBorder = image.getWidth();
+        int rightBorder = 0;
+        int topBorder = image.getHeight();
+        int bottomBorder = 0;
+
+        for (int x = 0; x < image.getWidth(); x++) {
+            for (int y = 0; y < image.getHeight(); y++) {
+                if (image.getRGB(x, y) != 0) {
+                    leftBorder = Math.min(leftBorder, x);
+                    rightBorder = Math.max(rightBorder, x);
+                    topBorder = Math.min(topBorder, y);
+                    bottomBorder = Math.max(bottomBorder, y);
+                }
+            }
+        }
+
+        bottomBorder++;
+        rightBorder++;
+
+        // Make new image with new border
+        BufferedImage newImage = new BufferedImage(rightBorder - leftBorder + 2 * newBorder,
+                bottomBorder - topBorder + 2 * newBorder, BufferedImage.TYPE_INT_ARGB);
+
+        BufferedImage noBorder = image.getSubimage(leftBorder, topBorder, rightBorder - leftBorder, bottomBorder - topBorder);
+
+        Graphics2D g = newImage.createGraphics();
+        g.drawImage(noBorder, newBorder, newBorder, null);
+        g.dispose();
+
+        return newImage;
     }
 
     public static void drawCroppedText(String text, Vector2 position, Vector2 pos) {
@@ -224,10 +359,8 @@ public class Render {
                 BufferedImage.TYPE_INT_ARGB);
 
         // Create mirror image pixel by pixel
-        for (int y = 0; y < height; y++)
-        {
-            for (int lx = 0, rx = width - 1; lx < width; lx++, rx--)
-            {
+        for (int y = 0; y < height; y++) {
+            for (int lx = 0, rx = width - 1; lx < width; lx++, rx--) {
                 // lx starts from the left side of the image
                 // rx starts from the right side of the image
                 // lx is used since we are getting pixel from left side

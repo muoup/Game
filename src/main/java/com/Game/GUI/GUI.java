@@ -179,21 +179,25 @@ public class GUI {
         }
     }
 
-    public static void drawItem(int x, int y, ItemData stack) {
+    public static void drawMenuItem(int x, int y, ItemData stack) {
         Vector2 rectPos = getGridPosition(x, y);
 
+        drawItem(rectPos, stack);
+    }
+
+    public static void drawItem(Vector2 rectPos, ItemData item) {
         Render.setColor(Color.BLACK);
         Render.drawRectOutline(rectPos, GUI.invSize);
 
-        if (stack.getSprite() == null)
+        if (item.getSprite() == null)
             return;
 
-        Render.drawImage(Render.getScaledImage(stack.getImage(), GUI.invSize), rectPos);
+        Render.drawImage(Render.getScaledImage(item.getImage(), GUI.invSize), rectPos);
 
         // If the stack of items contains more than one item, make sure to write the amount of items at the bottom
         // right corner of the item box.
-        if (stack.getAmount() > 1) {
-            String text = formatAmount(stack.getAmount());
+        if (item.getAmount() > 1) {
+            String text = formatAmount(item.getAmount());
             Render.setFont(Settings.itemFont);
 
             Vector2 textPos = rectPos.addClone(new Vector2(GUI.intBoxSize - Settings.sWidth(text) - 4, GUI.intBoxSize - 4));

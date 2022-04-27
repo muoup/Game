@@ -279,18 +279,41 @@ public class Player {
 
     public static void drawBar(Vector2 startPos, Color color, float current, float max) {
         Render.setColor(Color.LIGHT_GRAY);
-        Render.drawRectangle(startPos,
-                new Vector2(GUI.intBoxSize * 4, 16));
+        Render.drawBorderedRect(startPos,
+                new Vector2(GUI.intBoxSize * 4, 16), 2);
 
         Render.setColor(color);
-        Render.drawRectangle(startPos,
-                new Vector2(GUI.intBoxSize * 4 * (current / max), 16));
-
-        Render.setColor(Color.BLACK);
-        Render.drawRectOutline(startPos,
-                new Vector2(GUI.intBoxSize * 4, 16));
+        Render.drawBorderedRect(startPos,
+                new Vector2(GUI.intBoxSize * 4 * (current / max), 16), 2);
     }
 
+    public static void drawSegmentedBar(Vector2 startPos, Color color, float current, float max, float segment) {
+        float barLength = GUI.intBoxSize * 4;
+
+        Render.setColor(Color.LIGHT_GRAY);
+        Render.drawBorderedRect(startPos,
+                new Vector2(barLength, 16), 2);
+
+        int segments = (int) (max / segment) + 1;
+
+        Render.setColor(color);
+
+        float standardLength = segment / max * barLength;
+
+        for (int i = 0; i < segments; i++) {
+            // calculate the length of the segment
+            float segmentLength = Math.min(current, segment) * barLength / max;
+
+            // draw the segment
+            Render.drawBorderedRect(startPos.addClone(new Vector2(i * standardLength, 0)),
+                    new Vector2(segmentLength, 16), 2);
+
+            current -= segment;
+
+            if (current <= 0)
+                break;
+        }
+    }
 
     public static void drawProgressBar() {
         if (Player.interactionStart == 0 || Player.interactionFinish == 0)
@@ -319,7 +342,7 @@ public class Player {
     }
 
     public static void renderStats() {
-        drawBar(GUI.GuiPos.subtractClone(new Vector2(0, 36)), Color.RED, health, maxHealth);
+        drawSegmentedBar(GUI.GuiPos.subtractClone(new Vector2(0, 36)), Color.RED, health, maxHealth, 100);
         drawBar(GUI.GuiPos.subtractClone(new Vector2(0, 18)), Color.CYAN.darker(), Settings.dashTimer - Math.max(0, dashTimer), Settings.dashTimer);
     }
 

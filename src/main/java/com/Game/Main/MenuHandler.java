@@ -20,7 +20,8 @@ public class MenuHandler {
         TextBoxPause,
         PauseMenu,
         VideoSettings,
-        AudioSettings
+        AudioSettings,
+        MiscPause
     }
 
     int[] stateLengths = {

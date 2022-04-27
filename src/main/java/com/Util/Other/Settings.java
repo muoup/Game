@@ -70,4 +70,8 @@ public class Settings {
             }
         };
     }
+
+    public static float sHeight() {
+        return Main.graphics.getFontMetrics().getHeight();
+    }
 }

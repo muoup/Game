@@ -35,7 +35,7 @@ public class Client {
     private int port;
     private boolean listening = false;
     private byte[] dataBuffer = new byte[4096];
-    private static final String clientVersion = "0.0.2a";
+    private static final String clientVersion = "0.1.0a";
 
     private Error errorCode = Error.NONE;
 

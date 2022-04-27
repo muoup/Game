@@ -21,6 +21,9 @@ public class BankingHandler extends BasicGUIWindow {
 
     public static int padding = 16;
 
+    private static final Color bankBackground = new Color(182, 124, 45);
+    private static final Color bankItemIcon = new Color(153, 106, 38);
+
     private static final Vector2 beginPos = Settings.curResolution().scale(0.25f);
     private static final Vector2 size = Settings.curResolution().scale(0.5f);
     public static final int maxRow = (int) ((size.x - padding) / (padding + GUI.intBoxSize));
@@ -31,35 +34,37 @@ public class BankingHandler extends BasicGUIWindow {
 
     public static void render() {
         // Draw basic stuff for every shop such as background and items.
-        Render.setColor(new Color(182, 124, 45));
+        Render.setColor(bankBackground);
         Render.drawBorderedRect(beginPos, size);
 
         for (int i = 0; i < items.size(); i++) {
             int x = i % maxRow;
             int y = i / maxRow;
 
-            String text = GUI.formatAmount(items.get(i).getAmount());
+//            String text = GUI.formatAmount(items.get(i).getAmount());
 
             Vector2 imageScale = new Vector2(GUI.intBoxSize);
 
             Vector2 rectPos = beginPos.addClone(padding + (padding + GUI.intBoxSize) * x, padding + (padding + GUI.intBoxSize) * y);
-            Vector2 textPos = rectPos.addClone(new Vector2(GUI.intBoxSize - Settings.sWidth(text) - 4, GUI.intBoxSize - 4));
+//            Vector2 textPos = rectPos.addClone(new Vector2(GUI.intBoxSize - Settings.sWidth(text) - 4, GUI.intBoxSize - 4));
 
-            Render.setColor(Color.BLACK);
-            Render.drawRectOutline(rectPos, imageScale);
+            Render.setColor(bankItemIcon);
+            Render.drawRectangle(rectPos, imageScale);
 
             if (draggedIndex == i)
                 continue;
-
-            Render.drawImage(Render.getScaledImage(items.get(i).getImage(), imageScale), rectPos);
-
-            Render.setColor(Color.BLACK);
-            Render.setFont(Settings.itemFont);
-            Render.drawText(text, textPos.addClone(1, 0));
+//
+//            Render.drawImage(Render.getScaledImage(items.get(i).getImage(), imageScale), rectPos);
+//
+//            Render.setFont(Settings.itemFont);
+//
+//            Render.setColor(Color.BLACK);
+//            Render.drawText(text, textPos.addClone(1, 0));
+            GUI.drawItem(rectPos, items.get(i));
         }
 
         Render.setColor(Color.RED);
-        Render.drawBorderedRect(beginPos.addClone(size.x - GUI.intBoxSize / 2, 0), new Vector2(GUI.intBoxSize / 2));
+        Render.drawBorderedRect(beginPos.addClone(size.x - GUI.intBoxSize / 2, 0), new Vector2(GUI.intBoxSize / 2), 4);
     }
 
     public static void update() {
