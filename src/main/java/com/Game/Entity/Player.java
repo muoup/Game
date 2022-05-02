@@ -306,13 +306,17 @@ public class Player {
 
             // draw the segment
             Render.drawBorderedRect(startPos.addClone(new Vector2(i * standardLength, 0)),
-                    new Vector2(segmentLength, 16), 2);
+                    new Vector2(segmentLength + 1, 16), 1);
 
             current -= segment;
 
             if (current <= 0)
                 break;
         }
+
+        Render.setColor(Color.BLACK);
+        Render.drawBorder(startPos,
+                new Vector2(barLength, 16), 2);
     }
 
     public static void drawProgressBar() {

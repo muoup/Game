@@ -375,4 +375,11 @@ public class Render {
 
         return mimg;
     }
+
+    public static void drawBorder(Vector2 startPos, Vector2 size, int thickness) {
+        drawRectOutline(startPos, size);
+        if (thickness > 1) {
+            drawBorder(startPos.offset(1), size.offset(-2), thickness - 1);
+        }
+    }
 }
