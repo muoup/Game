@@ -91,7 +91,8 @@ public class BankingHandler extends BasicGUIWindow {
             if (Input.mousePosition.greaterThan(pos) && pos2.greaterThan(Input.mousePosition)) {
                 hover = i;
                 RightClick.customRightClick(BankingHandler::withdrawItem,
-                        "Withdraw 1", "Withdraw 10", "Withdraw 50", "Withdraw 100", "Withdraw All", "Examine");
+                        "Withdraw 1", "Withdraw 10", "Withdraw 100",
+                                "Withdraw " + Settings.customAmount, "Withdraw All", "Examine");
 
                 break;
             }

@@ -315,9 +315,9 @@ public class World {
         Vector2 movement = Vector2.fromString(parts[2]);
 
         for (Enemy enemy : MethodHandler.enemies) {
-            System.out.println("Distance: " + Vector2.distance(enemy.position, position));
-            System.out.println("Movement Error: " + Vector2.distance(enemy.movement, movement));
-            System.out.println("MoveTo Error: " + Vector2.distance(enemy.moveTo, moveTo));
+            /* Debug */ System.out.println("Distance: " + Vector2.distance(enemy.position, position));
+            /* Debug */ System.out.println("Movement Error: " + Vector2.distance(enemy.movement, movement));
+            /* Debug */ System.out.println("MoveTo Error: " + Vector2.distance(enemy.moveTo, moveTo));
         }
     }
 
@@ -325,7 +325,7 @@ public class World {
         Vector2 position = Vector2.fromString(message);
 
         for (Projectile projectile : MethodHandler.projectiles) {
-            System.out.println("Projectile Distance: " + Vector2.distance(projectile.position, position));
+            /* Debug */ System.out.println("Projectile Distance: " + Vector2.distance(projectile.position, position));
         }
     }
 }

@@ -66,8 +66,6 @@ public class TextBox {
     }
 
     public static void handleTextbox() {
-        //System.out.println(noText());
-
         if (noText())
             return;
 

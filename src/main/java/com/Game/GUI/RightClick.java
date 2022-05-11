@@ -206,14 +206,14 @@ public class RightClick {
             if (inventoryStack().notEmpty()) {
                 Shop.hover = getHoverIndex();
                 customRightClickFormat(Shop::sellOption, Shop.inventoryVerb, "%s 1", "%s 10",
-                        "%s 50", "%s 100", "%s All", "Examine");
+                        "%s 100", "%s " + Settings.customAmount, "%s Max", "Examine");
             }
             return;
         }  else if (GUI.renderBank) {
             if (inventoryStack().notEmpty()) {
                 BankingHandler.hover = getHoverIndex();
                 customRightClick(BankingHandler::depositItem, "Deposit 1", "Deposit 10",
-                        "Deposit 50", "Deposit 100", "Deposit All", "Examine");
+                        "Deposit 100", "Deposit " + Settings.customAmount, "Deposit All", "Examine");
             }
             return;
         }

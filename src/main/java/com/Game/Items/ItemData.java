@@ -3,12 +3,8 @@ package com.Game.Items;
 import com.Game.Entity.Player;
 import com.Game.GUI.GUI;
 import com.Game.Main.Main;
-import com.Util.Math.Vector2;
-import com.Util.Other.Render;
-import com.Util.Other.Settings;
 import com.Util.Other.Sprite;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class ItemData {

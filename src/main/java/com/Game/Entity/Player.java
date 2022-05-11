@@ -323,9 +323,6 @@ public class Player {
         if (Player.interactionStart == 0 || Player.interactionFinish == 0)
             return;
 
-        //System.out.println((System.currentTimeMillis() - Player.interactionStart) + " " + (Player.interactionFinish - Player.interactionStart));
-
-
         Vector2 sPos = Player.position.subtractClone(24, 35).subtractClone(World.offset);
         Vector2 rect = new Vector2(48 * ((float) (System.currentTimeMillis() - Player.interactionStart) / (Player.interactionFinish - Player.interactionStart)), 8);
         Vector2 compRect = new Vector2(48, 8);
@@ -364,6 +361,6 @@ public class Player {
     }
 
     public static void playerTest(String message) {
-        System.out.println(Vector2.distance(Vector2.fromString(message), position));
+        /* Debug */ System.out.println(Vector2.distance(Vector2.fromString(message), position));
     }
 }

@@ -20,8 +20,9 @@ public class Shop {
     public static final int amountOptions[] = {
             1,
             10,
-            50,
             100,
+            -999,
+            Integer.MAX_VALUE,
             -1,
             //-1 // Custom, buy custom or sell all.
     };
@@ -40,7 +41,7 @@ public class Shop {
 
     private static final Vector2 beginPos = Settings.curResolution().scale(0.25f);
     private static final Vector2 size = Settings.curResolution().scale(0.5f);
-    private static final int maxRow = (int) ((size.x - padding) / (padding + GUI.intBoxSize));
+    private static final int maxCol = (int) ((size.x - padding) / (padding + GUI.intBoxSize));
 
 //    public static void setItems(ItemData[] stacks) {
 //    }
@@ -65,20 +66,36 @@ public class Shop {
         Render.setColor(Color.LIGHT_GRAY);
         Render.drawBorderedRect(beginPos, size);
 
+        int row = 0;
+        int col = 0;
+
         for (int i = 0; i < getLength(); i++) {
-            int x = i % maxRow;
-            int y = i / maxRow;
+            if (prices.get(i) == -456) {
+                row++;
+                col = 0;
+                continue;
+            }
 
             String text = GUI.formatAmount(prices.get(i));
 
             Vector2 imageScale = new Vector2(GUI.intBoxSize);
 
-            Vector2 rectPos = beginPos.addClone(padding + (padding + GUI.intBoxSize) * x, padding + (padding + GUI.intBoxSize) * y);
+            Vector2 rectPos = beginPos.addClone(padding + (padding + GUI.intBoxSize) * col, padding + (padding + GUI.intBoxSize) * row);
             Vector2 textPos = rectPos.addClone(new Vector2(GUI.intBoxSize - Settings.sWidth(text) - 4, GUI.intBoxSize - 4));
 
             Render.setColor(Color.BLACK);
             Render.drawRectOutline(rectPos, imageScale);
             Render.drawImage(Render.getScaledImage(offeredItems.get(i).getImage(), imageScale), rectPos);
+
+            col++;
+
+            if (col == maxCol) {
+                col = 0;
+                row++;
+            }
+
+            if (Integer.parseInt(text) <= 0)
+                continue;
 
             Render.setColor(new Color(249, 249, 34));
             Render.setFont(Settings.itemFont);
@@ -98,25 +115,39 @@ public class Shop {
             }
         }
 
+        int row = 0;
+        int col = 0;
+
         for (int i = 0; i < getLength(); i++) {
-            int x = i % maxRow;
-            int y = i / maxRow;
+            if (prices.get(i) == -456) {
+                row++;
+                col = 0;
+                continue;
+            }
 
             Vector2 imageScale = new Vector2(GUI.intBoxSize);
 
-            Vector2 pos = beginPos.addClone(padding + (padding + GUI.intBoxSize) * x, padding + (padding + GUI.intBoxSize) * y);
+            Vector2 pos = beginPos.addClone(padding + (padding + GUI.intBoxSize) * col,
+                    padding + (padding + GUI.intBoxSize) * row);
             Vector2 pos2 = pos.addClone(imageScale);
 
             if (Input.mousePosition.greaterThan(pos) && pos2.greaterThan(Input.mousePosition)) {
                 if (Input.GetMouseDown(3)) {
-                    RightClick.customRightClick(Shop::buyOption,
-                            "Buy 1", "Buy 10", "Buy 50", "Buy 100", "Buy " + Settings.customAmount, "Examine");
+                    RightClick.customRightClickFormat(Shop::buyOption,
+                            Shop.shopVerb, "%s 1", "%s 10", "%s 100", "%s " + Settings.customAmount, "%s Max", "Examine");
 
                     selected = i;
                     break;
-                } else if (Input.GetMouseDown(1) && !RightClick.render) {
+                } else if (Input.GetMouseDown(1) && !RightClick.render && shopVerb.equals("Buy")) {
                     ChatBox.sendMessage("This item costs " + prices.get(i) + " gold.");
                 }
+            }
+
+            col++;
+
+            if (col == maxCol) {
+                col = 0;
+                row++;
             }
         }
     }
@@ -124,24 +155,34 @@ public class Shop {
     public static void buyOption(int option) {
         if (option >= amountOptions.length) {
             ChatBox.sendMessage(offeredItems.get(selected).examineText);
-            ChatBox.sendMessage("This item costs " + prices.get(selected) + " coins each.");
+            if (shopVerb.equals("Buy"))
+                ChatBox.sendMessage("This item costs " + prices.get(selected) + " coins each.");
             return;
         }
 
         int amount = amountOptions[option];
 
-        Main.sendPacket("si" + Player.name + ";shop;" + selected + ";" + amountOptions[option]);
+        if (amount == -999)
+            amount = Settings.customAmount;
+
+        Main.sendPacket("si" + Player.name + ";shop;" + selected + ";" + amount);
     }
 
     public static void sellOption(int option) {
         if (option >= amountOptions.length) {
             ItemData stack = InventoryManager.getStack(hover);
             ChatBox.sendMessage(stack.examineText);
-            ChatBox.sendMessage("This item will sell for " + stack.getSellValue() + " coins each");
+            if (inventoryVerb.equals("Sell"))
+                ChatBox.sendMessage("This item will sell for " + stack.getSellValue() + " coins each");
             return;
         }
 
-        Main.sendPacket("si" + Player.name + ";inventory;" + hover + ";" + amountOptions[option]);
+        int amount = amountOptions[option];
+
+        if (amount == -999)
+            amount = Settings.customAmount;
+
+        Main.sendPacket("si" + Player.name + ";inventory;" + hover + ";" + amount);
     }
 
     public static void addData(String message) {

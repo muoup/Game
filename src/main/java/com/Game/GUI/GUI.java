@@ -4,8 +4,8 @@ import com.Game.Entity.Player;
 import com.Game.GUI.Banking.BankingHandler;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.Inventory.AccessoriesManager;
-import com.Game.GUI.Inventory.ItemDrag;
 import com.Game.GUI.Inventory.InventoryManager;
+import com.Game.GUI.Inventory.ItemDrag;
 import com.Game.GUI.Shop.Shop;
 import com.Game.GUI.Skills.Skills;
 import com.Game.GUI.Skills.SkillsManager;
@@ -16,7 +16,6 @@ import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 import com.Util.Other.Settings;
-import com.Util.Other.Sprite;
 
 import java.awt.*;
 
@@ -243,8 +242,8 @@ public class GUI {
     }
 
     public static void disableShop() {
-        Shop.offeredItems = null;
-        Shop.prices = null;
+        Shop.offeredItems.clear();
+        Shop.prices.clear();
         renderShop = false;
 
         Main.sendPacket("lf" + Player.name);
