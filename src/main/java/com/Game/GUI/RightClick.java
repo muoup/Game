@@ -191,17 +191,29 @@ public class RightClick {
         customRightClick(optionArray, run);
     }
 
+    public static void customRightClickFormat(RightClickRunnable run, String format, String... options) {
+        ArrayList<String> optionArray = new ArrayList<>();
+
+        for (String s : options) {
+            optionArray.add(String.format(s, format));
+        }
+
+        customRightClick(optionArray, run);
+    }
+
     private static void inventoryRightClick() {
-        if (GUI.renderShop) {
+        if (GUI.renderShop && !Shop.inventoryVerb.trim().equals("N/A")) {
             if (inventoryStack().notEmpty()) {
                 Shop.hover = getHoverIndex();
-                customRightClick(Shop::sellOption, "Sell 1", "Sell 10", "Sell 50", "Sell 100", "Sell All", "Examine");
+                customRightClickFormat(Shop::sellOption, Shop.inventoryVerb, "%s 1", "%s 10",
+                        "%s 50", "%s 100", "%s All", "Examine");
             }
             return;
         }  else if (GUI.renderBank) {
             if (inventoryStack().notEmpty()) {
                 BankingHandler.hover = getHoverIndex();
-                customRightClick(BankingHandler::depositItem, "Deposit 1", "Deposit 10", "Deposit 50", "Deposit 100", "Deposit All", "Examine");
+                customRightClick(BankingHandler::depositItem, "Deposit 1", "Deposit 10",
+                        "Deposit 50", "Deposit 100", "Deposit All", "Examine");
             }
             return;
         }

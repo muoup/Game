@@ -230,30 +230,15 @@ public class GUI {
     }
 
     public static void enableShop(String args) {
+        Shop.offeredItems.clear();
+        Shop.prices.clear();
+
         args = args.substring(5);
 
-        String[] items = args.split("::");
+        String[] verbs = args.split(";");
+        Shop.shopVerb = verbs[0];
+        Shop.inventoryVerb = verbs[1];
 
-        ItemData[] shopItems = new ItemData[items.length];
-        int[] prices = new int[items.length];
-
-        for (int i = 0; i < items.length; i++) {
-            String item = items[i];
-
-            String[] parts = item.split(";");
-            ItemData data = new ItemData();
-            data.setName(parts[0]);
-            data.setImage(Sprite.identifierSprite(parts[1]));
-
-            prices[i] = Integer.parseInt(parts[2]);
-
-            data.setExamineText(parts[3]);
-
-            shopItems[i] = data;
-        }
-
-        Shop.prices = prices;
-        Shop.offeredItems = shopItems;
         renderShop = true;
     }
 

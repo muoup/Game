@@ -11,8 +11,10 @@ import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 import com.Util.Other.Settings;
+import com.Util.Other.Sprite;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Shop {
     public static final int amountOptions[] = {
@@ -24,12 +26,15 @@ public class Shop {
             //-1 // Custom, buy custom or sell all.
     };
 
-    public static ItemData[] offeredItems = new ItemData[0];
+    public static ArrayList<ItemData> offeredItems = new ArrayList<>();
 
-    public static int[] prices = null;
+    public static ArrayList<Integer> prices = new ArrayList<>();
 
     public static int selected;
     public static int hover;
+
+    public static String shopVerb = "Buy";
+    public static String inventoryVerb = "Sell";
 
     private static int padding = 16;
 
@@ -37,20 +42,15 @@ public class Shop {
     private static final Vector2 size = Settings.curResolution().scale(0.5f);
     private static final int maxRow = (int) ((size.x - padding) / (padding + GUI.intBoxSize));
 
-
-    // TODO: Item refilling?
-    private long timeClosed;
-
-    public static void setItems(ItemData[] stacks) {
-        offeredItems = stacks;
-    }
+//    public static void setItems(ItemData[] stacks) {
+//    }
 
     public static boolean empty() {
-        return offeredItems.length == 0;
+        return offeredItems.size() == 0;
     }
 
     public static int getLength() {
-        return offeredItems.length;
+        return offeredItems.size();
     }
 
     public static void baseInit() {
@@ -65,11 +65,11 @@ public class Shop {
         Render.setColor(Color.LIGHT_GRAY);
         Render.drawBorderedRect(beginPos, size);
 
-        for (int i = 0; i < offeredItems.length; i++) {
+        for (int i = 0; i < getLength(); i++) {
             int x = i % maxRow;
             int y = i / maxRow;
 
-            String text = GUI.formatAmount(prices[i]);
+            String text = GUI.formatAmount(prices.get(i));
 
             Vector2 imageScale = new Vector2(GUI.intBoxSize);
 
@@ -78,7 +78,7 @@ public class Shop {
 
             Render.setColor(Color.BLACK);
             Render.drawRectOutline(rectPos, imageScale);
-            Render.drawImage(Render.getScaledImage(offeredItems[i].getImage(), imageScale), rectPos);
+            Render.drawImage(Render.getScaledImage(offeredItems.get(i).getImage(), imageScale), rectPos);
 
             Render.setColor(new Color(249, 249, 34));
             Render.setFont(Settings.itemFont);
@@ -98,7 +98,7 @@ public class Shop {
             }
         }
 
-        for (int i = 0; i < offeredItems.length; i++) {
+        for (int i = 0; i < getLength(); i++) {
             int x = i % maxRow;
             int y = i / maxRow;
 
@@ -115,7 +115,7 @@ public class Shop {
                     selected = i;
                     break;
                 } else if (Input.GetMouseDown(1) && !RightClick.render) {
-                    ChatBox.sendMessage("This item costs " + prices[i] + " gold.");
+                    ChatBox.sendMessage("This item costs " + prices.get(i) + " gold.");
                 }
             }
         }
@@ -123,14 +123,14 @@ public class Shop {
 
     public static void buyOption(int option) {
         if (option >= amountOptions.length) {
-            ChatBox.sendMessage(offeredItems[selected].examineText);
-            ChatBox.sendMessage("This item costs " + prices[selected] + " coins each.");
+            ChatBox.sendMessage(offeredItems.get(selected).examineText);
+            ChatBox.sendMessage("This item costs " + prices.get(selected) + " coins each.");
             return;
         }
 
         int amount = amountOptions[option];
 
-        Main.sendPacket("si" + Player.name + ";buy;" + selected + ";" + amountOptions[option]);
+        Main.sendPacket("si" + Player.name + ";shop;" + selected + ";" + amountOptions[option]);
     }
 
     public static void sellOption(int option) {
@@ -141,6 +141,18 @@ public class Shop {
             return;
         }
 
-        Main.sendPacket("si" + Player.name + ";sell;" + hover + ";" + amountOptions[option]);
+        Main.sendPacket("si" + Player.name + ";inventory;" + hover + ";" + amountOptions[option]);
+    }
+
+    public static void addData(String message) {
+        String[] data = message.split(";");
+
+        ItemData item = new ItemData();
+        item.name = data[0];
+        item.image = Sprite.identifierSprite(data[1]);
+        item.examineText = data[3];
+
+        offeredItems.add(item);
+        prices.add(Integer.parseInt(data[2]));
     }
 }

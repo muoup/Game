@@ -6,6 +6,7 @@ import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.GUI;
 import com.Game.GUI.Inventory.AccessoriesManager;
 import com.Game.GUI.Inventory.InventoryManager;
+import com.Game.GUI.Shop.Shop;
 import com.Game.GUI.Skills.Skills;
 import com.Game.GUI.TextBox;
 import com.Game.Items.ItemData;
@@ -235,6 +236,9 @@ public class Client {
                 break;
             case "ui": // User Interface
                 GUI.openGUI(message);
+                break;
+            case "sa": // Shop Add
+                Shop.addData(message);
                 break;
             case "bc": // Bank Change
                 BankingHandler.handleChange(message);
