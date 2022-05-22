@@ -216,6 +216,8 @@ public class GUI {
     }
 
     private static void enableBankInterface() {
+        BankingHandler.init();
+
         RightClick.render = false;
         renderBank = true;
     }

@@ -41,7 +41,7 @@ public class InventoryManager {
 
                 Vector2 rectPos = GUI.getGridPosition(x, y);
 
-                if (draggedIndex == x + y * 4) {
+                if (ItemDrag.invDragIndex() == x + y * 4) {
                     Render.drawRectOutline(rectPos, GUI.invSize);
                     continue;
                 }
@@ -70,6 +70,7 @@ public class InventoryManager {
     }
 
     public static void leftClick(int inventoryIndex) {
+        System.out.println(inventoryIndex);
         Main.sendPacket("lc" + Player.name + ";" + inventoryIndex);
     }
 }

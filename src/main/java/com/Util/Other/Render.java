@@ -2,6 +2,7 @@ package com.Util.Other;
 
 import com.Game.Main.Main;
 import com.Game.World.World;
+import com.Util.Math.Rect2;
 import com.Util.Math.Vector2;
 
 import java.awt.*;
@@ -27,6 +28,10 @@ public class Render {
 
     public static void drawRectOutline(Vector2 position, Vector2 scale) {
         Main.graphics.drawRect((int) position.x, (int) position.y, (int) scale.x, (int) scale.y);
+    }
+
+    public static void drawRectOutline(Rect2 rect) {
+        drawRectOutline(rect.getPos(), rect.getSize());
     }
 
     public static void drawRectOutline(float x, float y, float width, float height) {
@@ -133,11 +138,8 @@ public class Render {
         float fontHeight = getStrictStringHeight();
         Color dCol = Main.graphics.getColor();
 
-        // Calculate adjusted position to take into account text is rendered from the bottom left corner
-        Vector2 adjustedPosition = position.addClone(new Vector2(0, -fontHeight));
-
         // Create BufferedImage to render text to
-        BufferedImage textImage = new BufferedImage((int) (getStringWidth(text) + textPadding * 2), (int) (fontHeight + textPadding * 2), BufferedImage.TYPE_INT_ARGB);
+        BufferedImage textImage = new BufferedImage(getStringWidth(text) + textPadding * 2, (int) (fontHeight + textPadding * 2), BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D textGraphics = textImage.createGraphics();
 
@@ -160,9 +162,9 @@ public class Render {
 
         // Render image to screen
         setColor(Color.BLACK);
-        drawRectangle((int) adjustedPosition.x - borderSize, (int) adjustedPosition.y - borderSize,
+        drawRectangle((int) position.x - borderSize, (int) position.y - borderSize,
                 noBorderText.getWidth() + 2 * borderSize, noBorderText.getHeight() + 2 * borderSize);
-        drawImage(noBorderText, adjustedPosition);
+        drawImage(noBorderText, position);
     }
 
     public static void drawRectMultiText(Vector2 dPos, Color gray, int padding, int border, String... texts) {
@@ -381,5 +383,13 @@ public class Render {
         if (thickness > 1) {
             drawBorder(startPos.offset(1), size.offset(-2), thickness - 1);
         }
+    }
+
+    public static void drawBorderedRect(Rect2 closeRect, int border) {
+        drawBorderedRect(closeRect.getPos(), closeRect.getSize(), border);
+    }
+
+    public static void drawRect(Rect2 stackedRect) {
+        drawRectangle(stackedRect.getPos(), stackedRect.getSize());
     }
 }

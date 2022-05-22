@@ -4,16 +4,20 @@ import com.Game.Entity.Player;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.GUI;
 import com.Game.GUI.GUIWindow.BasicGUIWindow;
+import com.Game.GUI.Inventory.InventoryManager;
+import com.Game.GUI.Inventory.ItemDrag;
 import com.Game.GUI.RightClick;
 import com.Game.GUI.Shop.Shop;
 import com.Game.Items.ItemData;
 import com.Game.Main.Main;
 import com.Game.listener.Input;
+import com.Util.Math.Rect2;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 import com.Util.Other.Settings;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class BankingHandler extends BasicGUIWindow {
@@ -31,6 +35,29 @@ public class BankingHandler extends BasicGUIWindow {
     public static int hover = -1;
 
     public static float draggedIndex = -1;
+
+    public static Rect2 closeRect;
+    public static Rect2 stackedRect;
+    public static Rect2 unstackedRect;
+    public static Rect2 invRect;
+
+    public static BufferedImage invDepImage;
+
+    public static void init() {
+        closeRect = new Rect2(beginPos.addClone(size.x - GUI.intBoxSize / 2, 0), new Vector2(GUI.intBoxSize / 2));
+
+        Render.setFont(Settings.itemFont.deriveFont(Font.BOLD, Settings.itemFont.getSize() * 1.5f));
+        float stackedSize = Settings.sWidth("Stacked");
+        float unstackedSize = Settings.sWidth("Unstacked");
+
+        stackedRect = new Rect2(beginPos.addClone((size.x - stackedSize - unstackedSize) / 2 - 8f,
+                size.y - GUI.intBoxSize / 2 - 4), stackedSize + 12f, (float) Render.getStringHeight() + 4);
+        unstackedRect = new Rect2(beginPos.addClone((size.x - stackedSize - unstackedSize) / 2 + stackedSize + 8f,
+                size.y - GUI.intBoxSize / 2 - 4), unstackedSize + 12f, (float) Render.getStringHeight() + 4);
+        invRect = new Rect2(beginPos.addClone(size.x - 34, size.y - 34), new Vector2(34, 34));
+
+        invDepImage = Main.getImage("GUI/Bank/depositInv.png");
+    }
 
     public static void render() {
         // Draw basic stuff for every shop such as background and items.
@@ -51,8 +78,11 @@ public class BankingHandler extends BasicGUIWindow {
             Render.setColor(bankItemIcon);
             Render.drawRectangle(rectPos, imageScale);
 
-            if (draggedIndex == i)
+            if (ItemDrag.bankDragIndex() == i) {
+                Render.setColor(Color.BLACK);
+                Render.drawRectOutline(rectPos, GUI.invSize);
                 continue;
+            }
 //
 //            Render.drawImage(Render.getScaledImage(items.get(i).getImage(), imageScale), rectPos);
 //
@@ -63,15 +93,36 @@ public class BankingHandler extends BasicGUIWindow {
             GUI.drawItem(rectPos, items.get(i));
         }
 
+        // Exit Button Render
         Render.setColor(Color.RED);
-        Render.drawBorderedRect(beginPos.addClone(size.x - GUI.intBoxSize / 2, 0), new Vector2(GUI.intBoxSize / 2), 4);
+        Render.drawBorderedRect(closeRect, 4);
+
+        // Render two buttons in the bottom middle of the window side by side with the text "Stacked" and "Unstacked"
+        Render.setColor(Color.BLACK);
+        Render.setFont(Settings.itemFont.deriveFont(Font.BOLD, Settings.itemFont.getSize() * 1.5f));
+
+        Color stackedColor = (Settings.inStack) ? Color.DARK_GRAY : Color.GRAY;
+        Color unStackedColor = (!Settings.inStack) ? Color.DARK_GRAY : Color.GRAY;
+
+        Render.drawRectText("Stacked", stackedRect.getPos(), stackedColor, 8, 2);
+        Render.drawRectText("Unstacked", unstackedRect.getPos(), unStackedColor, 8, 2);
+
+        // Render a button in the bottom left corner of the window to deposit all inventory items
+        Render.drawImage(invDepImage, invRect.getPos());
     }
 
     public static void update() {
         if (Input.GetMouseDown(1)) {
-            Vector2 rectBounds = beginPos.addClone(size.x - GUI.intBoxSize / 2, 0);
-            if (Input.mouseInBounds(rectBounds, rectBounds.addClone(GUI.intBoxSize / 2))) {
+            if (Input.mouseInRect(closeRect)) {
                 GUI.closeBank();
+                return;
+            } else if (Input.mouseInRect(invRect)) {
+                BankingHandler.depositInventory();
+            } else if (Input.mouseInRect(stackedRect)) {
+                Settings.inStack = true;
+                return;
+            } else if (Input.mouseInRect(unstackedRect)) {
+                Settings.inStack = false;
                 return;
             }
         }
@@ -99,6 +150,12 @@ public class BankingHandler extends BasicGUIWindow {
         }
     }
 
+    private static void depositInventory() {
+        for (int i = 0; i < InventoryManager.inventory.length; i++) {
+            depositPacket(i, Integer.MAX_VALUE);
+        }
+    }
+
     private static void withdrawItem(int option) {
         if (option >= Shop.amountOptions.length) {
             ItemData item = items.get(hover);
@@ -112,7 +169,7 @@ public class BankingHandler extends BasicGUIWindow {
             return;
         }
 
-        Main.sendPacket("bc" + Player.name + ";withdraw;" + hover + ";" + Shop.amountOptions[option]);
+        Main.sendPacket("bc" + Player.name + ";withdraw;" + hover + ";" + Shop.getAmount(option) + ";" + Settings.inStack);
     }
 
     public static void depositItem(int option) {
@@ -129,7 +186,11 @@ public class BankingHandler extends BasicGUIWindow {
             return;
         }
 
-        Main.sendPacket("bc" + Player.name + ";deposit;" + hover + ";" + Shop.amountOptions[option]);
+        depositPacket(hover, Shop.getAmount(option));
+    }
+
+    public static void depositPacket(int index, int amount) {
+        Main.sendPacket("bc" + Player.name + ";deposit;" + index + ";" + amount + ";" + false);
     }
 
     public static void handleChange(String message) {
@@ -188,6 +249,6 @@ public class BankingHandler extends BasicGUIWindow {
     }
 
     public static void leftClick(int index) {
-        Main.sendPacket("wb" + Player.name + ";" + index);
+        Main.sendPacket("bc" + Player.name + ";withdraw;" + index + ";" + 1 + ";" + Settings.inStack);
     }
 }

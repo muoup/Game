@@ -94,7 +94,7 @@ public class Shop {
                 row++;
             }
 
-            if (Integer.parseInt(text) <= 0)
+            if (text.contains("-"))
                 continue;
 
             Render.setColor(new Color(249, 249, 34));
@@ -135,7 +135,6 @@ public class Shop {
                 if (Input.GetMouseDown(3)) {
                     RightClick.customRightClickFormat(Shop::buyOption,
                             Shop.shopVerb, "%s 1", "%s 10", "%s 100", "%s " + Settings.customAmount, "%s Max", "Examine");
-
                     selected = i;
                     break;
                 } else if (Input.GetMouseDown(1) && !RightClick.render && shopVerb.equals("Buy")) {
@@ -160,12 +159,7 @@ public class Shop {
             return;
         }
 
-        int amount = amountOptions[option];
-
-        if (amount == -999)
-            amount = Settings.customAmount;
-
-        Main.sendPacket("si" + Player.name + ";shop;" + selected + ";" + amount);
+        Main.sendPacket("si" + Player.name + ";shop;" + selected + ";" + getAmount(option));
     }
 
     public static void sellOption(int option) {
@@ -177,12 +171,7 @@ public class Shop {
             return;
         }
 
-        int amount = amountOptions[option];
-
-        if (amount == -999)
-            amount = Settings.customAmount;
-
-        Main.sendPacket("si" + Player.name + ";inventory;" + hover + ";" + amount);
+        Main.sendPacket("si" + Player.name + ";inventory;" + hover + ";" + getAmount(option));
     }
 
     public static void addData(String message) {
@@ -195,5 +184,14 @@ public class Shop {
 
         offeredItems.add(item);
         prices.add(Integer.parseInt(data[2]));
+    }
+
+    public static int getAmount(int index) {
+        int amount = amountOptions[index];
+
+        if (amount == -999)
+            amount = Settings.customAmount;
+
+        return amount;
     }
 }

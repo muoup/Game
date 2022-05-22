@@ -3,8 +3,10 @@ package com.Game.Items;
 import com.Game.Entity.Player;
 import com.Game.GUI.GUI;
 import com.Game.Main.Main;
+import com.Util.Other.Render;
 import com.Util.Other.Sprite;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class ItemData {
@@ -14,6 +16,7 @@ public class ItemData {
     public String name;
     public String examineText;
     public String[] rcOptions;
+    public boolean stacked;
 
     public ItemData() {
         this.rcOptions = new String[0];
@@ -27,6 +30,7 @@ public class ItemData {
         this.rcOptions = data.rcOptions;
         this.examineText = data.examineText;
         this.sellValue = data.sellValue;
+        this.stacked = data.stacked;
     }
 
     public String getName() {
@@ -42,7 +46,22 @@ public class ItemData {
     }
 
     public BufferedImage getImage() {
-        return image.getImage();
+        if (!stacked)
+            return image.getImage();
+        else
+            return getStackedImage();
+    }
+
+    private BufferedImage getStackedImage() {
+        BufferedImage image = this.image.getImage();
+        image = Render.getScaledImage(image, 32, 32);
+
+        BufferedImage stackedImage = Main.getImage("/Items/stack_background.png");
+        Graphics g = stackedImage.getGraphics();
+        g.drawImage(image, 8, 8, null);
+        g.dispose();
+
+        return stackedImage;
     }
 
     public void setImage(Sprite image) {
@@ -97,6 +116,7 @@ public class ItemData {
             setRcOptions(index[4]);
             setExamineText(index[5]);
             setSellValue(Integer.parseInt(index[6]));
+            setStacked(Boolean.parseBoolean(index[7]));
         } catch (Exception e) {
             System.err.println("Invalid item sent!");
             StringBuilder errorBuilder = new StringBuilder();
@@ -122,6 +142,10 @@ public class ItemData {
 
     public void setSellValue(int sellValue) {
         this.sellValue = sellValue;
+    }
+
+    public void setStacked(boolean stacked) {
+        this.stacked = stacked;
     }
 
     public int getSellValue() {

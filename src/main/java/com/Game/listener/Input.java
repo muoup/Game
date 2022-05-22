@@ -3,6 +3,7 @@ package com.Game.listener;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.Main.Main;
 import com.Game.Networking.Login;
+import com.Util.Math.Rect2;
 import com.Util.Math.Vector2;
 
 import java.awt.event.*;
@@ -200,6 +201,10 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 
     public static boolean mouseInRect(Vector2 pos, Vector2 size) {
         return mouseInBounds(pos, pos.addClone(size));
+    }
+
+    public static boolean mouseInRect(Rect2 rect) {
+        return mouseInBounds(rect.getPos(), rect.getEnd());
     }
 }
 

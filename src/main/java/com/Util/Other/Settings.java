@@ -44,6 +44,7 @@ public class Settings {
 
     public static int questCount = 0;
     public static float playerSpeed = 225f;
+    public static boolean inStack = true;
 
     public static Vector2 curResolution() {
         return Settings.resolutions[Settings.resolutionIndex].clone();
