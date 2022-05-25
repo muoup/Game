@@ -101,8 +101,8 @@ public class BankingHandler extends BasicGUIWindow {
         Render.setColor(Color.BLACK);
         Render.setFont(Settings.itemFont.deriveFont(Font.BOLD, Settings.itemFont.getSize() * 1.5f));
 
-        Color stackedColor = (Settings.inStack) ? Color.DARK_GRAY : Color.GRAY;
-        Color unStackedColor = (!Settings.inStack) ? Color.DARK_GRAY : Color.GRAY;
+        Color stackedColor = (!Settings.inStack) ? Color.DARK_GRAY : Color.GRAY;
+        Color unStackedColor = (Settings.inStack) ? Color.DARK_GRAY : Color.GRAY;
 
         Render.drawRectText("Stacked", stackedRect.getPos(), stackedColor, 8, 2);
         Render.drawRectText("Unstacked", unstackedRect.getPos(), unStackedColor, 8, 2);
