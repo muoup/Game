@@ -55,7 +55,10 @@ public class MethodHandler {
 
     public void update() {
         if (Input.GetKeyDown(KeyEvent.VK_ESCAPE)) {
-            if (!Settings.paused() && TextBox.noText())
+            if (GUI.renderShop || GUI.renderBank) {
+                GUI.closeBank();
+                GUI.closeShop();
+            } else if (!Settings.paused() && TextBox.noText())
                 MenuHandler.setState(MenuHandler.MenuState.PauseMenu);
             else if (Settings.paused())
                 Settings.disablePause();

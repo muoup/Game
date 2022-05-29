@@ -104,13 +104,26 @@ public class Render {
     public static void drawBorderedBounds(Vector2 v1, Vector2 v2) {
         drawBorderedBounds(v1, v2, 5);
     }
+
     public static void drawBorderedBounds(Vector2 v1, Vector2 v2, float border) {
         Color dcol = Main.graphics.getColor();
 
-        Render.setColor(Color.BLACK);
-        drawBounds(v1, v2);
-        Render.setColor(dcol);
-        drawBounds(v1.addClone(border), v2.addClone(-border));
+        if (!v2.subtractClone(v1).greaterThanZero())
+            return;
+
+        BufferedImage img = new BufferedImage((int) (v2.x - v1.x), (int) (v2.y - v1.y), BufferedImage.TYPE_INT_ARGB);
+
+        for (int x = 0; x < img.getWidth(); x++) {
+            for (int y = 0; y < img.getHeight(); y++) {
+                if (x < border || img.getWidth() - x <= border || y < border || img.getHeight() - y <= border) {
+                    img.setRGB(x, y, Color.BLACK.getRGB());
+                } else {
+                    img.setRGB(x, y, dcol.getRGB());
+                }
+            }
+        }
+
+        Main.graphics.drawImage(img, (int) v1.x, (int) v1.y, null);
     }
 
     public static void drawBorderedRect(Vector2 pos, Vector2 size) {

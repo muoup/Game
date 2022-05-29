@@ -8,8 +8,6 @@ import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 
-import java.awt.*;
-
 public class AccessoriesManager {
 
     public static final int WEAPON_SLOT = 0;
@@ -39,11 +37,8 @@ public class AccessoriesManager {
     }
 
     public static void render() {
-        Render.setColor(Color.BLACK);
-        Render.drawBounds(GUI.GuiPos, GUI.GUIEnd());
-
-        Render.setColor(new Color(154, 154, 154));
-        Render.drawBounds(GUI.GuiPos.addClone(2, 2), GUI.GUIEnd().subtractClone(2, 2));
+        Render.setColor(GUI.GUIBgColor);
+        Render.drawBorderedBounds(GUI.GuiPos, GUI.GUIEnd(), 1);
 
         for (int i = 0; i < accessories.length; i++) {
             int x = i % 4;

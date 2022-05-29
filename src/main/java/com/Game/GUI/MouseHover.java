@@ -55,7 +55,7 @@ public class MouseHover {
 
         if (index == 0 && !RightClick.render && !ItemDrag.itemDrag.notEmpty()) { // Handle Item Inventory Hovering
             ItemData item = InventoryManager.getStack(hover);
-            String text = "(" + item.getName() + ") " + ((item.rcOptions.length == 0) ? "Examine" : item.rcOptions[0]);
+            String text = "[" + item.getName() + "] - " + ((item.rcOptions.length == 0) ? "Examine" : item.rcOptions[0]);
 
             if (!item.notEmpty())
                 return;

@@ -124,7 +124,7 @@ public class Player {
 
         if (!movement.equalTo(Vector2.zero())) {
             position.add(movement);
-            GUI.disableShop();
+            GUI.closeShop();
             changeSprite(runAnimation);
             sendMovementPacket();
 

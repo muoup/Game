@@ -18,6 +18,7 @@ import com.Util.Other.Render;
 import com.Util.Other.Settings;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class GUI {
 
@@ -34,6 +35,10 @@ public class GUI {
 
     public static boolean renderBank = false;
     public static boolean renderShop = false;
+
+    public static ArrayList<String> extraCommands = new ArrayList<>();
+
+    public static final Color GUIBgColor = new Color(128, 128, 128, 120);
 
     public static Vector2 GUIEnd() {
         return GuiPos.addClone(4 * intBoxSize, 5 * intBoxSize);
@@ -61,7 +66,6 @@ public class GUI {
         Vector2 mainOffset = new Vector2(intBoxSize * 0.5f, intBoxSize * 1.5f);
         GuiPos = res.subtractClone(new Vector2(intBoxSize * 4f, intBoxSize * 5.5f)).subtractClone(mainOffset);
         below = GuiPos.addClone(0, intBoxSize * 5);
-        Settings.itemFont = new Font("Arial", Font.PLAIN, (int) Settings.curResolution().x / 75);
 
         for (int i = 0; i < invImgNames.length; i++) {
             inventoryOptions[i] = Render.getScaledImage(Main.getImage("GUI/" + invImgNames[i]), select, select);
@@ -105,12 +109,13 @@ public class GUI {
         ChatBox.update();
         ChatBox.render();
 
-        if (GUI.renderShop) {
+        if (renderShop) {
             Shop.baseRender();
             Shop.baseUpdate();
+            Shop.handleCommands();
         }
 
-        if (renderBank) {
+        else if (renderBank) {
             BankingHandler.update();
             BankingHandler.render();
         }
@@ -181,12 +186,19 @@ public class GUI {
     public static void drawMenuItem(int x, int y, ItemData stack) {
         Vector2 rectPos = getGridPosition(x, y);
 
-        drawItem(rectPos, stack);
+        drawOutlinedItem(rectPos, stack);
+    }
+
+    public static void drawOutlinedItem(Vector2 rectPos, ItemData item) {
+        Render.setColor(Color.BLACK);
+        Render.drawRectOutline(rectPos, GUI.invSize);
+
+        drawItem(rectPos, item);
     }
 
     public static void drawItem(Vector2 rectPos, ItemData item) {
         Render.setColor(Color.BLACK);
-        Render.drawRectOutline(rectPos, GUI.invSize);
+        Render.setFont(Settings.itemFont);
 
         if (item.getSprite() == null)
             return;
@@ -197,7 +209,6 @@ public class GUI {
         // right corner of the item box.
         if (item.getAmount() > 1) {
             String text = formatAmount(item.getAmount());
-            Render.setFont(Settings.itemFont);
 
             Vector2 textPos = rectPos.addClone(new Vector2(GUI.intBoxSize - Settings.sWidth(text) - 4, GUI.intBoxSize - 4));
 
@@ -207,10 +218,10 @@ public class GUI {
 //            Render.setColor(new Color(255, 255, 255, 150));
 //            Render.drawRectangle(textPos.subtractClone(Render.getStringWidth(text) * 0.05f, (Render.getStringHeight() - Render.getStringAscent() / 2)), Render.stringDimensions(text).scaleClone(1.1f));
 
-            Render.setColor(Color.GRAY);
-            Render.drawText(text, textPos.addClone(1, 0));
+            Render.setColor(new Color(201, 191, 1));
+            Render.drawText(text, textPos.addClone(1, 1));
 
-            Render.setColor(new Color(18, 34, 20));
+            Render.setColor(new Color(255, 242, 0));
             Render.drawText(text, textPos);
         }
     }
@@ -243,7 +254,7 @@ public class GUI {
         renderShop = true;
     }
 
-    public static void disableShop() {
+    public static void closeShop() {
         Shop.offeredItems.clear();
         Shop.prices.clear();
         renderShop = false;
@@ -260,12 +271,17 @@ public class GUI {
                 break;
             case "bankoff":
                 GUI.disableBankInterface();
+                extraCommands.clear();
                 break;
             case "shop":
                 GUI.enableShop(message);
                 break;
             case "shopoff":
-                GUI.disableShop();
+                GUI.closeShop();
+                extraCommands.clear();
+                break;
+            case "shopextra":
+                extraCommands.add(message.replace("shopextra;", ""));
                 break;
         }
     }

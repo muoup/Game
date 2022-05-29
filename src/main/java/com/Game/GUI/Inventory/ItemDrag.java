@@ -8,9 +8,7 @@ import com.Game.listener.Input;
 import com.Util.Math.Vector2;
 import com.Util.Other.DataShortcut;
 import com.Util.Other.Render;
-import com.Util.Other.Settings;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class ItemDrag {
@@ -31,112 +29,11 @@ public class ItemDrag {
 
     private static boolean mouse = false;
     private static boolean mouseDown = false;
-    private static boolean click = true;
 
     private static DragState state = DragState.none;
 
     public static void init() {
         itemDrag = new ItemData();
-    }
-
-    // Old and no longer used, but kept for reference
-    public static void renderOLD() {
-        if (RightClick.render || RightClick.coolDown > 0)
-            return;
-
-        if (itemDrag != null && mouse && !click) {
-            // When the player attempts to drag the item, draw the image.
-            InventoryManager.useIndex = -1;
-            Vector2 rectPos = Input.mousePosition.subtractClone(itemDragImage.getWidth() / 2, itemDragImage.getWidth() / 2);
-
-            Render.drawImage(itemDragImage, rectPos);
-
-            if (itemDrag.getAmount() > 1) {
-                String text = GUI.formatAmount(itemDrag.getAmount());
-
-                Render.setFont(Settings.itemFont);
-                Render.setColor(Color.BLACK);
-
-                Render.drawText(text,
-                        rectPos.addClone(new Vector2(GUI.intBoxSize - Settings.sWidth(text) - 4, GUI.intBoxSize - 4)));
-            }
-        } else if (itemDrag.notEmpty() && !mouse && inCorrectBounds() && !click) {
-            if (state == DragState.draggingInventory) {
-                int index = getInventoryIndex();
-
-                // Swap the two spaces in case there is already an item in the state slot.
-                InventoryManager.swapSlots(inventoryIndex, index);
-
-                resetVariables();
-            } else if (state == DragState.draggingBank) {
-                int index = getBankIndex();
-
-                BankingHandler.swapSlots(bankIndex, index);
-
-                resetVariables();
-            }
-        } else if (itemDrag.notEmpty() && !mouse && !inCorrectBounds() && !click) {
-            // When the player attempts to drag the item outside the state
-            resetVariables();
-        } else if (itemDrag.notEmpty() && !mouse && click && RightClick.coolDown <= 0) {
-            // When the player clicks on an item
-            if (state == DragState.inventoryClick) {
-                InventoryManager.leftClick(inventoryIndex);
-            } else if (state == DragState.bankClick) {
-                BankingHandler.leftClick(bankIndex);
-            }
-            resetVariables();
-        } else if (inventoryIndex != -1 && !mouse) {
-            resetVariables();
-        }
-    }
-
-    // Old and no longer used, but kept for reference
-    public static void updateOLD() {
-        if (RightClick.render || RightClick.coolDown > 0)
-            return;
-
-        mouse = Input.GetMouse(1);
-
-        // If the mouse is in the inventory and there is no selected item, select that item.
-        if (mouse && GUI.inGUI() && inventoryIndex == -1) {
-            inventoryIndex = getInventoryIndex();
-            itemDrag = InventoryManager.getStack(inventoryIndex);
-            itemDragImage = Render.getScaledImage(itemDrag.getImage(), GUI.invSize);
-            initMousePos = Input.mousePosition.clone();
-            state = DragState.inventoryClick;
-        } else if (mouse && GUI.inBank() && bankIndex == -1) {
-            bankIndex = getBankIndex();
-
-            if (bankIndex > BankingHandler.items.size() - 1) {
-                bankIndex = -1;
-                return;
-            }
-
-            itemDrag = BankingHandler.getItem(bankIndex);
-            itemDragImage = Render.getScaledImage(itemDrag.getImage(), BankingHandler.getItemScale());
-            initMousePos = Input.mousePosition.clone();
-            state = DragState.bankClick;
-
-            if (bankIndex < 0 || bankIndex > BankingHandler.items.size() - 1)
-                resetVariables();
-        }
-
-        // If an item is selected and the mouse tries to drag it, drag the item.
-        if (state != DragState.none && Vector2.distance(initMousePos, Input.mousePosition) > 16) {
-            click = false;
-
-            switch (state) {
-                case inventoryClick:
-                    InventoryManager.draggedIndex = inventoryIndex;
-                    state = DragState.draggingInventory;
-                    break;
-                case bankClick:
-                    BankingHandler.draggedIndex = bankIndex;
-                    state = DragState.draggingBank;
-                    break;
-            }
-        }
     }
 
     public static void render() {
@@ -145,17 +42,7 @@ public class ItemDrag {
 
         if (itemDrag != null && itemDrag.notEmpty()) {
             Vector2 itemDragPos = Input.mousePosition.addClone(-itemDragImage.getWidth() / 2);
-            Render.drawImage(itemDragImage, itemDragPos);
-
-            if (itemDrag.amount > 1) {
-                String text = GUI.formatAmount(itemDrag.getAmount());
-
-                Render.setFont(Settings.itemFont);
-                Render.setColor(Color.BLACK);
-
-                Render.drawText(text,
-                        itemDragPos.addClone(new Vector2(GUI.intBoxSize - Settings.sWidth(text) - 4, GUI.intBoxSize - 4)));
-            }
+            GUI.drawItem(itemDragPos, itemDrag);
         }
     }
 
@@ -240,7 +127,6 @@ public class ItemDrag {
     }
 
     private static void resetVariables() {
-        click = true;
         itemDrag = new ItemData();
         inventoryIndex = -1;
         bankIndex = -1;

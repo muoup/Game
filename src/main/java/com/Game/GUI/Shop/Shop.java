@@ -3,7 +3,6 @@ package com.Game.GUI.Shop;
 import com.Game.Entity.Player;
 import com.Game.GUI.Chatbox.ChatBox;
 import com.Game.GUI.GUI;
-import com.Game.GUI.Inventory.InventoryManager;
 import com.Game.GUI.RightClick;
 import com.Game.Items.ItemData;
 import com.Game.Main.Main;
@@ -43,8 +42,10 @@ public class Shop {
     private static final Vector2 size = Settings.curResolution().scale(0.5f);
     private static final int maxCol = (int) ((size.x - padding) / (padding + GUI.intBoxSize));
 
-//    public static void setItems(ItemData[] stacks) {
-//    }
+    // Extra Commands Settings
+    private static final int textPadding = 10;
+    private static final Font extraFont = Settings.itemFont.deriveFont(Font.BOLD, Settings.itemFont.getSize() * 1.25f);
+
 
     public static boolean empty() {
         return offeredItems.size() == 0;
@@ -106,11 +107,37 @@ public class Shop {
         Render.drawBorderedRect(beginPos.addClone(size.x - GUI.intBoxSize / 2, 0), new Vector2(GUI.intBoxSize / 2));
     }
 
+    public static void renderText(String horizontalBias, String verticalBias, String text) {
+        int xx = 0;
+        int yy = 0;
+
+        Render.setColor(Color.BLACK);
+        Render.setFont(extraFont);
+
+        if (verticalBias.equalsIgnoreCase("top")) {
+            yy = padding;
+        } else if (verticalBias.equalsIgnoreCase("bottom")) {
+            yy = (int) (size.y - padding - Settings.sHeight());
+        } else if (verticalBias.equalsIgnoreCase("center")) {
+            yy = (int) (size.y / 2 - Settings.sHeight() / 2);
+        }
+
+        if (horizontalBias.equalsIgnoreCase("left")) {
+            xx = padding;
+        } else if (horizontalBias.equalsIgnoreCase("right")) {
+            xx = (int) (size.x - padding - Settings.sWidth(text));
+        } else if (horizontalBias.equalsIgnoreCase("center")) {
+            xx = (int) (size.x / 2 - Settings.sWidth(text) / 2);
+        }
+
+        Render.drawText(text, beginPos.addClone(xx, yy));
+    }
+
     public static void baseUpdate() {
         if (Input.GetMouseDown(1)) {
             Vector2 rectBounds = beginPos.addClone(size.x - GUI.intBoxSize / 2, 0);
             if (Input.mouseInBounds(rectBounds, rectBounds.addClone(GUI.intBoxSize / 2))) {
-                GUI.disableShop();
+                GUI.closeShop();
                 return;
             }
         }
@@ -134,7 +161,7 @@ public class Shop {
             if (Input.mousePosition.greaterThan(pos) && pos2.greaterThan(Input.mousePosition)) {
                 if (Input.GetMouseDown(3)) {
                     RightClick.customRightClickFormat(Shop::buyOption,
-                            Shop.shopVerb, "%s 1", "%s 10", "%s 100", "%s " + Settings.customAmount, "%s Max", "Examine");
+                            Shop.shopVerb, "%s 1", "%s 10", "%s 100", "%s " + GUI.formatAmount(Settings.customAmount), "%s Max", "Examine");
                     selected = i;
                     break;
                 } else if (Input.GetMouseDown(1) && !RightClick.render && shopVerb.equals("Buy")) {
@@ -152,25 +179,10 @@ public class Shop {
     }
 
     public static void buyOption(int option) {
-        if (option >= amountOptions.length) {
-            ChatBox.sendMessage(offeredItems.get(selected).examineText);
-            if (shopVerb.equals("Buy"))
-                ChatBox.sendMessage("This item costs " + prices.get(selected) + " coins each.");
-            return;
-        }
-
         Main.sendPacket("si" + Player.name + ";shop;" + selected + ";" + getAmount(option));
     }
 
     public static void sellOption(int option) {
-        if (option >= amountOptions.length) {
-            ItemData stack = InventoryManager.getStack(hover);
-            ChatBox.sendMessage(stack.examineText);
-            if (inventoryVerb.equals("Sell"))
-                ChatBox.sendMessage("This item will sell for " + stack.getSellValue() + " coins each");
-            return;
-        }
-
         Main.sendPacket("si" + Player.name + ";inventory;" + hover + ";" + getAmount(option));
     }
 
@@ -193,5 +205,29 @@ public class Shop {
             amount = Settings.customAmount;
 
         return amount;
+    }
+
+    public static void handleCommands() {
+        for (String command : GUI.extraCommands) {
+            try {
+                int openParenthesis = command.indexOf('(');
+                int closeParenthesis = command.indexOf(')');
+
+                String commandName = command.substring(0, openParenthesis);
+                String[] args = command.substring(openParenthesis + 1, closeParenthesis).split(",");
+
+                extraCommand(commandName, args);
+            } catch (Exception e) {
+                System.err.println("Error in extra command: " + command);
+            }
+        }
+    }
+
+    public static void extraCommand(String command, String[] args) {
+        switch (command) {
+            case "DrawString":
+                renderText(args[0].trim(), args[1].trim(), args[2].trim());
+                break;
+        }
     }
 }

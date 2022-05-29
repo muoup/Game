@@ -266,4 +266,8 @@ public class Vector2 {
 
         return new Vector2(Float.parseFloat(parts[0]), Float.parseFloat(parts[1]));
     }
+
+    public boolean greaterThanZero() {
+        return x > 0 && y > 0;
+    }
 }

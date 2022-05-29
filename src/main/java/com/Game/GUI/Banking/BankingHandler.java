@@ -68,12 +68,9 @@ public class BankingHandler extends BasicGUIWindow {
             int x = i % maxRow;
             int y = i / maxRow;
 
-//            String text = GUI.formatAmount(items.get(i).getAmount());
-
             Vector2 imageScale = new Vector2(GUI.intBoxSize);
 
             Vector2 rectPos = beginPos.addClone(padding + (padding + GUI.intBoxSize) * x, padding + (padding + GUI.intBoxSize) * y);
-//            Vector2 textPos = rectPos.addClone(new Vector2(GUI.intBoxSize - Settings.sWidth(text) - 4, GUI.intBoxSize - 4));
 
             Render.setColor(bankItemIcon);
             Render.drawRectangle(rectPos, imageScale);
@@ -83,14 +80,8 @@ public class BankingHandler extends BasicGUIWindow {
                 Render.drawRectOutline(rectPos, GUI.invSize);
                 continue;
             }
-//
-//            Render.drawImage(Render.getScaledImage(items.get(i).getImage(), imageScale), rectPos);
-//
-//            Render.setFont(Settings.itemFont);
-//
-//            Render.setColor(Color.BLACK);
-//            Render.drawText(text, textPos.addClone(1, 0));
-            GUI.drawItem(rectPos, items.get(i));
+
+            GUI.drawOutlinedItem(rectPos, items.get(i));
         }
 
         // Exit Button Render
@@ -143,7 +134,7 @@ public class BankingHandler extends BasicGUIWindow {
                 hover = i;
                 RightClick.customRightClick(BankingHandler::withdrawItem,
                         "Withdraw 1", "Withdraw 10", "Withdraw 100",
-                                "Withdraw " + Settings.customAmount, "Withdraw All", "Examine");
+                                "Withdraw " + GUI.formatAmount(Settings.customAmount), "Withdraw All", "Examine");
 
                 break;
             }

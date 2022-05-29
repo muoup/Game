@@ -10,8 +10,6 @@ import java.awt.*;
 
 public class QuestManager {
 
-    public static final Color COMPLETE = Color.GREEN.darker();
-
     public static Quest[] questList;
 
     public static void init() {
@@ -23,11 +21,8 @@ public class QuestManager {
     }
 
     public static void render() {
-        Render.setColor(Color.LIGHT_GRAY);
-        Render.drawBounds(GUI.GuiPos, GUI.GUIEnd());
-
-        Render.setColor(Color.BLACK);
-        Render.drawRectOutlineBounds(GUI.GuiPos, GUI.GUIEnd());
+        Render.setColor(GUI.GUIBgColor);
+        Render.drawBorderedBounds(GUI.GuiPos, GUI.GUIEnd(), 1);
 
         Render.setColor(Color.BLACK);
         Render.setFont(Settings.questFont.deriveFont(Font.BOLD, 24));

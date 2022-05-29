@@ -2,7 +2,6 @@ package com.Game.GUI.Inventory;
 
 import com.Game.Entity.Player;
 import com.Game.GUI.GUI;
-import com.Game.GUI.RightClick;
 import com.Game.Items.ItemData;
 import com.Game.Main.Main;
 import com.Util.Math.Vector2;
@@ -14,7 +13,6 @@ public class InventoryManager {
 
     public static ItemData[] inventory = new ItemData[20];
     public static int draggedIndex = -1;
-    public static int useIndex = -1;
 
     public static void init() {
         for (int i = 0; i < inventory.length; i++) {
@@ -25,12 +23,10 @@ public class InventoryManager {
     }
 
     public static void update() {
-        if (RightClick.render)
-            InventoryManager.useIndex = -1;
     }
 
     public static void render() {
-        Render.setColor(new Color(255, 138, 4));
+        Render.setColor(new Color(180, 120, 68, 152));
 
         Render.drawBounds(GUI.GuiPos, GUI.GUIEnd());
 
@@ -42,6 +38,7 @@ public class InventoryManager {
                 Vector2 rectPos = GUI.getGridPosition(x, y);
 
                 if (ItemDrag.invDragIndex() == x + y * 4) {
+                    Render.setColor(Color.BLACK);
                     Render.drawRectOutline(rectPos, GUI.invSize);
                     continue;
                 }
@@ -49,11 +46,6 @@ public class InventoryManager {
                 ItemData stack = getStack(x + y * 4);
                 GUI.drawMenuItem(x, y, stack);
             }
-        }
-
-        if (useIndex != -1) {
-            Render.setColor(Color.GREEN);
-            Render.drawRectOutline(GUI.getGridPosition(useIndex % 4, useIndex / 4), GUI.invSize);
         }
     }
 
@@ -65,12 +57,7 @@ public class InventoryManager {
         Main.sendPacket("ss" + Player.name + ";" + index1 + ";" + index2);
     }
 
-    public static void use(int inventoryIndex) {
-        Main.sendPacket("us" + Player.name + ";" + inventoryIndex);
-    }
-
     public static void leftClick(int inventoryIndex) {
-        System.out.println(inventoryIndex);
         Main.sendPacket("lc" + Player.name + ";" + inventoryIndex);
     }
 }
