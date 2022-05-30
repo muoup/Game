@@ -19,7 +19,7 @@ public class ChatBox {
     private static float barSensitivity = 1f; // How much the bar needs to be scrolled (greater is less scrolling).
     private static float heightOffset = 50f; // How far up the GUI should be pushed.
     public static Font textFont; // see initialization
-    public static Color chatColor = new Color(175, 129, 34);
+    public static Color chatColor = new Color(175, 129, 34, 191);
 
     // There is not harm in touching these but it will not change it.
     // They are changed every render to help with cleaning up math when rendering the chatbox.
@@ -104,8 +104,8 @@ public class ChatBox {
         Render.setColor(new Color(40, 38, 34));
         Render.drawBorderedRect(bPos, bSize);
 
-        Render.setColor(moveBar && Input.GetMouse(1) ? new Color(181, 160, 108) :
-                new Color(181, 151, 57));
+        Render.setColor(moveBar && Input.GetMouse(1) ? new Color(181, 160, 108, 191) :
+                new Color(181, 151, 57, 191));
         Render.drawBorderedRect(bPos.addClone(0, scroll), new Vector2(bSize.x, height));
     }
 

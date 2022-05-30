@@ -95,7 +95,7 @@ public class Shop {
                 row++;
             }
 
-            if (text.contains("-"))
+            if (prices.get(i) <= 0 || shopVerb.equalsIgnoreCase("Buy"))
                 continue;
 
             Render.setColor(new Color(249, 249, 34));

@@ -8,7 +8,6 @@ import java.awt.*;
 import java.util.TimerTask;
 
 public class Settings {
-    public static float cameraZoom = 320;
     public static int fpsCap = 60;
     public static boolean showFPS = false;
     public static int resolutionIndex = 1;
