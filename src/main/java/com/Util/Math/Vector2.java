@@ -1,8 +1,18 @@
 package com.Util.Math;
 
+import java.awt.*;
 import java.util.Random;
 
 public class Vector2 {
+
+    public static final Vector2 up = new Vector2(0, -1);
+    public static final Vector2 down = new Vector2(0, 1);
+    public static final Vector2 left = new Vector2(-1, 0);
+    public static final Vector2 right = new Vector2(1, 0);
+    public static final Vector2 upright = new Vector2(1, -1);
+    public static final Vector2 downright = new Vector2(1, 1);
+    public static final Vector2 upleft = new Vector2(-1, -1);
+    public static final Vector2 downleft = new Vector2(-1, 1);
 
     public float x = 0;
     public float y = 0;
@@ -17,6 +27,18 @@ public class Vector2 {
         this.y = xy;
     }
 
+    public static boolean approximatelyEqualAngles(Vector2 movement, Vector2 magnitudeDirection) {
+        return Math.abs(Math.atan2(movement.y, movement.x) - Math.atan2(magnitudeDirection.y, magnitudeDirection.x)) < 0.1;
+    }
+
+    public static Vector2 parseDimension(Dimension screenSize) {
+        return new Vector2(screenSize.width, screenSize.height);
+    }
+
+    public static Dimension toDimension(Vector2 screenSize) {
+        return new Dimension((int) screenSize.x, (int) screenSize.y);
+    }
+
     public Vector2 clone() {
         return new Vector2(x, y);
     }
@@ -27,6 +49,14 @@ public class Vector2 {
 
     public String toString() {
         return x + " " + y;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
     }
 
     public Vector2 add(Vector2 other) {
@@ -168,7 +198,7 @@ public class Vector2 {
 
         Vector2 result = new Vector2(dx, dy);
 
-        float slope = 0;
+        float slope;
 
         boolean xy = (Math.abs(dx) < Math.abs(dy));
 
@@ -257,17 +287,100 @@ public class Vector2 {
         return x == 0 && y == 0;
     }
 
-    public String ints() {
-        return x + ", " + y;
-    }
-
     public static Vector2 fromString(String string) {
         String[] parts = string.split(" ");
 
         return new Vector2(Float.parseFloat(parts[0]), Float.parseFloat(parts[1]));
     }
 
-    public boolean greaterThanZero() {
-        return x > 0 && y > 0;
+    public boolean intGreaterThanZero() {
+        return (int) x > 0 && (int) y > 0;
+    }
+
+    /**
+     * Creates a movement vector for a potential moving object / projectile / enemy that will hit a target moving in a certain direction.
+     * If the target continues to move in the same direction, using this direction ensures that the object will be hit the player, assuming it is applied
+     * like a normal movement Vector2.
+     *
+     * IF the provided speed prevents the object from mathematically reaching the object, the method will instead return the magnitude direction
+     * between the self and the target.
+     *
+     * TODO: Come up with a better alternative if the method is unable to come up with a definite answer. (The determinant is less than zero)
+     *
+     * @param selfPos - Position of the object that is attempting to reach the target
+     * @param targetPos - The current position of the target
+     * @param targetVel - The current velocity of the target (if this remains constant, the target will be hit)
+     * @param speed - The speed the object moves at
+     * @return The velocity needed to target the player's current trajectory.
+     */
+    public static Vector2 movementPredictVector(Vector2 selfPos, Vector2 targetPos, Vector2 targetVel, float speed) {
+        try {
+        /*
+            The 'difference quotients' of the function.
+            These don't serve a concrete mathematical purpose, but they shorten the code a little bit.
+            I also do recognize that difference quotients already exist in math, I just do not have anything better to call them,
+            as they are a quotient of differences.
+         */
+            float Dx = (targetPos.x - selfPos.x) / (targetPos.y - selfPos.y);
+            float Dy = (targetPos.y - selfPos.y) / (targetPos.x - selfPos.x);
+
+        /*
+            References to the needed parameters squared, just makes the code a bit more readable.
+         */
+            Vector2 vp2 = new Vector2(targetVel.x * targetVel.x, targetVel.y * targetVel.y);
+            Vector2 D2 = new Vector2(Dx * Dx, Dy * Dy);
+            float s2 = speed * speed;
+
+
+        /*
+            The actual equation this function revolves around. If you wanna derive this yourself, just do some system of equations with the
+            following equations.
+
+            selfPos.x + selfVel.x * t = targetPos.x + targetVel.x * t
+            selfPos.y + selfVel.y * t = targetPos.y + targetVel.y * t
+            selfVel.x^2 + selfVel.y^2 = speed^2
+
+            Solve for t in one equation and then input that into the other.
+            Solve for one of the selfVel values in terms of the other and then plug it into the final equation.
+         */
+            Vector2 selfVel = Vector2.zero();
+
+            // The 'determinants' of the function, if either are less than zero, that means that the object cannot mathematically reach the player.
+            float determX = -D2.y * vp2.x + 2 * Dy * targetVel.x * targetVel.y + D2.y * s2 + s2 - vp2.y;
+            float determY = -D2.x * vp2.y + 2 * Dx * targetVel.y * targetVel.x + D2.x * s2 + s2 - vp2.x;
+
+            selfVel.x = (D2.y * targetVel.x - Dy * targetVel.y + (float) Math.sqrt(determX))
+                    / (1 + D2.y);
+            selfVel.y = (D2.x * targetVel.y - Dx * targetVel.x + (float) Math.sqrt(determY))
+                    / (1 + D2.x);
+
+
+            // Something something sqrt(x) = (+/-)sqrt(x)
+            if (targetPos.y < selfPos.y)
+                selfVel.y *= -1;
+
+            if (targetPos.x < selfPos.x)
+                selfVel.x *= -1;
+
+            return selfVel.normalize();
+        } catch (Exception e) {
+            // I am not sure if an imaginary number is an ArithmeticException or not, and in case there are other possible edge-cases
+            // it is just best for now to print out the stack trace for *unexpected* errors.
+            if (!(e instanceof ArithmeticException))
+                e.printStackTrace();
+
+            // See above, a second case in case there is a divide by zero error with Dx or Dy, or
+            // if the determinant is less than zero and returns a complex number for selfVel.x or selfVel.y
+            return Vector2.magnitudeDirection(selfPos, targetPos);
+        }
+    }
+
+    /**
+     * Tells whether two vectors are approximately equal, with a distance lax of 0.1 units.
+     * @param compare - The vector to compare to
+     * @return Whether the vectors are approximately equal
+     */
+    public boolean approximately(Vector2 compare) {
+        return Vector2.distance(this, compare) < 0.1f;
     }
 }

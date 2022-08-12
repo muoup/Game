@@ -14,9 +14,25 @@ public class Rect2 {
         this.size = size.clone();
     }
 
-    public Rect2(Vector2 addClone, float stackedSize, float stringHeight) {
+    public Rect2(Vector2 addClone, float width, float height) {
         this.pos = addClone.clone();
-        this.size = new Vector2(stackedSize, stringHeight);
+        this.size = new Vector2(width, height);
+    }
+
+    public float getX() {
+        return pos.getX();
+    }
+
+    public float getY() {
+        return pos.getY();
+    }
+
+    public float getWidth() {
+        return size.getX();
+    }
+
+    public float getHeight() {
+        return size.getY();
     }
 
     public Vector2 getPos() {
@@ -37,5 +53,22 @@ public class Rect2 {
 
     public Vector2 getEnd() {
         return pos.addClone(size);
+    }
+
+    // Returns true if the rectangle shares any points with the other rectangle.
+    public boolean overlaps(Rect2 screenRect) {
+        return !(screenRect.getX() > getX() + getWidth() || screenRect.getX() + screenRect.getWidth() < getX() || screenRect.getY() > getY() + getHeight() || screenRect.getY() + screenRect.getHeight() < getY());
+    }
+
+    public boolean overlapst(Rect2 screenRect) {
+        System.out.println(screenRect.getY() + " " + screenRect.getHeight() + " " + getY() + " " + getHeight());
+        return !(screenRect.getX() > getX() + getWidth() || screenRect.getX() + screenRect.getWidth() < getX() || screenRect.getY() > getY() + getHeight() || screenRect.getY() + screenRect.getHeight() < getY());
+    }
+
+    public String toString() {
+        return "Rect2{" +
+                "pos=" + pos +
+                ", size=" + size +
+                '}';
     }
 }

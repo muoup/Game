@@ -33,8 +33,6 @@ public class MethodHandler {
     public static ArrayList<PlayerObject> playerConnections;
     public static ArrayList<SkillPopup> skillPopups;
 
-    private static ArrayList[] lists;
-
     private static int fpsTotal = 0;
     private static int fpsAmount = 0;
 
@@ -85,14 +83,6 @@ public class MethodHandler {
              * This may lead to some items not being updated on a certain frame
              * but that should hopefully not have too large of an impact.
              */
-            for (int i = 0; i < projectiles.size(); i++) {
-                Projectile p = projectiles.get(i);
-                p.renderProjectile();
-            }
-            for (int i = 0; i < playerConnections.size(); i++) {
-                PlayerObject playerObject = playerConnections.get(i);
-                playerObject.render();
-            }
             for (int i = 0; i < objects.size(); i++) {
                 GameObject object = objects.get(i);
                 object.renderObject();
@@ -102,12 +92,20 @@ public class MethodHandler {
             }
             for (int i = 0; i < enemies.size(); i++) {
                 Enemy enemy = enemies.get(i);
-                // TODO: i dunno
+
                 enemy.renderEnemy();
             }
             for (int i = 0; i < groundItems.size(); i++) {
                 GroundItem groundItem = groundItems.get(i);
                 groundItem.renderStack();
+            }
+            for (int i = 0; i < projectiles.size(); i++) {
+                Projectile p = projectiles.get(i);
+                p.renderProjectile();
+            }
+            for (int i = 0; i < playerConnections.size(); i++) {
+                PlayerObject playerObject = playerConnections.get(i);
+                playerObject.render();
             }
 
             Player.render();

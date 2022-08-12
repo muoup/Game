@@ -52,10 +52,10 @@ public class MenuHandler {
         if (state == MenuState.TextBoxPause || state == MenuState.NoPause)
             return;
 
-        Vector2 center = Settings.curResolution().scaleClone(0.5f);
+        Vector2 center = Settings.screenSize().scaleClone(0.5f);
 
         Render.setColor(new Color(64, 64, 64));
-        Render.drawRectangle(Vector2.zero(), Settings.curResolution());
+        Render.drawRectangle(Vector2.zero(), Settings.screenSize());
 
         Render.setColor(Color.GRAY);
         Render.drawRectangle(center.scaleClone(0.33f), center.scaleClone(1.33f));

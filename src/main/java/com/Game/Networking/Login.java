@@ -17,16 +17,10 @@ public class Login {
     private static int selected;
     private static Font loginFont;
     private static Color barColor;
-    private static Vector2 scale;
-    private static Vector2 res;
-    private static Vector2 namePos;
-    private static Vector2 passPos;
-    private static Vector2 center;
-    private static Vector2 buttonSize;
-    private static Vector2 loginPos;
-    private static Vector2 registerPos;
+    private static Vector2 scale, res, namePos, passPos, center, buttonSize, loginPos, registerPos;
     private static final int nameLimit = 15;
     private static final int passLimit = 15;
+    private static Vector2 size = Vector2.zero();
 
     public static void init() {
         loginFont = Main.getFont("login-text.ttf", 25, Font.PLAIN);
@@ -90,7 +84,7 @@ public class Login {
     public static void render() {
         Render.setColor(new Color(131, 199, 192));
         Render.setFont(loginFont);
-        Render.drawRectangle(Vector2.zero(), Settings.curResolution());
+        Render.drawRectangle(Vector2.zero(), Settings.screenSize());
 
         Render.setColor(barColor.brighter());
 

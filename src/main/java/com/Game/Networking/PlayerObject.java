@@ -1,8 +1,10 @@
 package com.Game.Networking;
 
 import com.Game.Entity.Player;
+import com.Game.Main.MethodHandler;
 import com.Game.World.World;
 import com.Util.Math.Vector2;
+import com.Util.Other.AnimatedSprite;
 import com.Util.Other.Render;
 import com.Util.Other.Settings;
 
@@ -13,7 +15,8 @@ public class PlayerObject {
     private int x, y;
     private String username;
     private float nameOffset;
-    private BufferedImage image;
+    private AnimatedSprite animation;
+    private boolean facingLeft = false;
 
     public PlayerObject(int x, int y, final String username) {
         this.x = x;
@@ -21,7 +24,27 @@ public class PlayerObject {
         this.username = username;
         Render.setFont(Settings.npcFont);
         this.nameOffset = 0.5f * Render.getStringWidth(username);
-        setImage(Player.idleAnimation.getFrame(0));
+        animation = Player.idleAnimation;
+    }
+
+    public static void animate(String username, String animation) {
+        for (PlayerObject player : MethodHandler.playerConnections) {
+            if (player.username.equals(username)) {
+                if (player.getAnimation().equals(animation))
+                    return;
+
+                player.setAnimation(animation);
+            }
+        }
+    }
+
+    public void setAnimation(String animation) {
+        for (AnimatedSprite sprite : Player.animationList) {
+            if (sprite.getName().equals(animation)) {
+                this.animation = sprite.createNewInstance();
+                return;
+            }
+        }
     }
 
     public void setPos(int x, int y) {
@@ -40,17 +63,23 @@ public class PlayerObject {
     }
 
     public void render() {
+        BufferedImage image = Render.getScaledImage(this.animation.getImage(), Player.scale);
+
         if (Render.onScreen(getPos(), image)) {
             Render.setFont(Settings.npcFont);
             Vector2 drawPos = new Vector2(getPos().x - World.offset.x,
                     getPos().y - World.offset.y);
-            Render.drawImage(image, drawPos.subtractClone(Player.scale.x / 2, Player.scale.y / 2));
+            Render.drawImage((!facingLeft) ? image : Render.mirrorImageHorizontally(image), drawPos.subtractClone(Player.scale.x / 2, Player.scale.y / 2));
             Render.setColor(Color.BLACK);
             Render.drawText(username, drawPos.subtractClone(nameOffset, 24));
         }
     }
 
-    public void setImage(BufferedImage image) {
-        this.image = Render.getScaledImage(image, Player.scale);
+    public void setFacingLeft(boolean facingLeft) {
+        this.facingLeft = facingLeft;
+    }
+
+    public String getAnimation() {
+        return animation.getName();
     }
 }

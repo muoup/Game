@@ -37,7 +37,7 @@ public class RightClick {
 
     public static void init() {
         options = new ArrayList<>();
-        percentBox = Settings.curResolution().y * 0.03f;
+        percentBox = Settings.screenSize().y * 0.03f;
     }
 
     public static void render() {
@@ -52,7 +52,7 @@ public class RightClick {
         Render.setFont(Settings.groundFont);
 
         for (int y = 0; y < options.size(); y++) {
-            Vector2 newPos = deltaDraw.addClone(0, percentBox * y);
+            Vector2 newPos = deltaDraw.addClone(0, (percentBox - 1) * y);
 
             Render.setColor(Color.LIGHT_GRAY);
             Render.drawRectangle(newPos, new Vector2(maxWidth, percentBox));
@@ -177,10 +177,10 @@ public class RightClick {
 
         maxWidth *= maxMultiplier;
 
-        if (deltaDraw.x + maxWidth > Settings.curResolution().x * 0.9f)
+        if (deltaDraw.x + maxWidth > Settings.screenSize().x * 0.9f)
             deltaDraw.x -= maxWidth;
 
-        if (deltaDraw.y + options.size() * percentBox > Settings.curResolution().y * 0.9) {
+        if (deltaDraw.y + options.size() * percentBox > Settings.screenSize().y * 0.9) {
             deltaDraw.y -= options.size() * percentBox;
         }
     }
@@ -247,7 +247,7 @@ public class RightClick {
 
         maxWidth = Math.max(Settings.sWidth("Examine"), maxWidth) * maxMultiplier;
 
-        if (deltaDraw.x + maxWidth > Settings.curResolution().x * 0.9f)
+        if (deltaDraw.x + maxWidth > Settings.screenSize().x * 0.9f)
             deltaDraw.x -= maxWidth;
 
         options.add("Drop");
@@ -309,8 +309,8 @@ public class RightClick {
 
         maxWidth *= maxMultiplier;
 
-        if (maxWidth + deltaDraw.x > Settings.curResolution().x)
-            deltaDraw.x = Settings.curResolution().x - maxWidth;
+        if (maxWidth + deltaDraw.x > Settings.screenSize().x)
+            deltaDraw.x = Settings.screenSize().x - maxWidth;
     }
 
     private static void objectRightClick(UsableGameObject object) {
@@ -343,8 +343,8 @@ public class RightClick {
 
         Render.setFont(Settings.groundFont);
 
-        if (maxWidth + deltaDraw.x > Settings.curResolution().x)
-            deltaDraw.x = Settings.curResolution().x - maxWidth;
+        if (maxWidth + deltaDraw.x > Settings.screenSize().x)
+            deltaDraw.x = Settings.screenSize().x - maxWidth;
     }
 
     public static boolean onPopup() {

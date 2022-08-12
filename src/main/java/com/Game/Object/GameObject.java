@@ -49,11 +49,18 @@ public class GameObject {
     }
 
     public void renderObject() {
+        if (scale.x < 1 || scale.y < 1)
+            return;
+
+        World.renderObject(position, image, scale);
+
         if (image == null || !Render.onScreen(position, image))
             return;
 
         if (scale == null)
             scale = Render.getImageSize(image);
+
+
 
         Render.drawImage(Render.getScaledImage(image, scale),
                 position.subtractClone(World.offset).subtractClone(scale.scaleClone(0.5f)));

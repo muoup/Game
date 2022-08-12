@@ -14,14 +14,14 @@ public class Enemy {
 
     public Vector2 position;
 
-    public int id = 0, token = 0;
+    public int id = 0, token;
     public Vector2 moveTo;
     public Vector2 movement;
 
     public boolean enabled = true;
 
-    public float maxHealth = 25000f;
-    public float health = 25000f;
+    public float maxHealth;
+    public float health;
     public float speed = 0;
 
     public BufferedImage image;
@@ -32,6 +32,7 @@ public class Enemy {
         this.position = position;
         this.token = token;
         this.moveTo = position;
+        this.movement = Vector2.zero();
         this.health = health;
         this.maxHealth = maxHealth;
         this.image = sprite.getImage();
@@ -50,7 +51,7 @@ public class Enemy {
 
         Vector2 deltaPosition = position.subtractClone(World.offset);
 
-        if (Vector2.distance(position, moveTo) > 2) {
+        if (!movement.isZero() && Vector2.approximatelyEqualAngles(movement, Vector2.magnitudeDirection(position, moveTo))) {
             position.add(movement.scaleClone(speed * (float) Main.dTime()));
         }
 
@@ -58,6 +59,8 @@ public class Enemy {
             System.err.println(name + ": " + id + " did not load image correctly :(.");
             return;
         }
+
+        World.renderEnemy(position);
 
         if (Render.onScreen(position, image)) {
             Render.drawImage(image, deltaPosition.subtract(Render.getDimensions(image).scale(0.5f)));

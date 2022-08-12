@@ -28,8 +28,8 @@ public class BankingHandler extends BasicGUIWindow {
     private static final Color bankBackground = new Color(182, 124, 45);
     private static final Color bankItemIcon = new Color(153, 106, 38);
 
-    private static final Vector2 beginPos = Settings.curResolution().scale(0.25f);
-    private static final Vector2 size = Settings.curResolution().scale(0.5f);
+    private static final Vector2 beginPos = Settings.screenSize().scale(0.25f);
+    private static final Vector2 size = Settings.screenSize().scale(0.5f);
     public static final int maxRow = (int) ((size.x - padding) / (padding + GUI.intBoxSize));
 
     public static int hover = -1;
@@ -70,7 +70,7 @@ public class BankingHandler extends BasicGUIWindow {
 
             Vector2 imageScale = new Vector2(GUI.intBoxSize);
 
-            Vector2 rectPos = beginPos.addClone(padding + (padding + GUI.intBoxSize) * x, padding + (padding + GUI.intBoxSize) * y);
+            Vector2 rectPos = getItemPos(x, y);
 
             Render.setColor(bankItemIcon);
             Render.drawRectangle(rectPos, imageScale);
@@ -103,12 +103,13 @@ public class BankingHandler extends BasicGUIWindow {
     }
 
     public static void update() {
-        if (Input.GetMouseDown(1)) {
+        if (Input.GetMouseDown(1) && RightClick.coolDown <= 0) {
             if (Input.mouseInRect(closeRect)) {
                 GUI.closeBank();
                 return;
             } else if (Input.mouseInRect(invRect)) {
                 BankingHandler.depositInventory();
+                return;
             } else if (Input.mouseInRect(stackedRect)) {
                 Settings.inStack = true;
                 return;
@@ -148,7 +149,7 @@ public class BankingHandler extends BasicGUIWindow {
     }
 
     private static void withdrawItem(int option) {
-        if (option >= Shop.amountOptions.length) {
+        if (option >= Shop.amountOptions.length - 1) {
             ItemData item = items.get(hover);
 
             ChatBox.sendMessage(item.examineText);
@@ -164,7 +165,7 @@ public class BankingHandler extends BasicGUIWindow {
     }
 
     public static void depositItem(int option) {
-        if (option >= Shop.amountOptions.length) {
+        if (option >= Shop.amountOptions.length - 1) {
             ItemData item = items.get(hover);
 
             ChatBox.sendMessage(item.examineText);
@@ -178,6 +179,10 @@ public class BankingHandler extends BasicGUIWindow {
         }
 
         depositPacket(hover, Shop.getAmount(option));
+    }
+
+    public static void depositItem(int invIndex, int amount) {
+        depositPacket(invIndex, amount);
     }
 
     public static void depositPacket(int index, int amount) {
@@ -207,6 +212,10 @@ public class BankingHandler extends BasicGUIWindow {
                 ItemData stack = ItemData.getFromPacketData("0;" + portions[1]);
                 items.set(index, stack);
                 break;
+            case "clear":
+                int afterIndex = Integer.parseInt(parts[1]);
+                items.subList(afterIndex, items.size()).clear();
+                break;
         }
     }
 
@@ -214,7 +223,7 @@ public class BankingHandler extends BasicGUIWindow {
         return items.get(bankIndex);
     }
 
-    public static void swapSlots(int bankIndex, int index) {
+    public static void swapSlots(int bankIndex, double index) {
         Main.sendPacket("bs" + Player.name + ";" + bankIndex + ";" + index);
     }
 
@@ -241,5 +250,9 @@ public class BankingHandler extends BasicGUIWindow {
 
     public static void leftClick(int index) {
         Main.sendPacket("bc" + Player.name + ";withdraw;" + index + ";" + 1 + ";" + Settings.inStack);
+    }
+
+    public static Vector2 getItemPos(int x, int y) {
+        return beginPos.addClone(padding + (padding + GUI.intBoxSize) * x, padding + (padding + GUI.intBoxSize) * y);
     }
 }

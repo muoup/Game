@@ -1,16 +1,15 @@
 package com.Util.Other;
 
-import com.Game.Main.Main;
 import com.Util.Math.Vector2;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class AnimatedSprite extends Sprite {
-    public float timer = 0;
+    public long startTime = 0;
     private SpriteSheet spriteSheet;
     private Vector2[] cellList = new Vector2[0];
-    private BufferedImage image;
+    private String name;
     private float fps;
     public int row = -1;
 
@@ -28,9 +27,11 @@ public class AnimatedSprite extends Sprite {
         this.fps = Integer.parseInt(frames[1]);
     }
 
-    public AnimatedSprite(SpriteSheet spriteSheet, int frameCount, int fps) {
+    public AnimatedSprite(String name, SpriteSheet spriteSheet, int frameCount, float fps) {
         this.spriteSheet = spriteSheet;
         this.fps = fps;
+        this.name = name;
+        this.startTime = System.currentTimeMillis();
 
         calculateCells(frameCount);
     }
@@ -39,7 +40,11 @@ public class AnimatedSprite extends Sprite {
     }
 
     public void reset() {
-        timer = 0;
+        startTime = System.currentTimeMillis();
+    }
+
+    public float getTimer() {
+        return (System.currentTimeMillis() - startTime) / 1000f;
     }
 
     public BufferedImage getImage() {
@@ -49,18 +54,11 @@ public class AnimatedSprite extends Sprite {
         if (row >= 0)
             return getColumnImage();
 
-        int cellNum = (int) ((timer * fps) % cellList.length);
+        int cellNum = (int) ((getTimer() * fps) % cellList.length);
 
         Vector2 cell = cellList[cellNum];
 
-        timer += Main.dTime();
-
         return spriteSheet.getCell((int) cell.x, (int) cell.y);
-    }
-
-    public BufferedImage getImageDontAnimate() {
-        timer -= Main.dTime();
-        return getImage();
     }
 
     public BufferedImage getFrame(int frame) {
@@ -72,7 +70,7 @@ public class AnimatedSprite extends Sprite {
     }
 
     private BufferedImage getColumnImage() {
-        int cellNum = (int) ((timer * fps) % spriteSheet.columns);
+        int cellNum = (int) ((getTimer() * fps) % spriteSheet.columns);
         return spriteSheet.getCell(cellNum, row);
     }
 
@@ -112,11 +110,19 @@ public class AnimatedSprite extends Sprite {
     }
 
     public int getFrame() {
-        return (int) ((timer * fps) % cellList.length);
+        return (int) ((getTimer() * fps) % cellList.length);
     }
 
     public boolean equivalent(AnimatedSprite animated) {
         return spriteSheet == animated.spriteSheet
                && cellList == animated.cellList;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public AnimatedSprite createNewInstance() {
+        return new AnimatedSprite(name, spriteSheet, cellList.length, fps);
     }
 }

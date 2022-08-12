@@ -88,7 +88,7 @@ public class ChatBox {
         mSize = new Vector2(size.x * 1.25f, size.y * 0.125f);
         bSize = new Vector2(size.x * 0.1f, size.y * 1.25f - mSize.y);
         gSize = new Vector2(size.x * 1.25f, size.y * 1.25f - mSize.y);
-        bPos = new Vector2(gSize.x - size.x * 0.125f + heightOffset, Settings.curResolution().y - gSize.y - heightOffset);
+        bPos = new Vector2(gSize.x - size.x * 0.125f + heightOffset, Settings.screenSize().y - gSize.y - heightOffset);
         gPos = new Vector2(heightOffset / 2, bPos.y);
         mPos = gPos.addClone(0, gSize.y - mSize.y);
         height = Math.min(gSize.y, gSize.y * (gSize.y - mSize.y) / distScroll);

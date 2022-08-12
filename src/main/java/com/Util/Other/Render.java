@@ -73,10 +73,11 @@ public class Render {
     }
 
     public static boolean onScreen(Vector2 position, Image image) {
-        Vector2 offset = World.offset;
+        Vector2 pos = position.subtractClone(World.offset).subtractClone(getImageSize(image).scale(0.5f));
+        Rect2 imageRect = new Rect2(pos, Render.getImageSize(image));
+        Rect2 screenRect = new Rect2(Vector2.zero(), Settings.screenSize());
 
-        return position.compareTo(offset.subtractClone(Render.getDimensions(image))) == 1
-                && offset.addClone(Settings.curResolution()).compareTo(position) == 1;
+        return imageRect.overlaps(screenRect);
     }
 
     public static int getStringHeight() {
@@ -108,7 +109,7 @@ public class Render {
     public static void drawBorderedBounds(Vector2 v1, Vector2 v2, float border) {
         Color dcol = Main.graphics.getColor();
 
-        if (!v2.subtractClone(v1).greaterThanZero())
+        if (!v2.subtractClone(v1).intGreaterThanZero())
             return;
 
         BufferedImage img = new BufferedImage((int) (v2.x - v1.x), (int) (v2.y - v1.y), BufferedImage.TYPE_INT_ARGB);
@@ -404,5 +405,60 @@ public class Render {
 
     public static void drawRect(Rect2 stackedRect) {
         drawRectangle(stackedRect.getPos(), stackedRect.getSize());
+    }
+
+    public static void drawOval(Vector2 playerPosition, float horizRadius, float vertRadius) {
+        Main.graphics.fillOval((int) playerPosition.x, (int) playerPosition.y,
+                (int) horizRadius * 2, (int) vertRadius * 2);
+
+        setColor(Main.graphics.getColor().darker());
+
+        Main.graphics.drawOval((int) playerPosition.x, (int) playerPosition.y,
+                (int) horizRadius * 2, (int) vertRadius * 2);
+    }
+
+    public static void drawCircle(float x, float y, float width, float height) {
+        Main.graphics.fillOval((int) x, (int) y, (int) width, (int) height);
+    }
+
+    public static void drawCircleWithinBounds(float x, float y, float width, float height, Rect2 bounds) {
+        BufferedImage circle = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = circle.createGraphics();
+        graphics.setColor(Main.graphics.getColor());
+        graphics.fillOval(0, 0, (int) width, (int) height);
+        graphics.dispose();
+
+        drawImageWithinBounds(circle, x, y, bounds);
+    }
+
+    // Draws an image, but cuts off part of it if it leaks out of the bounds
+    public static void drawImageWithinBounds(BufferedImage image, float x, float y, Rect2 bounds) {
+        int dx = 0, dy = 0;
+        int dwidth = image.getWidth(), dheight = image.getHeight();
+
+        Vector2 imageSize = getImageSize(image);
+
+        if (x + imageSize.x > bounds.getX() + bounds.getWidth()) {
+            dwidth = (int) (bounds.getX() + bounds.getWidth() - x + 1);
+        }
+
+        if (x < bounds.getPos().x) {
+            dx = (int) (bounds.getX() - x + 1);
+        }
+
+        if (y + imageSize.y > bounds.getY() + bounds.getHeight()) {
+            dheight = (int) (bounds.getY() + bounds.getHeight() - y + 1);
+        }
+
+        if (y < bounds.getPos().y) {
+            dy = (int) (bounds.getY() - y + 1);
+        }
+
+        if (dx < 0 || dy < 0 || dwidth - dx <= 0 || dheight - dx <= 0 || dx >= imageSize.x || dy >= imageSize.y)
+            return;
+
+        BufferedImage newImage = image.getSubimage(dx, dy, dwidth - dx, dheight - dy);
+
+        Main.graphics.drawImage(newImage, (int) (x + dx), (int) (y + dy), null);
     }
 }

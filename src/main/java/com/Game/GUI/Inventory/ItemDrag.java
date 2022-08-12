@@ -9,6 +9,8 @@ import com.Util.Math.Vector2;
 import com.Util.Other.DataShortcut;
 import com.Util.Other.Render;
 
+import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
 public class ItemDrag {
@@ -44,6 +46,33 @@ public class ItemDrag {
             Vector2 itemDragPos = Input.mousePosition.addClone(-itemDragImage.getWidth() / 2);
             GUI.drawItem(itemDragPos, itemDrag);
         }
+
+        if (state == DragState.draggingBank) {
+            double index = getBankIndex();
+
+            if (index >= BankingHandler.items.size())
+                return;
+
+            Render.setColor(Color.YELLOW);
+
+            if (index % 1 == 0) {
+                int i = (int) index;
+                int x = i % BankingHandler.maxRow;
+                int y = i / BankingHandler.maxRow;
+
+                Vector2 itemPos = BankingHandler.getItemPos(x, y);
+
+                Render.drawRectOutline(itemPos, GUI.invSize);
+            } else {
+                int i = (int) index;
+                int x = i % BankingHandler.maxRow + 1;
+                int y = i / BankingHandler.maxRow;
+
+                Vector2 itemPos = BankingHandler.getItemPos(x, y).subtractClone(BankingHandler.padding / 2, 0);
+
+                Render.drawRectangle(itemPos, new Vector2(1, GUI.intBoxSize));
+            }
+        }
     }
 
     public static void update() {
@@ -58,12 +87,18 @@ public class ItemDrag {
             if (GUI.inGUI()) {
                 selectedIndex = getInventoryIndex();
 
-                if (selectedIndex > InventoryManager.inventory.length - 1)
+                if (selectedIndex > InventoryManager.inventory.length - 1
+                        || !InventoryManager.getStack(selectedIndex).notEmpty())
                     selectedIndex = -1;
 
-                state = DragState.inventoryClick;
+                state = DragState.inventoryClick ;
             } else if (GUI.inBank()) {
-                selectedIndex = getBankIndex();
+                double sel = getBankIndex();
+
+                if (sel % 1 != 0)
+                    return;
+
+                selectedIndex = (int) sel;
 
                 if (selectedIndex > BankingHandler.items.size() - 1)
                     selectedIndex = -1;
@@ -85,6 +120,9 @@ public class ItemDrag {
         if (Vector2.distance(initMousePos, Input.mousePosition) > 16) {
             switch (state) {
                 case inventoryClick:
+                    if (GUI.curMain != 0)
+                        break;
+
                     InventoryManager.draggedIndex = inventoryIndex;
                     state = DragState.draggingInventory;
                     itemDrag = InventoryManager.getStack(selectedIndex);
@@ -102,19 +140,30 @@ public class ItemDrag {
         // If an item has been clicked/dragged, and the mouse is released, either swap items or click the item
         if (!mouse) {
             if (inCorrectBounds()) {
-                int index;
+                double index;
 
                 switch (state) {
                     case draggingInventory:
+                        if (GUI.curMain != 0)
+                            return;
+
                         index = getInventoryIndex();
-                        InventoryManager.swapSlots(selectedIndex, index);
+                        InventoryManager.swapSlots(selectedIndex, (int) index);
                         break;
                     case draggingBank:
                         index = getBankIndex();
+
                         BankingHandler.swapSlots(selectedIndex, index);
                         break;
                     case inventoryClick:
-                        InventoryManager.leftClick(selectedIndex);
+                        if (GUI.curMain != 0)
+                            return;
+
+                        if (GUI.renderBank) {
+                            BankingHandler.depositItem(selectedIndex, Input.GetKey(KeyEvent.VK_SHIFT) || Input.GetKey(KeyEvent.VK_CONTROL)
+                                    ? Integer.MAX_VALUE : 1);
+                        } else
+                            InventoryManager.leftClick(selectedIndex);
                         break;
                     case bankClick:
                         BankingHandler.leftClick(selectedIndex);
@@ -145,16 +194,21 @@ public class ItemDrag {
         return x + y * 4;
     }
 
-    private static int getBankIndex() {
+    private static double getBankIndex() {
         Vector2 mousePos = Input.mousePosition.subtractClone(BankingHandler.getBeginPos());
 
         int x = (int) mousePos.x / (BankingHandler.padding + GUI.intBoxSize);
         int y = (int) mousePos.y / (BankingHandler.padding + GUI.intBoxSize);
 
-        if (x > BankingHandler.maxRow - 1)
-            return Integer.MAX_VALUE;
+        double ret = x + y * BankingHandler.maxRow;
 
-        int ret = x + y * BankingHandler.maxRow;
+        if (mousePos.x - (BankingHandler.padding + GUI.intBoxSize) * x < BankingHandler.padding)
+            ret -= 0.5;
+        else if (mousePos.x - (BankingHandler.padding + GUI.intBoxSize) * x > BankingHandler.padding + GUI.intBoxSize)
+            ret += 0.5;
+
+        if (ret >= BankingHandler.maxRow * (y + 1))
+            return Integer.MAX_VALUE;
 
         return ret;
     }

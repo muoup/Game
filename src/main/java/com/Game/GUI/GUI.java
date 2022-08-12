@@ -26,6 +26,7 @@ public class GUI {
     private static Image[] inventoryOptions;
     public static int select, intBoxSize, curMain = 0;
     public static Vector2 below, GuiPos, invSize, categorySize;
+
     private static final String[] invImgNames = {
             "backpack.png",
             "accessories.png",
@@ -49,7 +50,7 @@ public class GUI {
     }
 
     public static boolean inBank() {
-        return Input.mouseInBounds(Settings.curResolution().scaleClone(0.25f), Settings.curResolution().scaleClone(0.75f)) && renderBank;
+        return Input.mouseInBounds(Settings.screenSize().scaleClone(0.25f), Settings.screenSize().scaleClone(0.75f)) && renderBank;
     }
 
     public static Vector2 getGridPosition(int x, int y) {
@@ -57,7 +58,7 @@ public class GUI {
     }
 
     public static void init() {
-        Vector2 res = Settings.curResolution();
+        Vector2 res = Settings.screenSize();
         inventoryOptions = new Image[invImgNames.length];
         intBoxSize = (int) (res.x * 0.05f);
         invSize = Vector2.identity(intBoxSize);
@@ -250,6 +251,7 @@ public class GUI {
         String[] verbs = args.split(";");
         Shop.shopVerb = verbs[0];
         Shop.inventoryVerb = verbs[1];
+        Shop.showPrices = verbs[2].equals("true");
 
         renderShop = true;
     }
@@ -284,5 +286,14 @@ public class GUI {
                 extraCommands.add(message.replace("shopextra;", ""));
                 break;
         }
+    }
+
+    public static void drawInvTimer(int x, int y, InventoryManager.InvTimer invTimer) {
+        float percent = (invTimer.getFinishTime() - System.currentTimeMillis()) / (float) invTimer.getDuration();
+
+        Vector2 start = getGridPosition(x, y).addClone(0, intBoxSize - 5);
+
+        Render.setColor(Color.BLUE);
+        Render.drawBorderedRect(start, new Vector2(intBoxSize * percent, 5), 1);
     }
 }

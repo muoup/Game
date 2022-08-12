@@ -35,11 +35,12 @@ public class Shop {
 
     public static String shopVerb = "Buy";
     public static String inventoryVerb = "Sell";
+    public static boolean showPrices = false;
 
     private static int padding = 16;
 
-    private static final Vector2 beginPos = Settings.curResolution().scale(0.25f);
-    private static final Vector2 size = Settings.curResolution().scale(0.5f);
+    private static final Vector2 beginPos = Settings.screenSize().scale(0.25f);
+    private static final Vector2 size = Settings.screenSize().scale(0.5f);
     private static final int maxCol = (int) ((size.x - padding) / (padding + GUI.intBoxSize));
 
     // Extra Commands Settings
@@ -71,10 +72,14 @@ public class Shop {
         int col = 0;
 
         for (int i = 0; i < getLength(); i++) {
-            if (prices.get(i) == -456) {
-                row++;
-                col = 0;
-                continue;
+            switch (offeredItems.get(i).name) {
+                case "Break Point":
+                    row++;
+                    col = 0;
+                    continue;
+                case "Empty":
+                    col++;
+                    continue;
             }
 
             String text = GUI.formatAmount(prices.get(i));
@@ -95,7 +100,7 @@ public class Shop {
                 row++;
             }
 
-            if (prices.get(i) <= 0 || shopVerb.equalsIgnoreCase("Buy"))
+            if (prices.get(i) <= 0 || !showPrices)
                 continue;
 
             Render.setColor(new Color(249, 249, 34));

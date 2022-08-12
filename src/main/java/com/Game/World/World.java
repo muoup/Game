@@ -11,6 +11,7 @@ import com.Game.Object.GameObject;
 import com.Game.Object.GroundItem;
 import com.Game.Projectile.Projectile;
 import com.Util.Math.DeltaMath;
+import com.Util.Math.Rect2;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 import com.Util.Other.Settings;
@@ -18,10 +19,11 @@ import com.Util.Other.Sprite;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class World {
 
-    private static final int miniMapSize = 512;
+    private static final int miniMapSize = 1024;
     private static final int miniMapScale = 256;
 
     public static Vector2 size;
@@ -29,6 +31,10 @@ public class World {
 
     public static BufferedImage worldImage;
     public static BufferedImage colWorld;
+
+    public static Rect2 minimap;
+
+    public static ArrayList<Runnable> todo = new ArrayList<>();
 
     public static void changeWorld(int parseInt) {
 
@@ -50,6 +56,9 @@ public class World {
         MethodHandler.objects.clear();
         MethodHandler.groundItems.clear();
         MethodHandler.enemies.clear();
+
+        minimap = new Rect2(Settings.screenSize().x - miniMapScale - 40, 40,
+                miniMapScale, miniMapScale);
 
         Player.handleOffset();
     }
@@ -94,7 +103,7 @@ public class World {
     // Render the buffered image of the World, this will be called in the methods.java generally
     public static void renderWorld() {
         Vector2 start = new Vector2(World.offset.x / Settings.worldScale, World.offset.y / Settings.worldScale);
-        Vector2 scale = new Vector2(Settings.curResolution().x / Settings.worldScale, Settings.curResolution().y / Settings.worldScale);
+        Vector2 scale = new Vector2(Settings.screenSize().x / Settings.worldScale, Settings.screenSize().y / Settings.worldScale);
 
         if (start.x + scale.x > worldImage.getWidth() || start.y + scale.y > worldImage.getHeight()) {
             return;
@@ -102,7 +111,7 @@ public class World {
 
         BufferedImage subImage = worldImage.getSubimage((int) start.x, (int) start.y, (int) scale.x, (int) scale.y);
 
-        BufferedImage imageMap = Render.getScaledImage(subImage, Settings.curResolution());
+        BufferedImage imageMap = Render.getScaledImage(subImage, Settings.screenSize());
 
         Render.drawImage(imageMap, Vector2.zero());
     }
@@ -111,19 +120,65 @@ public class World {
         if (worldImage == null)
             return;
 
-        Vector2 screenSize = Settings.curResolution();
-        Vector2 offset = World.offset.addClone(screenSize.scaleClone(0.5f));
+        Vector2 pos = getPos();
 
-        Vector2 pos = new Vector2(DeltaMath.maxmin(offset.x / Settings.worldScale - miniMapSize, 0, worldImage.getWidth() - miniMapSize * 2),
-                DeltaMath.maxmin(offset.y / Settings.worldScale - miniMapSize, 0, worldImage.getHeight() - miniMapSize * 2));
-
-        BufferedImage imageMap = worldImage.getSubimage((int) pos.x, (int) pos.y, Math.min(miniMapSize * 2, worldImage.getWidth()), Math.min(miniMapSize * 2, worldImage.getHeight()));
-        imageMap = Render.getScaledImage(imageMap, Vector2.identity(miniMapScale));
+        BufferedImage imageMap = worldImage.getSubimage((int) pos.x / Settings.worldScale, (int) pos.y / Settings.worldScale,
+                miniMapSize * 2 / Settings.worldScale, miniMapSize * 2 / Settings.worldScale);
+        imageMap = Render.getScaledImage(imageMap, minimap.getWidth(), minimap.getHeight());
 
         Render.setColor(Color.BLACK);
 
-        Render.drawRectangle(screenSize.x - miniMapScale - 40, 40, imageMap.getWidth() + 8, imageMap.getHeight() + 8);
-        Render.drawImage(imageMap, new Vector2(screenSize.x - miniMapScale - 36, 44));
+        Render.drawRectangle(minimap.getX() - 4, minimap.getY() - 4, minimap.getWidth() + 8, minimap.getHeight() + 8);
+        Render.drawImage(imageMap, minimap.getX(), minimap.getY());
+
+        todo.forEach(Runnable::run);
+        todo.clear();
+    }
+
+    public static Vector2 getPos() {
+        Vector2 offset = World.offset.addClone(Settings.screenSize().scaleClone(0.5f));
+
+        return new Vector2(DeltaMath.minpositive(offset.x - miniMapSize, worldImage.getWidth() * Settings.worldScale - miniMapSize * 2),
+                DeltaMath.minpositive(offset.y - miniMapSize, worldImage.getHeight() * Settings.worldScale - miniMapSize * 2));
+    }
+
+    public static void renderEnemy(Vector2 position) {
+        Vector2 pos = getPos();
+        Rect2 render = new Rect2(worldPosToMiniMap(pos), miniMapScale, miniMapScale);
+        Rect2 enemy = new Rect2(worldPosToMiniMap(position.addClone(-2)), 4, 4);
+
+        if (render.overlaps(enemy)) {
+            todo.add(() -> {
+                Render.setColor(Color.RED);
+                Render.drawCircleWithinBounds(enemy.getX(), enemy.getY(), 4, 4, minimap);
+            });
+        }
+    }
+
+    public static void renderObject(Vector2 position, BufferedImage image, Vector2 scale) {
+        Vector2 imageScale = scale.scaleClone(1 / wtmConst());
+
+        if (imageScale.x < 1 || imageScale.y < 1)
+            return;
+
+        BufferedImage imageMap = Render.getScaledImage(image, imageScale);
+        Vector2 pos = getPos();
+        Rect2 render = new Rect2(worldPosToMiniMap(pos), miniMapScale, miniMapScale);
+        Rect2 enemy = new Rect2(worldPosToMiniMap(position.addClone(imageScale.scaleClone(0.5f))), imageScale);
+
+        if (render.overlaps(enemy)) {
+            todo.add(() -> Render.drawImageWithinBounds(imageMap, enemy.getX(), enemy.getY(), minimap));
+        }
+    }
+
+    public static Vector2 worldPosToMiniMap(Vector2 position) {
+        Vector2 pos = getPos();
+        return new Vector2((position.x - pos.x) / wtmConst() + minimap.getX(),
+                (position.y - pos.y)  / wtmConst() + minimap.getY());
+    }
+
+    public static Vector2 worldPosToMiniMap(float x, float y) {
+        return worldPosToMiniMap(new Vector2(x, y));
     }
 
     public static void spawnObject(String message) {
@@ -210,6 +265,8 @@ public class World {
 
         if (!variable.equalsIgnoreCase("Enabled") && !enemy.enabled) {
             System.err.println("mhm mhm mhm: " + token);
+            System.err.println("bad variable: " + variable);
+            System.err.println(message);
             return;
         }
 
@@ -302,7 +359,6 @@ public class World {
         for (PlayerObject player : MethodHandler.playerConnections) {
             if (player.getUsername().equalsIgnoreCase(message)) {
                 MethodHandler.playerConnections.remove(player);
-
                 return;
             }
         }
@@ -327,5 +383,9 @@ public class World {
         for (Projectile projectile : MethodHandler.projectiles) {
             /* Debug */ System.out.println("Projectile Distance: " + Vector2.distance(projectile.position, position));
         }
+    }
+
+    public static float wtmConst() {
+        return Settings.worldScale * miniMapSize / miniMapScale;
     }
 }

@@ -28,7 +28,7 @@ public class Player {
     public static float dashTimer = 0f;
     public static Vector2 scale;
     private static Vector2 curSpeed = Vector2.zero();
-    public static float dx = 0, dy = 0, dMod = 0, shootTimer = 0;
+    public static float dx = 0, dy = 0;
     public static String name = null;
 
     public static long interactionFinish = 0;
@@ -43,12 +43,22 @@ public class Player {
     public static final SpriteSheet playerRun = new SpriteSheet("Player/player_run.png", 32, 32);
     public static final SpriteSheet playerChop  = new SpriteSheet("Player/player_chop.png", 32, 32);
 
-    public static final AnimatedSprite idleAnimation = new AnimatedSprite(playerIdle, 2, 2);
-    public static final AnimatedSprite runAnimation = new AnimatedSprite(playerRun,4, 6);
-    public static final AnimatedSprite chopAnimation = new AnimatedSprite(playerChop,8, 8);
+    public static final AnimatedSprite idleAnimation = new AnimatedSprite("idle", playerIdle, 2, 2);
+    public static final AnimatedSprite runAnimation = new AnimatedSprite("run", playerRun,4, 6);
+    public static final AnimatedSprite chopAnimation = new AnimatedSprite("chop", playerChop,8, 8);
+
+    public static final AnimatedSprite[] animationList = {
+            idleAnimation,
+            runAnimation,
+            chopAnimation
+    };
 
     public static AnimatedSprite current = idleAnimation;
     private static boolean leftFacing = true;
+
+    // Misc Effects
+    public static long shieldLast = 0;
+    public static Color shieldColor = new Color(0, 0, 0, 0);
 
     public static void init(Vector2 position, float speed, Color playerColor, float dash) {
         Player.position = position;
@@ -65,7 +75,6 @@ public class Player {
     }
 
     public static void update() {
-        shootTimer -= Main.dTime();
         dashTimer -= Main.dTime();
 
         if (!Settings.paused())
@@ -109,7 +118,7 @@ public class Player {
             if (Input.GetKeyDown(KeyEvent.VK_ESCAPE))
                 Main.sendPacket("gc" + Player.name);
 
-            if (Input.GetKeyDown(KeyEvent.VK_SHIFT) && dashTimer <= 0) {
+            if (Input.GetKey(KeyEvent.VK_SHIFT) && dashTimer <= 0) {
                 speedMod = dashMultiplier;
                 dashTimer = Settings.dashTimer;
             }
@@ -141,8 +150,12 @@ public class Player {
         if (!current.equivalent(spriteSheet)) {
             current = spriteSheet;
             current.reset();
-            sendMovementPacket();
+            sendAnimationPacket();
         }
+    }
+
+    public static void sendAnimationPacket() {
+        Main.sendPacket("an" + name + ":" + current.getName());
     }
 
     public static void changeSprite(String code) {
@@ -157,22 +170,7 @@ public class Player {
     }
 
     public static void sendMovementPacket() {
-        Main.sendPacket("15" + Player.name + ":" + (int) position.x + ":" + (int) position.y + ":" + animationInformation() + " " + leftFacing);
-    }
-
-    private static String animationInformation() {
-        int spriteSheet = -1;
-
-        if (current == idleAnimation)
-            spriteSheet = 0;
-        else if (current == runAnimation)
-            spriteSheet = 1;
-        else if (current == chopAnimation)
-            spriteSheet = 2;
-
-        int frame = current.getFrame();
-
-        return spriteSheet + " " + frame;
+        Main.sendPacket("15" + Player.name + ":" + (int) position.x + ":" + (int) position.y + ":" + leftFacing);
     }
 
     public static BufferedImage getAnimation(String information) {
@@ -242,7 +240,7 @@ public class Player {
         // These variables are probably not all necessary but it looks cleaner.
         Vector2 offset = World.offset;
         Vector2 size = World.size;
-        Vector2 res = Settings.curResolution();
+        Vector2 res = Settings.screenSize();
         Vector2 middle = res.scaleClone(0.5f);
         Vector2 sens = middle.scaleClone(Settings.cameraSensitivity);
         Vector2 arcsens = middle.scaleClone(1 - Settings.cameraSensitivity);
@@ -262,7 +260,7 @@ public class Player {
             offset.y = position.y - sens.y - middle.y;
         }
 
-        Vector2 maximum = size.scaleClone(Settings.worldScale).subtractClone(Settings.curResolution());
+        Vector2 maximum = size.scaleClone(Settings.worldScale).subtractClone(Settings.screenSize());
 
         if (offset.x < 0) {
             offset.x = 0;
@@ -348,9 +346,16 @@ public class Player {
     }
 
     public static void render() {
-        Render.drawImage((!leftFacing) ? getImage() : Render.mirrorImageHorizontally(getImage()) /* Image is mirrored horizontally if the player is moving to the left.*/,
-                position.x - scale.x / 2 - World.offset.x,
+        Vector2 playerPosition = new Vector2(position.x - scale.x / 2 - World.offset.x,
                 position.y - scale.y / 2 - World.offset.y);
+
+        Render.drawImage((!leftFacing) ? getImage() : Render.mirrorImageHorizontally(getImage()) /* Image is mirrored horizontally if the player is moving to the left.*/,
+                playerPosition);
+
+        if (shieldLast > System.currentTimeMillis()) {
+            Render.setColor(shieldColor);
+            Render.drawOval(playerPosition.addClone(-getImage().getWidth() * 0.05f, getImage().getHeight() * 0.05f), getImage().getWidth() / 1.9f, getImage().getHeight() / 1.9f);
+        }
 
         renderStats();
         drawProgressBar();
@@ -362,5 +367,18 @@ public class Player {
 
     public static void playerTest(String message) {
         /* Debug */ System.out.println(Vector2.distance(Vector2.fromString(message), position));
+    }
+
+    public static void addMiscTimer(String message) {
+        String[] split = message.split(";");
+
+        String type = split[0];
+        long duration = Long.parseLong(split[1]);
+        long finishTime = Long.parseLong(split[2]);
+
+        if (type.startsWith("protcircle")) {
+            shieldLast = finishTime;
+            shieldColor = new Color(Integer.parseInt(type.substring(10)), true);
+        }
     }
 }

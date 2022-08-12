@@ -11,6 +11,7 @@ import com.Util.Other.Render;
 public class AccessoriesManager {
 
     public static final int WEAPON_SLOT = 0;
+    public static final int SHIELD_SLOT = 1;
     public static final int AMMO_SLOT = 4;
 
     public static final int HELMET_SLOT = 3;
@@ -33,7 +34,6 @@ public class AccessoriesManager {
 
     public static void setSlot(ItemData item, int index) {
         accessories[index] = item;
-
     }
 
     public static void render() {
@@ -54,6 +54,7 @@ public class AccessoriesManager {
                 case CHESTPLATE_SLOT:
                 case LEGGING_SLOT:
                 case BOOT_SLOT:
+                case SHIELD_SLOT:
                     GUI.drawMenuItem(x, y, accessories[i]);
                     break;
             }

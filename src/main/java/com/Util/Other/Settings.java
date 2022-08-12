@@ -45,6 +45,10 @@ public class Settings {
     public static float playerSpeed = 225f;
     public static boolean inStack = false;
 
+    public static Vector2 screenSize() {
+        return Vector2.parseDimension(Main.frame.getContentPane().getSize());
+    }
+
     public static Vector2 curResolution() {
         return Settings.resolutions[Settings.resolutionIndex].clone();
     }
@@ -73,5 +77,9 @@ public class Settings {
 
     public static float sHeight() {
         return Main.graphics.getFontMetrics().getHeight();
+    }
+
+    public static void interpretPreferences() {
+        // TODO: Read Preferences.ini and fix settings to make them useful
     }
 }

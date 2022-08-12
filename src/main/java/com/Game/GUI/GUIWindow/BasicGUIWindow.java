@@ -10,8 +10,8 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class BasicGUIWindow {
-    protected static Vector2 beginPos = Settings.curResolution().scaleClone(0.25f);
-    protected static Vector2 size = Settings.curResolution().scaleClone(0.5f);
+    protected static Vector2 beginPos = Settings.screenSize().scaleClone(0.25f);
+    protected static Vector2 size = Settings.screenSize().scaleClone(0.5f);
     protected static Vector2 itemScale = new Vector2(GUI.intBoxSize);
 
     public static void init() {

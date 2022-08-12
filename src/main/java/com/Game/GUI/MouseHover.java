@@ -1,23 +1,23 @@
 package com.Game.GUI;
 
 import com.Game.Entity.Enemy;
-import com.Game.GUI.Inventory.ItemDrag;
 import com.Game.GUI.Inventory.InventoryManager;
+import com.Game.GUI.Inventory.ItemDrag;
 import com.Game.GUI.Skills.Skills;
 import com.Game.Items.ItemData;
 import com.Game.Main.MethodHandler;
 import com.Game.World.World;
 import com.Game.listener.Input;
+import com.Util.Math.DeltaMath;
 import com.Util.Math.Vector2;
 import com.Util.Other.Render;
 import com.Util.Other.Settings;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class MouseHover {
     private static int hover = -1;
-    private static Vector2 draw = Vector2.zero();
-    private static final int offset = 16;
     private static Enemy hoverEntity;
 
     public static void init() {
@@ -27,29 +27,49 @@ public class MouseHover {
     public static void handleHover(int index) {
         update(index);
         render(index);
-        updateEntity();
-        renderEntity();
     }
 
     public static void update(int index) {
+        // Find Entity Being Hovered If It Exists
         if (!GUI.inGUI()) {
             hover = -1;
+            hoverEntity = null;
+            ArrayList<Enemy> enemies = MethodHandler.enemies;
+            for (int i = 0; i < enemies.size(); i++) {
+                Enemy e = enemies.get(i);
+                if (e.image == null)
+                    return;
+
+                if (!Render.onScreen(e.position, e.image) || !e.enabled)
+                    continue;
+
+                if (Vector2.distance(Input.mousePosition, e.position.subtractClone(World.offset)) <= e.image.getHeight()) {
+                    hoverEntity = e;
+                    return;
+                }
+            }
+
             return;
-        }
+        } else if (GUI.inGUI())
+            hoverEntity = null;
+
         Vector2 deltaMouse = Input.mousePosition.subtractClone(GUI.GuiPos);
         int dx = (int) deltaMouse.x / GUI.intBoxSize;
         int dy = (int) deltaMouse.y / GUI.intBoxSize;
 
         hover = dx + dy * 4;
-        draw = deltaMouse.clone();
 
         if (hover >= ((index == 0) ? InventoryManager.inventory.length : Skills.skillAmt)) {
             hover = -1;
-            draw = Vector2.zero();
         }
     }
 
     public static void render(int index) {
+        if (hoverEntity != null) {
+            renderHoverText(hoverEntity.name + " | " +
+                    DeltaMath.addCommas((int) hoverEntity.health) + " / " +  DeltaMath.addCommas((int) hoverEntity.maxHealth));
+        }
+
         if (hover <= -1 || GUI.renderShop || GUI.renderBank)
             return;
 
@@ -60,77 +80,32 @@ public class MouseHover {
             if (!item.notEmpty())
                 return;
 
-            Render.setFont(new Font("Arial", Font.BOLD, 14));
-
-            float width = Settings.sWidth(text) * RightClick.maxMultiplier;
-            float x = (Input.mousePosition.x + width * 1.25f > Settings.curResolution().x) ?
-                    Input.mousePosition.x - width * 1.1f : Input.mousePosition.x + offset;
-            Vector2 dPos = new Vector2(x + width * (1 - RightClick.maxMultiplier) / 2, Input.mousePosition.y);
-
-            Render.setColor(Color.BLACK);
-            Render.drawRectangle(dPos, new Vector2(width * 1.15f, Render.getStringHeight() * 1.55f));
-
-            Render.setColor(Color.GRAY);
-            Render.drawRectangle(dPos.addClone(2, 2),
-                    new Vector2(width * 1.15f - 4, Render.getStringHeight() * 1.55f - 4));
-
-            Render.setColor(Color.BLACK);
-            Render.drawText(text, dPos.addClone(width * 0.05f, Settings.curResolution().y * 0.02f));
+            renderHoverText(text);
         } else if (index == 2) { // Handle Stat Hovering
-            String xp = "Current XP: " + (int) Skills.getExperience(hover);
-            String lvlUp = "XP for Next Level: " + Skills.levelToExp(Skills.getLevel(hover) + 1);
-            String until = "XP Left: " + (int) (Skills.levelToExp(Skills.getLevel(hover) + 1) - Skills.getExperience(hover));
+            String xp = "Current XP: " + DeltaMath.addCommas((int) Skills.getExperience(hover));
+            String lvlUp = "XP for Next Level: " + DeltaMath.addCommas(Skills.levelToExp(Skills.getLevel(hover) + 1));
+            String until = "XP Left: " + DeltaMath.addCommas((int) (Skills.levelToExp(Skills.getLevel(hover) + 1) - Skills.getExperience(hover)));
 
-            Render.setFont(new Font("Arial", Font.BOLD, 14));
-
-            float width = Settings.sWidth(lvlUp);
-            float x = (Input.mousePosition.x + width * 1.25f > Settings.curResolution().x) ?
-                    Input.mousePosition.x - width * 1.1f : Input.mousePosition.x;
-            Vector2 dPos = new Vector2(x, Input.mousePosition.y);
-
-            Render.drawRectMultiText(dPos, Color.GRAY, 2, 2, xp, lvlUp, until);
+            renderHoverText(xp, lvlUp, until);
         }
     }
 
-    public static void updateEntity() {
-        if (!GUI.inGUI()) {
-            hover = -1;
-            draw = Vector2.zero();
-            hoverEntity = null;
-            for (Enemy e : MethodHandler.enemies) {
-                if (e.image == null)
-                    return;
+    private static void renderHoverText(String... text) {
+        Render.setFont(new Font("Arial", Font.BOLD, 14));
 
-                if (!Render.onScreen(e.position, e.image) || !e.enabled)
-                    continue;
+        float width = 0;
 
-                if (Vector2.distance(Input.mousePosition, e.position.subtractClone(World.offset)) <= e.image.getHeight()) {
-                    draw = Input.mousePosition.clone();
-                    hoverEntity = e;
-                    return;
-                }
-            }
-        } else if (GUI.inGUI())
-            hoverEntity = null;
-    }
+        for (String t : text)
+            width = Math.max(Render.getStringWidth(t), width);
 
-    public static void renderEntity() {
-        if (hoverEntity != null) {
-            float width = Settings.sWidth(hoverEntity.name);
-            float x = (Input.mousePosition.x + width * 1.25f > Settings.curResolution().x) ?
-                    Input.mousePosition.x - width * 1.1f : Input.mousePosition.x;
-            float height = Render.getStringHeight() * 1.1f;
-            Vector2 dPos = new Vector2(x, Input.mousePosition.y);
+        float height = Render.getStringHeight() * text.length;
 
-            Render.setColor(Color.BLACK);
-            Render.drawRectangle(dPos, new Vector2(width * 1.1f, height));
+        float x = (Input.mousePosition.x + width * 1.25f > Settings.screenSize().x) ?
+                Input.mousePosition.x - width - 5 : Input.mousePosition.x + 5;
+        float y = (Input.mousePosition.y + height * 1.25f > Settings.screenSize().y) ?
+                Input.mousePosition.y - height - 5 : Input.mousePosition.y + 5;
+        Vector2 dPos = new Vector2(x, y);
 
-            Render.setColor(Color.LIGHT_GRAY);
-            Render.drawRectangle(dPos.addClone(2, 2),
-                    new Vector2(width * 1.1f - 4, height - 4));
-
-            Render.setColor(Color.BLACK);
-            Render.drawText(hoverEntity.name, dPos.addClone(width * 0.05f, Settings.curResolution().y * 0.02f));
-        }
+        Render.drawRectMultiText(dPos, Color.GRAY, 5, 2, text);
     }
 }

@@ -39,16 +39,28 @@ public class Main extends Canvas {
 
     private static long updateLength;
 
+    public Main() {
+        main = this;
+
+        Vector2 res = Settings.curResolution();
+        Dimension screenSize = new Dimension((int) res.x, (int) res.y);
+
+        main.setSize(screenSize);
+        main.setPreferredSize(screenSize);
+        main.setMaximumSize(screenSize);
+        main.setMinimumSize(screenSize);
+    }
+
     public static void main(String[] args) {
-        main = new Main();
+        new Main();
+
+        Settings.interpretPreferences();
+
         frame = new JFrame("Game");
         Input input = new Input();
-        Vector2 res = Settings.curResolution();
 
         frame.add(main);
-        frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize((int) res.x, (int) res.y);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         frame.setResizable(false);
@@ -114,9 +126,9 @@ public class Main extends Canvas {
         frame.setSize((int) Settings.curResolution().x, (int) Settings.curResolution().y);
         frame.setLocationRelativeTo(null);
 
-        Settings.itemFont = new Font("Arial", Font.PLAIN, (int) Settings.curResolution().x / 75);
+        Settings.itemFont = new Font("Arial", Font.PLAIN, (int) Settings.screenSize().x / 75);
 
-        GUI.init();
+        initMethods();
     }
 
     // Calculate fps and run other functions

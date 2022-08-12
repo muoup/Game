@@ -84,6 +84,7 @@ public class Client {
             }
 
             process(packet);
+            dataBuffer = new byte[4096];
         }
     }
 
@@ -94,180 +95,214 @@ public class Client {
         String message = content.substring(2).trim();
         String[] index;
 
-        switch (start) {
-            case "00":
-                index = message.split(":");
-                Settings.questCount = Integer.parseInt(index[0]);
-                QuestManager.init();
-                // index[1] is the skill count if ever needed.
-                break;
-            case "02":
-                index = message.split(":");
-                if (message.charAt(0) == 'p') {
-                    JOptionPane.showMessageDialog(null, "That player is already logged in. Wait a second and retry again.");
-                    return;
-                } else if (message.charAt(0) == 'v') {
-                    JOptionPane.showMessageDialog(null, "You are running the wrong client version! Please restart your client.");
-                    return;
-                }
-                boolean c = message.charAt(1) == 'c';
-                if (message.charAt(0) == 'l') {
-                    if (c) {
-                        joinServer(index[1]);
+        try {
+            switch (start) {
+                case "00":
+                    index = message.split(":");
+                    Settings.questCount = Integer.parseInt(index[0]);
+                    QuestManager.init();
+                    // index[1] is the skill count if ever needed.
+                    break;
+                case "02":
+                    index = message.split(":");
+                    if (message.charAt(0) == 'p') {
+                        JOptionPane.showMessageDialog(null, "That player is already logged in. Wait a second and retry again.");
+                        return;
+                    } else if (message.charAt(0) == 'v') {
+                        JOptionPane.showMessageDialog(null, "You are running the wrong client version! Please restart your client.");
+                        return;
+                    }
+                    boolean c = message.charAt(1) == 'c';
+                    if (message.charAt(0) == 'l') {
+                        if (c) {
+                            joinServer(index[1]);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "The username and password is not recognized.");
+                        }
+                    } else if (message.charAt(0) == 'r') {
+                        if (c) {
+                            joinServer(index[1]);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "That username already exists!");
+                        }
                     } else {
-                        JOptionPane.showMessageDialog(null, "The username and password is not recognized.");
+                        System.err.println("An unexpected login message occured.");
                     }
-                } else if (message.charAt(0) == 'r') {
-                    if (c) {
-                        joinServer(index[1]);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "That username already exists!");
+                    break;
+                case "04":
+                    takeSkillData(message.split(":"));
+                    break;
+                case "07":
+                    takeQuestData(message.split(":"));
+                    break;
+                case "12":
+                    String[] parts = message.split(":");
+
+                    String username = parts[2];
+
+                    if (username.equalsIgnoreCase(Player.name))
+                        return;
+
+                    for (PlayerObject object : MethodHandler.playerConnections)
+                        if (username.equalsIgnoreCase(object.getUsername()))
+                            return;
+
+                    PlayerObject playerObject = new PlayerObject(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), username);
+                    playerObject.setAnimation(parts[3]);
+
+                    MethodHandler.playerConnections.add(playerObject);
+                    break;
+                case "13":
+                case "55":
+                case "me":
+                    // Message is received
+                    ChatBox.sendMessage(message);
+                    break;
+                case "an":
+                    index = message.split(":");
+                    PlayerObject.animate(index[0], index[1]);
+                    break;
+                case "te":
+                    TextBox.addText(message);
+                    break;
+                case "ch":
+                    TextBox.setChoices(message);
+                    break;
+                case "15":
+                    String[] movement = message.split(":");
+                    for (PlayerObject o : MethodHandler.playerConnections) {
+                        if (o.getUsername().equalsIgnoreCase(movement[2].trim())) {
+                            o.setPos(Integer.parseInt(movement[0]), Integer.parseInt(movement[1]));
+                            if (!movement[3].equalsIgnoreCase("nochange"))
+                                o.setFacingLeft(Boolean.parseBoolean(movement[3]));
+                            break;
+                        }
                     }
-                } else {
-                    System.err.println("An unexpected login message occured.");
-                }
-                break;
-            case "04":
-                takeSkillData(message.split(":"));
-                break;
-            case "07":
-                takeQuestData(message.split(":"));
-                break;
-            case "12":
-                String[] parts = message.split(":");
-                MethodHandler.playerConnections.add(new PlayerObject(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), parts[2]));
-                break;
-            case "13":
-            case "55":
-            case "me":
-                // Message is received
-                ChatBox.sendMessage(message);
-                break;
-            case "te":
-                TextBox.addText(message);
-                break;
-            case "ch":
-                TextBox.setChoices(message);
-                break;
-            case "15":
-                String[] movement = message.split(":");
-                for (PlayerObject o : MethodHandler.playerConnections) {
-                    if (o.getUsername().equals(movement[0].trim())) {
-                        o.setPos(Integer.parseInt(movement[1]), Integer.parseInt(movement[2]));
-                        o.setImage(Player.getAnimation(movement[4]));
-                        break;
+                    break;
+                case "76":
+                    send("76" + Player.name);
+                    break;
+                case "66":
+                    for (PlayerObject o : MethodHandler.playerConnections) {
+                        if (o.getUsername().equals(message)) {
+                            MethodHandler.playerConnections.remove(o);
+                            break;
+                        }
                     }
-                }
-                break;
-            case "76":
-                send("76" + Player.name);
-                break;
-            case "66":
-                for (PlayerObject o : MethodHandler.playerConnections) {
-                    if (o.getUsername().equals(message)) {
-                        MethodHandler.playerConnections.remove(o);
-                        break;
-                    }
-                }
-                break;
-            case "99":
-                Main.logout();
-                break;
-            case "wc": // World Change
-                World.setWorld(message);
-                break;
-            case "pl": // Remove Player
-                World.removePlayer(message);
-                break;
-            case "ob": // Spawn Objects
-                World.spawnObject(message);
-                break;
-            case "ns": // NPC Spawn
-                World.spawnNPC(message);
-                break;
-            case "ne": // New Enemy
-                World.spawnEnemy(message);
-                break;
-            case "eu": // Enemy Movement
-                World.updateEnemy(message);
-                break;
-            case "gi": // Ground Item(s)
-                World.spawnGroundItems(message);
-                break;
-            case "gu": // Grounditem Update
-                World.updateGroundItem(message);
-                break;
-            case "gr": // Grounditem Remove
-                World.removeGroundItem(message);
-                break;
-            case "ou": // Object Update
-                World.updateObject(message);
-                break;
-            case "cc": // Perform the Chicken Check
-                World.chickenCheck(message);
-                break;
-            case "pp": // Perform the Projectile Ponderance
-                World.projectilePonderance(message);
-                break;
-            case "uu": // User Uxamination
-                Player.playerTest(message);
-                break;
-            case "pc": // Position Change
-                index = message.split(";");
-                Player.position = new Vector2(Integer.parseInt(index[0]), Integer.parseInt(index[1]));
-                break;
-            case "in": // Inventory Change
-                index = message.split(";");
-                ItemData inventory = InventoryManager.inventory[Integer.parseInt(index[0])];
-                inventory.interpretPacketData(index);
-                break;
-            case "ac": // Accessory Change
-                index = message.split(";");
-                ItemData accessory = AccessoriesManager.accessories[Integer.parseInt(index[0])];
-                accessory.interpretPacketData(index);
-                break;
-            case "oi": // Object Interaction
-                Player.interactionFinish = Long.parseLong(message);
-                Player.interactionStart = System.currentTimeMillis();
-                break;
-            case "lf": // Lose Focus
-                Player.interactionFinish = 0;
-                Player.interactionStart = 0;
-                break;
-            case "ui": // User Interface
-                GUI.openGUI(message);
-                break;
-            case "sa": // Shop Add
-                Shop.addData(message);
-                break;
-            case "bc": // Bank Change
-                BankingHandler.handleChange(message);
-                break;
-            case "sk": // Set Skill
-                Skills.handleChange(message);
-                break;
-            case "ps": // Projectile Spawn
-                Projectile.spawn(message);
-                break;
-            case "hs": // Homing Projectile Spawn
-                HomingProjectile.spawn(message);
-                break;
-            case "pd": // Projectile Destroy
-                Projectile.destroy(Integer.parseInt(message));
-                break;
-            case "ph": // Player Health
-                index = message.split(";");
-                Player.health = Float.parseFloat(index[0]);
-                Player.maxHealth = Float.parseFloat(index[1]);
-                break;
-            case "so": // Sound
-                SoundHandler.playSound(message);
-                break;
-            case "sc":
-                Player.changeSprite(message);
-                break;
-            default:
-                System.err.println("Unhandled server input: " + start + "\n" + content);
+                    break;
+                case "99":
+                    Main.logout();
+                    break;
+                case "wc": // World Change
+                    World.setWorld(message);
+                    break;
+                case "pl": // Remove Player
+                    World.removePlayer(message);
+                    break;
+                case "ob": // Spawn Objects
+                    World.spawnObject(message);
+                    break;
+                case "ns": // NPC Spawn
+                    World.spawnNPC(message);
+                    break;
+                case "ne": // New Enemy
+                    World.spawnEnemy(message);
+                    break;
+                case "eu": // Enemy Movement
+                    World.updateEnemy(message);
+                    break;
+                case "gi": // Ground Item(s)
+                    World.spawnGroundItems(message);
+                    break;
+                case "gu": // Grounditem Update
+                    World.updateGroundItem(message);
+                    break;
+                case "gr": // Grounditem Remove
+                    World.removeGroundItem(message);
+                    break;
+                case "ou": // Object Update
+                    World.updateObject(message);
+                    break;
+                case "cc": // Perform the Chicken Check
+                    World.chickenCheck(message);
+                    break;
+                case "pp": // Perform the Projectile Ponderance
+                    World.projectilePonderance(message);
+                    break;
+                case "uu": // User Uxamination
+                    Player.playerTest(message);
+                    break;
+                case "pc": // Position Change
+                    index = message.split(";");
+                    Player.position = new Vector2(Integer.parseInt(index[0]), Integer.parseInt(index[1]));
+                    break;
+                case "in": // Inventory Change
+                    index = message.split(";");
+                    ItemData inventory = InventoryManager.inventory[Integer.parseInt(index[0])];
+                    inventory.interpretPacketData(index);
+                    break;
+                case "ac": // Accessory Change
+                    index = message.split(";");
+                    ItemData accessory = AccessoriesManager.accessories[Integer.parseInt(index[0])];
+                    accessory.interpretPacketData(index);
+                    break;
+                case "oi": // Object Interaction
+                    Player.interactionFinish = Long.parseLong(message);
+                    Player.interactionStart = System.currentTimeMillis();
+                    break;
+                case "lf": // Lose Focus
+                    Player.interactionFinish = 0;
+                    Player.interactionStart = 0;
+                    break;
+                case "ui": // User Interface
+                    GUI.openGUI(message);
+                    break;
+                case "sa": // Shop Add
+                    Shop.addData(message);
+                    break;
+                case "bc": // Bank Change
+                    BankingHandler.handleChange(message);
+                    break;
+                case "sk": // Set Skill
+                    Skills.handleChange(message);
+                    break;
+                case "ps": // Projectile Spawn
+                    Projectile.spawn(message);
+                    break;
+                case "hs": // Homing Projectile Spawn
+                    HomingProjectile.spawn(message);
+                    break;
+                case "pd": // Projectile Destroy
+                    Projectile.destroy(Integer.parseInt(message));
+                    break;
+                case "ph": // Player Health
+                    index = message.split(";");
+                    Player.health = Float.parseFloat(index[0]);
+                    Player.maxHealth = Float.parseFloat(index[1]);
+                    break;
+                case "so": // Sound
+                    SoundHandler.playSound(message);
+                    break;
+                case "sc":
+                    Player.changeSprite(message);
+                    break;
+                case "it":
+                    InventoryManager.handleTimerAdd(message);
+                    break;
+                case "mt":
+                    Player.addMiscTimer(message);
+                    break;
+                case "ms":
+                    Player.speed = Float.parseFloat(message);
+                    break;
+                default:
+                    System.err.println("Unhandled server input: " + start + "\n" + content);
+            }
+        } catch (Exception e) {
+            System.err.println("Error in server input: " + start + "\n" + content);
+            System.err.println(new String(packet.getData()));
+
+            e.printStackTrace();
         }
 
         dataBuffer = new byte[4096];

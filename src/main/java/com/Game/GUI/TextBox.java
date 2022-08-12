@@ -82,8 +82,8 @@ public class TextBox {
             String text = textBoxes.get(0);
 
             Render.setColor(new Color(173, 108, 61));
-            Render.drawBorderedRect(Settings.curResolution().x * 0.25f, Settings.curResolution().y * 0.60f,
-                    Settings.curResolution().x * 0.5f, Settings.curResolution().y * 0.35f);
+            Render.drawBorderedRect(Settings.screenSize().x * 0.25f, Settings.screenSize().y * 0.60f,
+                    Settings.screenSize().x * 0.5f, Settings.screenSize().y * 0.35f);
 
             if (counter >= text.length() * 2) {
                 counter = text.length() * 2;
@@ -108,14 +108,14 @@ public class TextBox {
             String[] trueSplit = text.split("/n");
 
             int amount = trueSplit.length;
-            float height = Settings.curResolution().y * ((choices.length == 0) ? 0.8f : 0.74f)
+            float height = Settings.screenSize().y * ((choices.length == 0) ? 0.8f : 0.74f)
                     - Render.getStringHeight() * 1.1f * amount * 0.5f;
 
             for (int i = 0; i < split.length; i++) {
                 String s = split[i];
                 String ts = trueSplit[i];
 
-                Render.drawText(s, Settings.curResolution().x / 2 - Settings.sWidth(ts) / 2,
+                Render.drawText(s, Settings.screenSize().x / 2 - Settings.sWidth(ts) / 2,
                         height + Render.getStringHeight() * i * 1.1f);
             }
         }
@@ -127,18 +127,18 @@ public class TextBox {
 
         stringLength = Math.max(Render.getStringWidth(choices[0].string), Render.getStringWidth(choices[1].string));
         buttonWidth = stringLength * 1.25f;
-        buttonPadding = ((Settings.curResolution().x / 2) - buttonWidth * choices.length) / (choices.length + 1);
+        buttonPadding = ((Settings.screenSize().x / 2) - buttonWidth * choices.length) / (choices.length + 1);
 
         for (int i = 0; i < choices.length; i++) {
             String buttonText = choices[i].string;
-            float rx = Settings.curResolution().x * 0.25f + buttonPadding * (i + 1) + buttonWidth * i;
+            float rx = Settings.screenSize().x * 0.25f + buttonPadding * (i + 1) + buttonWidth * i;
             float tx = rx + buttonWidth / 2 - Render.getStringWidth(buttonText) / 2;
 
             Render.setColor(new Color(145, 82, 21));
-            Render.drawBorderedRect(rx, Settings.curResolution().y * 0.9f, buttonWidth, Render.getStringHeight() * 1.5f);
+            Render.drawBorderedRect(rx, Settings.screenSize().y * 0.9f, buttonWidth, Render.getStringHeight() * 1.5f);
 
             Render.setColor(Color.BLACK);
-            Render.drawText(buttonText, tx, Settings.curResolution().y * 0.9f + Render.getStringHeight());
+            Render.drawText(buttonText, tx, Settings.screenSize().y * 0.9f + Render.getStringHeight());
         }
     }
 
@@ -167,7 +167,7 @@ public class TextBox {
             return;
 
         float my = Input.mousePosition.y;
-        float ry = Settings.curResolution().y * 0.9f;
+        float ry = Settings.screenSize().y * 0.9f;
 
         if (my > ry && my < ry + Render.getStringHeight() * 1.5f) {
             // The mouse cursor is within the height range for the button, this means that it is possible
@@ -177,13 +177,13 @@ public class TextBox {
             // in the height range, the computer does not need to handle memory from the next variables.
             // I think this is slightly more efficient, and may help performance in large batches.
             float mx = Input.mousePosition.x;
-            float rx = Settings.curResolution().x;
+            float rx = Settings.screenSize().x;
 
             if (mx > rx * 0.25f && mx < rx * 0.75f) {
                 // Now that we know that the cursor is within the rectangle range for the choices, it
                 // is now time to determine which button the player is clicking, if any.
                 for (int i = 0; i < choices.length; i++) {
-                    float recX = Settings.curResolution().x * 0.25f + buttonPadding * (i + 1) + buttonWidth * i;
+                    float recX = Settings.screenSize().x * 0.25f + buttonPadding * (i + 1) + buttonWidth * i;
                     float diff = mx - recX;
 
                     if (diff > 0 && diff < buttonWidth) {
@@ -198,7 +198,7 @@ public class TextBox {
 
     public static String formatString(String message) {
         String fMsg = message;
-        float maxWidth = Settings.curResolution().x * 0.4f;
+        float maxWidth = Settings.screenSize().x * 0.4f;
         int bottom = 0;
 
         Render.setFont(Settings.npcFont);

@@ -1,7 +1,11 @@
 package com.Util.Math;
 
+import java.text.DecimalFormat;
+
 public class DeltaMath {
     public static final float pi = 3.1415926538f;
+
+    private static final DecimalFormat format = new DecimalFormat("#,###.##");
 
     public static int[] fillArray(int content, int length) {
         int[] array = new int[length];
@@ -23,8 +27,8 @@ public class DeltaMath {
         return dIn * to;
     }
 
-    public static float maxmin(float in, float b, float t) {
-        return Math.max(Math.min(t, in), b);
+    public static float minpositive(float in, float t) {
+        return Math.max(Math.min(t, in), 0);
     }
 
     public static float logb(float base, float number) {
@@ -37,5 +41,9 @@ public class DeltaMath {
 
     public static double trueArcSine(float amt) {
         return Math.asin(amt) + Math.ceil((2 * amt - pi) / pi);
+    }
+
+    public static String addCommas(float number) {
+        return format.format(number);
     }
 }
